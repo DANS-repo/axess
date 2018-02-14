@@ -1,8 +1,8 @@
-package nl.knaw.dans.repo.ingress.impl;
+package nl.knaw.dans.repo.axess.impl;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.ingress.core.FilenameComposer;
+import nl.knaw.dans.repo.axess.core.FilenameComposer;
 
 /**
  * Created on 2018-02-13 13:46.

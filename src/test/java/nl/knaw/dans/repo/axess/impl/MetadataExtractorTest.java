@@ -1,10 +1,10 @@
-package nl.knaw.dans.repo.ingress.impl;
+package nl.knaw.dans.repo.axess.impl;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.ingress.MetadataExtractor;
-import nl.knaw.dans.repo.ingress.core.KeyTypeValueMatrix;
+import nl.knaw.dans.repo.axess.MetadataExtractor;
+import nl.knaw.dans.repo.axess.core.KeyTypeValueMatrix;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

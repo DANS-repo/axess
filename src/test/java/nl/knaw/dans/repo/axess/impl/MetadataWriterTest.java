@@ -1,9 +1,9 @@
-package nl.knaw.dans.repo.ingress.impl;
+package nl.knaw.dans.repo.axess.impl;
 
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
-import nl.knaw.dans.repo.ingress.MetadataWriter;
+import nl.knaw.dans.repo.axess.MetadataWriter;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.jupiter.api.Test;
 

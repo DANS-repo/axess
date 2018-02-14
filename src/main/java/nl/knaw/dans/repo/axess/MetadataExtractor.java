@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.ingress;
+package nl.knaw.dans.repo.axess;
 
 
 import com.healthmarketscience.jackcess.Column;
@@ -7,7 +7,7 @@ import com.healthmarketscience.jackcess.PropertyMap;
 import com.healthmarketscience.jackcess.Relationship;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.query.Query;
-import nl.knaw.dans.repo.ingress.core.KeyTypeValueMatrix;
+import nl.knaw.dans.repo.axess.core.KeyTypeValueMatrix;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;

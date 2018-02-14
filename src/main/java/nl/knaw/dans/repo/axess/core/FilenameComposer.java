@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.ingress.core;
+package nl.knaw.dans.repo.axess.core;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
