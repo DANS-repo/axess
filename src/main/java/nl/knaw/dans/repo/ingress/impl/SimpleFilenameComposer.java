@@ -9,14 +9,14 @@ import nl.knaw.dans.repo.ingress.core.FilenameComposer;
  */
 public class SimpleFilenameComposer implements FilenameComposer {
 
-  public String getDabaseMetadataFilename(Database db) {
-    String basename = db.getFile().getName();
-    return String.format("%s.database_meta.csv", basename);
-  }
+    public String getDabaseMetadataFilename(Database db) {
+        String basename = db.getFile().getName();
+        return String.format("%s.database_meta.csv", basename);
+    }
 
-  @Override
-  public String getTableMetadataFilename(Table table) {
-    String basename =table.getDatabase().getFile().getName();
-    return String.format("%s.%s.table_meta.csv", basename, table.getName());
-  }
+    @Override
+    public String getTableMetadataFilename(Table table) {
+        String basename = table.getDatabase().getFile().getName();
+        return String.format("%s.%s.table_meta.csv", basename, table.getName());
+    }
 }

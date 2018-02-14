@@ -5,7 +5,7 @@ import com.healthmarketscience.jackcess.Table;
 
 public interface FilenameComposer {
 
-  String getDabaseMetadataFilename(Database db);
+    String getDabaseMetadataFilename(Database db);
 
-  String getTableMetadataFilename(Table table);
+    String getTableMetadataFilename(Table table);
 }

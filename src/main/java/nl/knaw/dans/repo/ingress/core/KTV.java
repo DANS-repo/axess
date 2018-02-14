@@ -3,29 +3,34 @@ package nl.knaw.dans.repo.ingress.core;
 
 public class KTV {
 
-  private Object key;
-  private final Object type;
-  private final Object value;
+    private final Object key;
+    private final Object type;
+    private final Object value;
+    private String prefix = null;
 
-  public KTV(Object key, Object type, Object value) {
-    this.key = key;
-    this.type = type;
-    this.value = value;
-  }
+    public KTV(Object key, Object type, Object value) {
+        this.key = key;
+        this.type = type;
+        this.value = value;
+    }
 
-  public Object getKey() {
-    return key;
-  }
+    public Object getKey() {
+        return key;
+    }
 
-  public Object getType() {
-    return type;
-  }
+    public Object getType() {
+        return type;
+    }
 
-  public Object getValue() {
-    return value;
-  }
+    public Object getValue() {
+        return value;
+    }
 
-  public void prefixKey(String prefix) {
-    key = prefix + key;
-  }
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
 }
