@@ -19,4 +19,10 @@ public class SimpleFilenameComposer implements FilenameComposer {
         String basename = table.getDatabase().getFile().getName();
         return String.format("%s.%s.metadata.csv", basename, table.getName());
     }
+
+    @Override
+    public String getTableDataFilename(Table table) {
+        String basename = table.getDatabase().getFile().getName();
+        return String.format("%s.%s.csv", basename, table.getName());
+    }
 }

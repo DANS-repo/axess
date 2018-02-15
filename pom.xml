@@ -67,6 +67,12 @@
       <version>2.6</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.any23</groupId>
+      <artifactId>apache-any23-encoding</artifactId>
+      <version>2.1</version>
+    </dependency>
+
     <!-- ## Test dependencies ## -->
     <!-- Hamcrest dependency should be on top see http://stackoverflow.com/a/16735373 -->
     <!-- Hamcrest library -->

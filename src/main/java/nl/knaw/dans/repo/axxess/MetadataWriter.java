@@ -2,11 +2,9 @@ package nl.knaw.dans.repo.axxess;
 
 
 import com.healthmarketscience.jackcess.Database;
-import nl.knaw.dans.repo.axxess.core.FilenameComposer;
+import nl.knaw.dans.repo.axxess.core.AbstractWriter;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
-import nl.knaw.dans.repo.axxess.impl.SimpleFilenameComposer;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,36 +12,12 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
-public class MetadataWriter {
+public class MetadataWriter extends AbstractWriter {
 
     private final MetadataExtractor extractor;
-    private String rootDirectory;
-    private FilenameComposer filenameComposer;
 
     public MetadataWriter() {
         extractor = new MetadataExtractor();
-    }
-
-    public String getRootDirectory() {
-        if (rootDirectory == null || "".equals(rootDirectory)) {
-            rootDirectory = "root";
-        }
-        return rootDirectory;
-    }
-
-    public void setRootDirectory(String rootDirectory) {
-        this.rootDirectory = rootDirectory;
-    }
-
-    public FilenameComposer getFilenameComposer() {
-        if (filenameComposer == null) {
-            filenameComposer = new SimpleFilenameComposer();
-        }
-        return filenameComposer;
-    }
-
-    public void setFilenameComposer(FilenameComposer filenameComposer) {
-        this.filenameComposer = filenameComposer;
     }
 
     /**
@@ -70,24 +44,18 @@ public class MetadataWriter {
      * @param db     the database
      * @param format the format for the .csv file
      * @throws IOException signals a failure in reading or writing
+     * @return the newly created .csv file
      */
-    public void writeDatabaseMetadata(Database db, CSVFormat format, boolean extended) throws IOException {
+    public File writeDatabaseMetadata(Database db, CSVFormat format, boolean extended) throws IOException {
         String filename = buildPaths(getFilenameComposer().getDabaseMetadataFilename(db));
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(filename), Charset.forName("UTF-8"));
+        File file = new File(filename);
+        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"));
         extractor.getMetadata(db, extended).printVertical(osw, buildVerticalFormat(format));
-    }
-
-    private String buildPaths(String basename) {
-        String filename = FilenameUtils.concat(getRootDirectory(), basename);
-        File directory = new File(filename).getParentFile();
-        assert directory.exists() || directory.mkdirs();
-        return filename;
+        return file;
     }
 
     private CSVFormat buildVerticalFormat(CSVFormat format) {
-        if (format == null) {
-            format = CSVFormat.RFC4180;
-        }
+        format = getCsvFormat(format);
         if (format.getHeader() == null || format.getHeader().length != 3) {
             format = format.withHeader("Obj", "Key", "Type", "Value");
         }
@@ -95,9 +63,7 @@ public class MetadataWriter {
     }
 
     private CSVFormat buildHorizontalFormat(CSVFormat format) {
-        if (format == null) {
-            format = CSVFormat.RFC4180;
-        }
+        format = getCsvFormat(format);
         return format.withFirstRecordAsHeader();
     }
 
