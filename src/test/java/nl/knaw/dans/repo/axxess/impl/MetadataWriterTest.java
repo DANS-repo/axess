@@ -1,9 +1,9 @@
-package nl.knaw.dans.repo.axess.impl;
+package nl.knaw.dans.repo.axxess.impl;
 
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
-import nl.knaw.dans.repo.axess.MetadataWriter;
+import nl.knaw.dans.repo.axxess.MetadataWriter;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.jupiter.api.Test;
 
@@ -12,10 +12,10 @@ import java.io.File;
 public class MetadataWriterTest {
 
     //private String databaseFile = "../mdb_testset/Admiraal Evertsen_1815.mdb";
-    //private String databaseFile = "../mdb_testset/CLIWOC21_97.mdb";
+    private String databaseFile = "../mdb_testset/CLIWOC21_97.mdb";
     //private String databaseFile = "../mdb_testset/ingress_test.accdb";
     //private String databaseFile = "../mdb_testset/axess.accdb";
-    private String databaseFile = "../mdb_testset/MonthlySalesReports.accdb";
+    //private String databaseFile = "../mdb_testset/MonthlySalesReports.accdb";
 
     @Test
     public void writesDatabaseMetadata() throws Exception {

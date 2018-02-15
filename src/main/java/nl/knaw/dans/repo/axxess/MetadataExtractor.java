@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.axess;
+package nl.knaw.dans.repo.axxess;
 
 
 import com.healthmarketscience.jackcess.Column;
@@ -7,7 +7,7 @@ import com.healthmarketscience.jackcess.PropertyMap;
 import com.healthmarketscience.jackcess.Relationship;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.query.Query;
-import nl.knaw.dans.repo.axess.core.KeyTypeValueMatrix;
+import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
@@ -24,25 +24,26 @@ public class MetadataExtractor {
     private static final String T_TEXT = "TEXT";
     private static final String CSV_DELIMITER = String.valueOf(CSVFormat.RFC4180.getDelimiter());
     private static final List<String> EXCLUDED_COLUMN_PROPERTIES = Arrays.asList(
-      "ColumnWidth",
-      "ColumnWidths",
-      "ColumnOrder",
-      "ColumnHidden",
+      "AggregateType",
       "BoundColumn",
       "ColumnCount",
       "ColumnHeads",
-      "DisplayControl",
-      "ListRows",
-      "ListWidth",
-      "IMEMode",
-      "IMESentenceMode",
-      "TextAlign",
-      "AggregateType",
-      "ResultType",
+      "ColumnHidden",
+      "ColumnOrder",
+      "ColumnWidth",
+      "ColumnWidths",
       "CurrencyLCID",
       "DecimalPlaces",
+      "DisplayControl",
+      "IMEMode",
+      "IMESentenceMode",
+      "ListRows",
+      "ListWidth",
+      "ResultType",
       "ShowDatePicker",
-      "ShowOnlyRowSourceValues"
+      "ShowOnlyRowSourceValues",
+      "TextAlign"
+
     );
 
     public KeyTypeValueMatrix getMetadata(Database db, boolean extended) throws IOException {

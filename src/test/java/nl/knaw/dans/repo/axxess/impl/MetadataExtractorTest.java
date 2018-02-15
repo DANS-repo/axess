@@ -1,10 +1,10 @@
-package nl.knaw.dans.repo.axess.impl;
+package nl.knaw.dans.repo.axxess.impl;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.axess.MetadataExtractor;
-import nl.knaw.dans.repo.axess.core.KeyTypeValueMatrix;
+import nl.knaw.dans.repo.axxess.MetadataExtractor;
+import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;

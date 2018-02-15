@@ -1,10 +1,10 @@
-package nl.knaw.dans.repo.axess;
+package nl.knaw.dans.repo.axxess;
 
 
 import com.healthmarketscience.jackcess.Database;
-import nl.knaw.dans.repo.axess.core.FilenameComposer;
-import nl.knaw.dans.repo.axess.core.KeyTypeValueMatrix;
-import nl.knaw.dans.repo.axess.impl.SimpleFilenameComposer;
+import nl.knaw.dans.repo.axxess.core.FilenameComposer;
+import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
+import nl.knaw.dans.repo.axxess.impl.SimpleFilenameComposer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FilenameUtils;
 
