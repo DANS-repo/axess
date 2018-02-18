@@ -3,8 +3,11 @@ package nl.knaw.dans.repo.axxess;
 
 import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.core.AbstractWriter;
+import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import org.apache.commons.csv.CSVFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,6 +16,8 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 
 public class MetadataWriter extends AbstractWriter {
+
+    private static Logger LOG = LoggerFactory.getLogger(MetadataWriter.class);
 
     private final MetadataExtractor extractor;
 
@@ -27,7 +32,7 @@ public class MetadataWriter extends AbstractWriter {
      * @param db the database
      * @throws IOException signals a failure in reading or writing
      */
-    public void writeDatabaseMetadata(Database db) throws IOException {
+    public void writeDatabaseMetadata(Database db) throws IOException, AxxessException {
         writeDatabaseMetadata(db, null, true);
     }
 
@@ -43,14 +48,19 @@ public class MetadataWriter extends AbstractWriter {
      *
      * @param db     the database
      * @param format the format for the .csv file
-     * @throws IOException signals a failure in reading or writing
      * @return the newly created .csv file
+     * @throws IOException signals a failure in reading or writing
      */
-    public File writeDatabaseMetadata(Database db, CSVFormat format, boolean extended) throws IOException {
+    public File writeDatabaseMetadata(Database db, CSVFormat format, boolean extended)
+      throws IOException, AxxessException {
         String filename = buildPaths(getFilenameComposer().getDabaseMetadataFilename(db));
         File file = new File(filename);
+        if (file.exists()) {
+            throw new AxxessException("File exists: " + file.getAbsolutePath());
+        }
         OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"));
         extractor.getMetadata(db, extended).printVertical(osw, buildVerticalFormat(format));
+        LOG.debug("Wrote metadata: {}", file.getName());
         return file;
     }
 

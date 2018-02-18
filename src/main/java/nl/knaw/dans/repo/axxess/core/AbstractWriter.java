@@ -10,18 +10,22 @@ import java.io.File;
 public abstract class AbstractWriter {
 
 
-    private String rootDirectory;
+    private String targetDirectory;
     private FilenameComposer filenameComposer;
 
-    public String getRootDirectory() {
-        if (rootDirectory == null || "".equals(rootDirectory)) {
-            rootDirectory = "root";
+    public String getTargetDirectory() {
+        if (targetDirectory == null || "".equals(targetDirectory)) {
+            targetDirectory = "root";
         }
-        return rootDirectory;
+        return targetDirectory;
     }
 
-    public void setRootDirectory(String rootDirectory) {
-        this.rootDirectory = rootDirectory;
+    public void setTargetDirectory(String targetDirectory) {
+        this.targetDirectory = targetDirectory;
+    }
+
+    public void setTargetDirectory(File targetDirectory) {
+        setTargetDirectory(targetDirectory.getAbsolutePath());
     }
 
     public FilenameComposer getFilenameComposer() {
@@ -36,7 +40,7 @@ public abstract class AbstractWriter {
     }
 
     protected String buildPaths(String basename) {
-        String filename = FilenameUtils.concat(getRootDirectory(), basename);
+        String filename = FilenameUtils.concat(getTargetDirectory(), basename);
         File directory = new File(filename).getParentFile();
         assert directory.exists() || directory.mkdirs();
         return filename;

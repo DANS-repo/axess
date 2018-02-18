@@ -28,3 +28,4 @@ hs_err_pid*
 
 # loadable test resources
 /src/test/test-set/
+/axxess-out/

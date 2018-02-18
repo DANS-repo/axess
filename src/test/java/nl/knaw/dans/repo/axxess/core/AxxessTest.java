@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.axxess.impl;
+package nl.knaw.dans.repo.axxess.core;
 
 
 import org.junit.jupiter.api.Test;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class AxxessTest {
 
-    private static  final Map<String, String> FILE_MAP = new HashMap<String, String>() {{
+    private static final Map<String, String> FILE_MAP = new HashMap<String, String>() {{
         put("CLIWOC21_97.mdb", "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content");
     }};
 
@@ -60,8 +60,12 @@ public class AxxessTest {
             System.out.println("\nDownloaded: " + total + " bytes");
             return file;
         } finally {
-            if (bof != null) bof.close();
-            if (bif != null) bif.close();
+            if (bof != null) {
+                bof.close();
+            }
+            if (bif != null) {
+                bif.close();
+            }
         }
     }
 

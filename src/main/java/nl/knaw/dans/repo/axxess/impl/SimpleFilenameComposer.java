@@ -11,18 +11,18 @@ public class SimpleFilenameComposer implements FilenameComposer {
 
     public String getDabaseMetadataFilename(Database db) {
         String basename = db.getFile().getName();
-        return String.format("%s.metadata.csv", basename);
-    }
-
-    @Override
-    public String getTableMetadataFilename(Table table) {
-        String basename = table.getDatabase().getFile().getName();
-        return String.format("%s.%s.metadata.csv", basename, table.getName());
+        return String.format("%s._metadata.csv", basename);
     }
 
     @Override
     public String getTableDataFilename(Table table) {
         String basename = table.getDatabase().getFile().getName();
         return String.format("%s.%s.csv", basename, table.getName());
+    }
+
+    @Override
+    public String getArchiveFilename(Database db) {
+        String basename = db.getFile().getName();
+        return String.format("%s.csv.zip", basename);
     }
 }

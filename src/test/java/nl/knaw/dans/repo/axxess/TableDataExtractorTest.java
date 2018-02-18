@@ -1,10 +1,10 @@
-package nl.knaw.dans.repo.axxess.impl;
+package nl.knaw.dans.repo.axxess;
 
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.axxess.TableDataExtractor;
+import nl.knaw.dans.repo.axxess.core.AxxessTest;
 import org.apache.commons.csv.CSVFormat;
 import org.junit.jupiter.api.Test;
 

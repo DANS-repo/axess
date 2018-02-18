@@ -7,7 +7,7 @@ public interface FilenameComposer {
 
     String getDabaseMetadataFilename(Database db);
 
-    String getTableMetadataFilename(Table table);
-
     String getTableDataFilename(Table table);
+
+    String getArchiveFilename(Database db);
 }

@@ -17,6 +17,17 @@ public class KeyTypeValueMatrix {
         return this;
     }
 
+    public KTV get(String prefix, Object key) {
+        for (KTV ktv : ktvLines) {
+            if ((ktv.prefix == null && prefix == null) || ktv.prefix != null && ktv.prefix.equals(prefix)) {
+                if (ktv.key != null && ktv.key.equals(key)) {
+                    return ktv;
+                }
+            }
+        }
+        return null;
+    }
+
     public KeyTypeValueMatrix append(KeyTypeValueMatrix ktvMatrix) {
         ktvLines.addAll(ktvMatrix.ktvLines);
         return this;
@@ -25,15 +36,6 @@ public class KeyTypeValueMatrix {
     public KeyTypeValueMatrix prefixKeys(String prefix) {
         ktvLines.forEach(ktv -> ktv.setPrefix(prefix));
         return this;
-    }
-
-    public void print(Appendable out, CSVFormat format, Orientation orientation) throws IOException {
-        if (Orientation.VERTICAL.equals(orientation)) {
-            printVertical(out, format);
-        }
-        if (Orientation.HORIZONTAL.equals(orientation)) {
-            printHorizontal(out, format);
-        }
     }
 
     public List<String> getPrefixes() {
@@ -50,6 +52,15 @@ public class KeyTypeValueMatrix {
 
     public List<Object> getValues() {
         return ktvLines.stream().map(KTV::getValue).collect(Collectors.toList());
+    }
+
+    public void print(Appendable out, CSVFormat format, Orientation orientation) throws IOException {
+        if (Orientation.VERTICAL.equals(orientation)) {
+            printVertical(out, format);
+        }
+        if (Orientation.HORIZONTAL.equals(orientation)) {
+            printHorizontal(out, format);
+        }
     }
 
     public void printVertical(Appendable out, CSVFormat format) throws IOException {
@@ -84,5 +95,39 @@ public class KeyTypeValueMatrix {
     public enum Orientation {
         HORIZONTAL,
         VERTICAL
+    }
+
+    public static class KTV {
+
+        private final Object key;
+        private final Object type;
+        private final Object value;
+        private String prefix = null;
+
+        public KTV(Object key, Object type, Object value) {
+            this.key = key;
+            this.type = type;
+            this.value = value;
+        }
+
+        public Object getKey() {
+            return key;
+        }
+
+        public Object getType() {
+            return type;
+        }
+
+        public Object getValue() {
+            return value;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public void setPrefix(String prefix) {
+            this.prefix = prefix;
+        }
     }
 }

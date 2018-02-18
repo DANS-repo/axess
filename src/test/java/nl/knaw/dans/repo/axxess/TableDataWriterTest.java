@@ -1,17 +1,15 @@
-package nl.knaw.dans.repo.axxess.impl;
+package nl.knaw.dans.repo.axxess;
 
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.axxess.TableDataWriter;
+import nl.knaw.dans.repo.axxess.core.AxxessTest;
 import org.apache.any23.encoding.TikaEncodingDetector;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
@@ -28,7 +26,7 @@ public class TableDataWriterTest extends AxxessTest {
 
             Table table = db.getTable(db.getTableNames().iterator().next());
             TableDataWriter writer = new TableDataWriter();
-            writer.setRootDirectory(rootDir);
+            writer.setTargetDirectory(rootDir);
             writer.writeTableData(table, null);
         } finally {
             if (db != null) {
@@ -36,5 +34,23 @@ public class TableDataWriterTest extends AxxessTest {
             }
         }
     }
+
+    @Test
+    public void readHeader() throws Exception {
+        File dbFile = getFile("Admiraal Evertsen_1815.mdb");
+        InputStream ins = new FileInputStream(dbFile);
+        // byte[] bytes = new byte[32];
+        // IOUtils.read(ins, bytes, 0, 32);
+        // String str = new String(bytes, "ISO8859-9");
+        //
+        // System.out.println(str);
+        TikaEncodingDetector detector = new TikaEncodingDetector();
+        System.out.println(detector.guessEncoding(ins));
+
+
+        Charset encoding = Charset.forName("windows-1252");
+        System.out.println(encoding.aliases());
+    }
+
 
 }

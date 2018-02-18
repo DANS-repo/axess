@@ -16,11 +16,11 @@ import java.util.stream.Collectors;
 
 public class TableDataExtractor {
 
-    private static final String[] textDataArray = { "TEXT", "GUID", "MEMO"};
+    private static final String[] textDataArray = {"TEXT", "GUID", "MEMO"};
     private static final List<String> textDataTypes = Arrays.asList(textDataArray);
 
 
-    public void getTableData(Table table, Appendable out, CSVFormat format) throws IOException {
+    public int getTableData(Table table, Appendable out, CSVFormat format) throws IOException {
         List<? extends Column> columns = table.getColumns();
         List<String> columnNames = columns
           .stream()
@@ -50,6 +50,6 @@ public class TableDataExtractor {
             printer.printRecord(cells);
         }
         printer.close();
-        System.out.println(rowCount);
+        return rowCount;
     }
 }
