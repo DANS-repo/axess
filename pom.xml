@@ -73,6 +73,13 @@
       <version>2.1</version>
     </dependency>
 
+    <!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.11</version>
+    </dependency>
+
 
     <!-- ## Test dependencies ## -->
     <!-- Hamcrest dependency should be on top see http://stackoverflow.com/a/16735373 -->

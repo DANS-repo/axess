@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.axxess;
+package nl.knaw.dans.repo.axxess.ac;
 
 
 import com.healthmarketscience.jackcess.Database;

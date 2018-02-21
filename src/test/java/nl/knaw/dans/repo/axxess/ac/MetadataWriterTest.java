@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.axxess;
+package nl.knaw.dans.repo.axxess.ac;
 
 
 import com.healthmarketscience.jackcess.Database;
@@ -17,7 +17,7 @@ public class MetadataWriterTest extends AxxessTest {
 
     @Test
     public void writesDatabaseMetadata() throws Exception {
-        File dbFile = getFile("Admiraal Evertsen_1815.mdb");
+        File dbFile = getFile("CLIWOC21_97.mdb");
         Database db = null;
         String rootDir = "target/test-output/metadata-writer";
         try {

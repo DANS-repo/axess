@@ -1,9 +1,13 @@
 package nl.knaw.dans.repo.axxess.core;
 
+import com.healthmarketscience.jackcess.DataType;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.csv.CSVRecord;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,15 +16,35 @@ public class KeyTypeValueMatrix {
 
     private List<KTV> ktvLines = new ArrayList<>();
 
-    public KeyTypeValueMatrix add(Object key, Object type, Object value) {
+    public KeyTypeValueMatrix() {
+    }
+
+    public KeyTypeValueMatrix(List<KTV> ktvLines) {
+        this.ktvLines = new ArrayList<>(ktvLines);
+    }
+
+    public KeyTypeValueMatrix(Reader reader, CSVFormat csvFormat) throws IOException {
+        CSVParser parser = new CSVParser(reader, csvFormat);
+        for (CSVRecord record : parser) {
+            add(record);
+        }
+    }
+
+    public KeyTypeValueMatrix add(String key, DataType type, Object value) {
         ktvLines.add(new KTV(key, type, value));
         return this;
     }
 
-    public KTV get(String prefix, Object key) {
+    public KeyTypeValueMatrix add(CSVRecord record) {
+        ktvLines.add(new KTV(record));
+        return this;
+    }
+
+    public KTV get(ObjectType objectType, Object key, int... indexes) {
+        String prefix = objectType.prefix(indexes);
         for (KTV ktv : ktvLines) {
-            if ((ktv.prefix == null && prefix == null) || ktv.prefix != null && ktv.prefix.equals(prefix)) {
-                if (ktv.key != null && ktv.key.equals(key)) {
+            if (ktv.getPrefix() != null && ktv.getPrefix().equals(prefix)) {
+                if (ktv.getKey() != null && ktv.getKey().equals(key)) {
                     return ktv;
                 }
             }
@@ -33,9 +57,14 @@ public class KeyTypeValueMatrix {
         return this;
     }
 
-    public KeyTypeValueMatrix prefixKeys(String prefix) {
+    public KeyTypeValueMatrix prefixKeys(ObjectType objectType, int... indexes) {
+        String prefix = objectType.prefix(indexes);
         ktvLines.forEach(ktv -> ktv.setPrefix(prefix));
         return this;
+    }
+
+    public List<KTV> getLines() {
+        return ktvLines;
     }
 
     public List<String> getPrefixes() {
@@ -97,37 +126,4 @@ public class KeyTypeValueMatrix {
         VERTICAL
     }
 
-    public static class KTV {
-
-        private final Object key;
-        private final Object type;
-        private final Object value;
-        private String prefix = null;
-
-        public KTV(Object key, Object type, Object value) {
-            this.key = key;
-            this.type = type;
-            this.value = value;
-        }
-
-        public Object getKey() {
-            return key;
-        }
-
-        public Object getType() {
-            return type;
-        }
-
-        public Object getValue() {
-            return value;
-        }
-
-        public String getPrefix() {
-            return prefix;
-        }
-
-        public void setPrefix(String prefix) {
-            this.prefix = prefix;
-        }
-    }
 }

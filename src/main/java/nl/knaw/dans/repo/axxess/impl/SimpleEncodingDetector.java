@@ -1,9 +1,11 @@
 package nl.knaw.dans.repo.axxess.impl;
 
 import com.healthmarketscience.jackcess.Database;
-import nl.knaw.dans.repo.axxess.MetadataExtractor;
+import nl.knaw.dans.repo.axxess.ac.MetadataExtractor;
 import nl.knaw.dans.repo.axxess.core.EncodingDetector;
+import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
+import nl.knaw.dans.repo.axxess.core.ObjectType;
 import org.apache.any23.encoding.TikaEncodingDetector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +33,9 @@ public class SimpleEncodingDetector implements EncodingDetector {
         LOG.debug("Encoding. Tika detected '{}', for {}", tikaGuess, db.getFile().getName());
 
         KeyTypeValueMatrix matrix = metadataExtractor.getDatabaseMetadata(db);
-        KeyTypeValueMatrix.KTV ff = matrix.get("[DB]", "File format");
+        KTV ff = matrix.get(ObjectType.DATABASE, "File format");
         Database.FileFormat fileFormat = ff == null ? null : (Database.FileFormat) ff.getValue();
-        KeyTypeValueMatrix.KTV cs = matrix.get("[DB]", "Charset");
+        KTV cs = matrix.get(ObjectType.DATABASE, "Charset");
         Charset charset = cs == null ? null : (Charset) cs.getValue();
         LOG.debug("Encoding. Jackcess detected '{}', for {}", charset, db.getFile().getName());
 

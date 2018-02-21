@@ -20,12 +20,12 @@ public abstract class AbstractWriter {
         return targetDirectory;
     }
 
-    public void setTargetDirectory(String targetDirectory) {
-        this.targetDirectory = targetDirectory;
-    }
-
     public void setTargetDirectory(File targetDirectory) {
         setTargetDirectory(targetDirectory.getAbsolutePath());
+    }
+
+    public void setTargetDirectory(String targetDirectory) {
+        this.targetDirectory = targetDirectory;
     }
 
     public FilenameComposer getFilenameComposer() {

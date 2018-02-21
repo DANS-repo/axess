@@ -4,14 +4,20 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
 import nl.knaw.dans.repo.axxess.core.FilenameComposer;
 
+import java.io.IOException;
+
 /**
  * Created on 2018-02-13 13:46.
  */
 public class SimpleFilenameComposer implements FilenameComposer {
 
-    public String getDabaseMetadataFilename(Database db) {
+    public String getDabaseMetadataFilename(Database db) throws IOException {
+        String mdName = "__metadata";
+        while (db.getTableNames().contains(mdName)) {
+            mdName = mdName + "_";
+        }
         String basename = db.getFile().getName();
-        return String.format("%s._metadata.csv", basename);
+        return String.format("%s.%s.csv", basename, mdName);
     }
 
     @Override

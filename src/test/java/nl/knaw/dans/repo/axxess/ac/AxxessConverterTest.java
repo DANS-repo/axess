@@ -1,22 +1,21 @@
-package nl.knaw.dans.repo.axxess;
+package nl.knaw.dans.repo.axxess.ac;
 
-import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
-import nl.knaw.dans.repo.axxess.core.AxxessTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AxxessConverterTest {
 
     @BeforeEach
     private void beforeEach() throws Exception {
-        File axxessDir = new File(AxxessConverter.DEFAULT_OUTPUT_DIRECTORY);
+        File axxessDir = new File(AxxessToCsvConverter.DEFAULT_OUTPUT_DIRECTORY);
         assert !axxessDir.exists() || deleteDirectory(axxessDir);
 
         File testOutput = new File("target/test-output");
@@ -35,11 +34,11 @@ public class AxxessConverterTest {
 
     @Test
     void convertFile() throws Exception {
-        AxxessConverter converter = new AxxessConverter();
+        AxxessToCsvConverter converter = new AxxessToCsvConverter();
         String filename = "src/test/test-set/axxes/axess.accdb";
         List<File> csvFiles = converter.convert(filename);
 
-        File axxessDir = new File(AxxessConverter.DEFAULT_OUTPUT_DIRECTORY);
+        File axxessDir = new File(AxxessToCsvConverter.DEFAULT_OUTPUT_DIRECTORY);
         assertTrue(axxessDir.exists());
         File metadata = new File(axxessDir, "axess.accdb.metadata.csv");
         assertTrue(metadata.exists());
@@ -60,18 +59,18 @@ public class AxxessConverterTest {
 
     @Test
     void convertDirectory() throws Exception {
-        AxxessConverter converter = new AxxessConverter();
+        AxxessToCsvConverter converter = new AxxessToCsvConverter();
         String filename = "src/test/test-set";
         List<File> csvFiles = converter.convert(filename);
 
-        File axxessDir = new File(AxxessConverter.DEFAULT_OUTPUT_DIRECTORY);
+        File axxessDir = new File(AxxessToCsvConverter.DEFAULT_OUTPUT_DIRECTORY);
         assertTrue(axxessDir.exists());
         assertEquals(80, csvFiles.size());
     }
 
     @Test
     void convertDirectoryToTargetDir() throws Exception {
-        AxxessConverter converter = new AxxessConverter()
+        AxxessToCsvConverter converter = new AxxessToCsvConverter()
           .withTargetDirectory("target/test-output");
         String filename = "src/test/test-set";
         converter.convert(filename);
@@ -84,12 +83,17 @@ public class AxxessConverterTest {
 
     @Test
     void convertDirectoryToTargetDirAndArchive() throws Exception {
-        AxxessConverter converter = new AxxessConverter()
+        AxxessToCsvConverter converter = new AxxessToCsvConverter()
           .withTargetDirectory("target/test-output")
           .withArchiveResults(true)
-          .withCompressArchive(true);
+          .withCompressArchive(false)
+          .withManifest(true);
         String filename = "src/test/test-set";
         List<File> zipFiles = converter.convert(filename);
+
+        assertEquals(5, zipFiles.size());
+        assertEquals(0, converter.getErrorList().size());
+        assertEquals(5, converter.getConvertedDatabaseCount());
 
         File targetDir = new File("target/test-output");
         assertTrue(targetDir.exists());

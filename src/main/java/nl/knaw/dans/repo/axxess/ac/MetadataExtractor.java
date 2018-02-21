@@ -1,4 +1,4 @@
-package nl.knaw.dans.repo.axxess;
+package nl.knaw.dans.repo.axxess.ac;
 
 
 import com.healthmarketscience.jackcess.Column;
@@ -8,18 +8,23 @@ import com.healthmarketscience.jackcess.PropertyMap;
 import com.healthmarketscience.jackcess.Relationship;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.query.Query;
+import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
-import org.apache.commons.csv.CSVFormat;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static nl.knaw.dans.repo.axxess.core.ObjectType.DATABASE;
+import static nl.knaw.dans.repo.axxess.core.ObjectType.QUERY;
+import static nl.knaw.dans.repo.axxess.core.ObjectType.RELATIONSHIP;
+import static nl.knaw.dans.repo.axxess.core.ObjectType.TABLE;
+import static nl.knaw.dans.repo.axxess.core.ObjectType.TABLE_COLUMN;
+
 public class MetadataExtractor {
 
     private static final String K_BUILD = "Build";
-    private static final String CSV_DELIMITER = String.valueOf(CSVFormat.RFC4180.getDelimiter());
     private static final List<String> EXCLUDED_COLUMN_PROPERTIES = Arrays.asList(
       "AggregateType",
       "BoundColumn",
@@ -72,21 +77,21 @@ public class MetadataExtractor {
         }
         PropertyMap.Property build = propertyMap.get(K_BUILD);
         if (build != null) {
-            matrix.add(K_BUILD, build.getType().name(), build.getValue());
+            matrix.add(K_BUILD, build.getType(), build.getValue());
         }
         for (PropertyMap.Property prop : db.getSummaryProperties()) {
-            matrix.add("(Summary) " + prop.getName(), prop.getType().name(), prop.getValue());
+            matrix.add("(Summary) " + prop.getName(), prop.getType(), prop.getValue());
         }
         for (PropertyMap.Property prop : db.getUserDefinedProperties()) {
-            matrix.add("(User defined) " + prop.getName(), prop.getType().name(), prop.getValue());
+            matrix.add("(User defined) " + prop.getName(), prop.getType(), prop.getValue());
         }
         matrix.add("Relationship count", DataType.INT, relationshipNames.size())
-              .add("Relationship names", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, relationshipNames))
+              .add("Relationship names", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, relationshipNames))
               .add("Query count", DataType.INT, queryNames.size())
-              .add("Query names", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, queryNames))
+              .add("Query names", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, queryNames))
               .add("Table count", DataType.INT, db.getTableNames().size())
-              .add("Table names", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, db.getTableNames()))
-              .prefixKeys("[DB]");
+              .add("Table names", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, db.getTableNames()))
+              .prefixKeys(DATABASE);
         return matrix;
     }
 
@@ -96,8 +101,7 @@ public class MetadataExtractor {
         for (String tableName : db.getTableNames()) {
             Table table = db.getTable(tableName);
             KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
-            String prefix = String.format("[T%d]", tableCount);
-            tableMatrix.prefixKeys(prefix);
+            tableMatrix.prefixKeys(TABLE, tableCount);
             matrix.append(tableMatrix);
             ++tableCount;
         }
@@ -118,10 +122,11 @@ public class MetadataExtractor {
         if (includeDbName) {
             matrix.add("Database name", DataType.TEXT, table.getDatabase().getFile().getName());
         }
-        matrix.add("Row count", DataType.LONG, table.getRowCount())
-              .add("Column count", DataType.LONG, table.getColumnCount())
-              .add("Column names", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, tableNames))
-              .add("Relationship names", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, relationshipNames));
+        // table can have indexes.
+        matrix.add("Row count", DataType.INT, table.getRowCount())
+              .add("Column count", DataType.INT, table.getColumnCount())
+              .add("Column names", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, tableNames))
+              .add("Relationship names", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, relationshipNames));
         return matrix;
     }
 
@@ -130,8 +135,7 @@ public class MetadataExtractor {
         int relationshipCount = 0;
         for (Relationship relationship : db.getRelationships()) {
             KeyTypeValueMatrix relationshipMatrix = getRelationshipMetadata(relationship);
-            String prefix = String.format("[R%d]", relationshipCount);
-            relationshipMatrix.prefixKeys(prefix);
+            relationshipMatrix.prefixKeys(RELATIONSHIP, relationshipCount);
             matrix.append(relationshipMatrix);
             ++relationshipCount;
         }
@@ -153,9 +157,9 @@ public class MetadataExtractor {
           .add("IsOneToOne", DataType.BOOLEAN, relationship.isOneToOne())
           .add("IsRightOuterJoin", DataType.BOOLEAN, relationship.isRightOuterJoin())
           .add("FromTable", DataType.TEXT, relationship.getFromTable().getName())
-          .add("FromColumns", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, fromColumnNames))
+          .add("FromColumns", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, fromColumnNames))
           .add("ToTable", DataType.TEXT, relationship.getToTable().getName())
-          .add("ToColumns", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, toColumnNames))
+          .add("ToColumns", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, toColumnNames))
           .add("JoinType", DataType.TEXT, relationship.getJoinType());
     }
 
@@ -164,8 +168,7 @@ public class MetadataExtractor {
         int queryCount = 0;
         for (Query query : db.getQueries()) {
             KeyTypeValueMatrix queryMatrix = getQueryMetadata(query);
-            String prefix = String.format("[Q%d]", queryCount);
-            queryMatrix.prefixKeys(prefix);
+            queryMatrix.prefixKeys(QUERY, queryCount);
             matrix.append(queryMatrix);
             ++queryCount;
         }
@@ -176,7 +179,7 @@ public class MetadataExtractor {
         return new KeyTypeValueMatrix()
           .add("Query name", DataType.TEXT, query.getName())
           .add("Query type", DataType.TEXT, query.getType())
-          .add("Parameters", DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, query.getParameters()))
+          .add("Parameters", DataType.COMPLEX_TYPE, String.join(KTV.CSV_DELIMITER, query.getParameters()))
           .add("SQL", DataType.TEXT, query.toSQLString().replaceAll("[\r\n]", " "));
     }
 
@@ -186,14 +189,12 @@ public class MetadataExtractor {
         for (String tableName : db.getTableNames()) {
             Table table = db.getTable(tableName);
             KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
-            String tablePrefix = String.format("[T%d]", tableCount);
-            tableMatrix.prefixKeys(tablePrefix);
+            tableMatrix.prefixKeys(TABLE, tableCount);
             matrix.append(tableMatrix);
             int columnCount = 0;
             for (Column column : table.getColumns()) {
                 KeyTypeValueMatrix columnMatrix = getColumnMetadata(column);
-                String prefix = String.format("%s[C%d]", tablePrefix, columnCount);
-                columnMatrix.prefixKeys(prefix);
+                columnMatrix.prefixKeys(TABLE_COLUMN, tableCount, columnCount);
                 matrix.append(columnMatrix);
                 ++columnCount;
             }
@@ -205,9 +206,9 @@ public class MetadataExtractor {
     public KeyTypeValueMatrix getColumnMetadata(Column column) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
           .add("Column name", DataType.TEXT, column.getName())
-          .add("Column index", DataType.LONG, column.getColumnIndex())
+          .add("Column index", DataType.INT, column.getColumnIndex())
           .add("Data type", DataType.TEXT, column.getType())
-          .add("Length", DataType.LONG, column.getLength())
+          .add("Length", DataType.INT, column.getLength())
 
           .add("IsAppendOnly", DataType.BOOLEAN, column.isAppendOnly())
           .add("IsAutoNumber", DataType.BOOLEAN, column.isAutoNumber())
@@ -222,7 +223,7 @@ public class MetadataExtractor {
         }
         Column vhColumn = column.getVersionHistoryColumn();
         if (vhColumn != null) {
-            matrix.add("VersionHistoryColumn", DataType.LONG, vhColumn.getColumnIndex());
+            matrix.add("VersionHistoryColumn", DataType.INT, vhColumn.getColumnIndex());
         }
         return matrix;
     }
