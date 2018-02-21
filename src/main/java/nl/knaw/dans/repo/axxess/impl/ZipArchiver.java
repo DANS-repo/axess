@@ -1,6 +1,6 @@
 package nl.knaw.dans.repo.axxess.impl;
 
-import nl.knaw.dans.repo.axxess.core.Archiver;
+import nl.knaw.dans.repo.axxess.acc2csv.Archiver;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

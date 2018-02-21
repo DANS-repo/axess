@@ -1,7 +1,7 @@
 package nl.knaw.dans.repo.axxess.impl;
 
 import com.healthmarketscience.jackcess.Database;
-import nl.knaw.dans.repo.axxess.core.EncodingDetector;
+import nl.knaw.dans.repo.axxess.acc2csv.EncodingDetector;
 
 import java.io.IOException;
 import java.nio.charset.Charset;

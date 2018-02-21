@@ -28,4 +28,8 @@ hs_err_pid*
 
 # loadable test resources
 /src/test/test-set/
+
+# test output
 /axxess-out/
+/src/test/resources/integration/*/acc2csv/
+/src/test/resources/integration/*/csv2acc/

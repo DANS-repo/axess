@@ -1,5 +1,9 @@
 package nl.knaw.dans.repo.axxess.core;
 
+import nl.knaw.dans.repo.axxess.csv2acc.MetadataParser;
+import nl.knaw.dans.repo.axxess.csv2acc.xdb.XColumn;
+import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
+import nl.knaw.dans.repo.axxess.csv2acc.xdb.XTable;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
