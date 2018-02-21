@@ -3,13 +3,17 @@ package nl.knaw.dans.repo.axxess;
 import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.acc2csv.AxxessToCsvConverter;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,18 +22,25 @@ public class IntegrationTest {
 
     private static File baseDirectory = new File("src/test/resources/integration").getAbsoluteFile();
 
-    private static String[] dbDirectories = {
-      "avereest",   // File format: V1997 [VERSION_3]   AccessVersion: 07.53
-      "walcheren",  // File format: V2000 [VERSION_4]   AccessVersion: 08.50
-      "kohier"      // File format: V2007 [VERSION_12]  AccessVersion: 09.50
+    private static String[][] databases = {
+      // File format: V1997 [VERSION_3]   AccessVersion: 07.53
+      {"avereest", "avereest.mdb",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content" },
 
+      // File format: V2000 [VERSION_4]   AccessVersion: 08.50
+      {"walcheren", "Boedelbestand Walcheren 1755-1855.MDB",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content" },
+
+      // File format: V2007 [VERSION_12]  AccessVersion: 09.50
+      {"kohier", "KOHIER1748.accdb",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content" }
     };
 
     @BeforeAll
     static void beforeAll() throws Exception {
-        for (String name : dbDirectories) {
-            assert deleteDirectory(getAcc2csvDir(name));
-            assert deleteDirectory(getCsv2accDir(name));
+        for (String[] name : databases) {
+            assert deleteDirectory(getAcc2csvDir(name[0]));
+            assert deleteDirectory(getCsv2accDir(name[0]));
         }
     }
 
@@ -95,9 +106,9 @@ public class IntegrationTest {
 
     @Test
     void acc2csv2acc() throws Exception {
-        for (String name : dbDirectories) {
-            acc2csvZipped(name);
-            acc2csvFiled(name);
+        for (String name[] : databases) {
+            acc2csvZipped(name[0]);
+            acc2csvFiled(name[0]);
         }
     }
 
@@ -119,6 +130,43 @@ public class IntegrationTest {
           .convert(getDbFile(name));
         assertTrue(fileList.contains(getMetadataFile(name)));
         assertTrue(getMetadataFile(name).exists());
+    }
+
+    private static File loadFromUrl(String urlString, File file) throws IOException {
+        URL url = new URL(urlString);
+        URLConnection conn = url.openConnection();
+
+        File dir = file.getParentFile();
+        assert dir.exists() || dir.mkdirs();
+        assert file.exists() || file.createNewFile();
+
+        BufferedInputStream bif = null;
+        BufferedOutputStream bof = null;
+        System.out.print("Downloading " + file.getName());
+
+        try {
+            bif = new BufferedInputStream(conn.getInputStream());
+            bof = new BufferedOutputStream(new FileOutputStream(file));
+            byte[] buffer = new byte[1024];
+            int read = 0;
+            int total = 0;
+            while ((read = bif.read(buffer, 0, buffer.length)) != -1) {
+                bof.write(buffer, 0, read);
+                total += read;
+                if (total % 100000 == 0) {
+                    System.out.print(" |");
+                }
+            }
+            System.out.println("\nDownloaded: " + total + " bytes");
+            return file;
+        } finally {
+            if (bof != null) {
+                bof.close();
+            }
+            if (bif != null) {
+                bif.close();
+            }
+        }
     }
 
 
