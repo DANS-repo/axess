@@ -1,5 +1,6 @@
 package nl.knaw.dans.repo.axxess;
 
+import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.acc2csv.AxxessToCsvConverter;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,7 +19,10 @@ public class IntegrationTest {
     private static File baseDirectory = new File("src/test/resources/integration").getAbsoluteFile();
 
     private static String[] dbDirectories = {
-      "kohier"
+      "avereest",   // File format: V1997 [VERSION_3]   AccessVersion: 07.53
+      "walcheren",  // File format: V2000 [VERSION_4]   AccessVersion: 08.50
+      "kohier"      // File format: V2007 [VERSION_12]  AccessVersion: 09.50
+
     };
 
     @BeforeAll
@@ -43,7 +48,17 @@ public class IntegrationTest {
 
     private static File getDbFile(String name) throws IOException {
         File dbDir = FileUtils.getFile(baseDirectory, name, "db");
-        File[] files = dbDir.listFiles();
+        File[] files = dbDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                for (Database.FileFormat fm : Database.FileFormat.values()) {
+                    if (name.toLowerCase().endsWith(fm.getFileExtension())) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
         if (files == null || files.length < 1) throw new IOException("dbFile does not exist: " + name);
         return files[0];
     }
@@ -51,6 +66,11 @@ public class IntegrationTest {
     private static File getZipFile(String name) throws IOException {
         String zipFilename = getDbName(name) + ".csv.zip";
         return new File(getAcc2csvZipDir(name), zipFilename);
+    }
+
+    private static File getMetadataFile(String name) throws IOException {
+        String metadataFilename = getDbName(name) + "._metadata.csv";
+        return  new File(getAcc2csvFilesDir(name), metadataFilename);
     }
 
     private static File getAcc2csvDir(String name) {
@@ -97,7 +117,8 @@ public class IntegrationTest {
           .withTargetDirectory(getAcc2csvFilesDir(name))
           .withManifest(true)
           .convert(getDbFile(name));
-        assertEquals(20, fileList.size());
+        assertTrue(fileList.contains(getMetadataFile(name)));
+        assertTrue(getMetadataFile(name).exists());
     }
 
 

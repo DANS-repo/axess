@@ -151,6 +151,8 @@ public class AxxessToCsvConverter {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
                 errorList.add(e);
             }
+        } else {
+            LOG.warn("File is not an access file: {}", file);
         }
     }
 
@@ -215,7 +217,7 @@ public class AxxessToCsvConverter {
 
     private boolean isAccessFile(File file) {
         for (Database.FileFormat fm : Database.FileFormat.values()) {
-            if (file.getName().endsWith(fm.getFileExtension())) {
+            if (file.getName().toLowerCase().endsWith(fm.getFileExtension())) {
                 return true;
             }
         }

@@ -35,17 +35,11 @@ public class TableDataExtractor {
             rowCount++;
             List<Object> cells = new ArrayList<>();
             for (Column column : columns) {
-                if (DataType.MEMO.equals(column.getType())) {
-                    String value = row.getString(column.getName());
-                    if (value == null) {
-                        cells.add(null);
-                    } else {
-                        value = value.replaceAll("[\r\n]", " ");
-                        cells.add(value);
-                    }
-                } else {
-                    cells.add(row.get(column.getName()));
+                Object value = row.get(column.getName());
+                if (value instanceof String) {
+                    value = ((String)value).replaceAll("[\r\n]", "\u0000");
                 }
+                cells.add(value);
             }
             printer.printRecord(cells);
         }

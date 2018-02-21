@@ -7,8 +7,10 @@ public class Tester {
 
     public static void main(String[] args) {
 
-        String key = "(User defined) Replicate Project";
-        key = key.replaceAll("\\(.*?\\) ", "");
-        System.out.println(key);
+        String value = "theegoed en \n\r43ander porselein";
+        String nv  = value.replaceAll("[\r\n]", "\u0000");
+
+        System.out.println("value: " + value);
+        System.out.println("ralue: " + nv);
     }
 }
