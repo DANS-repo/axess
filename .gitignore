@@ -28,6 +28,8 @@ hs_err_pid*
 
 # loadable test resources
 /src/test/test-set/
+*.accdb
+*.mdb
 
 # test output
 /axxess-out/

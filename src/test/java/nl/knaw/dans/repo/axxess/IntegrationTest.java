@@ -41,6 +41,10 @@ public class IntegrationTest {
         for (String[] name : databases) {
             assert deleteDirectory(getAcc2csvDir(name[0]));
             assert deleteDirectory(getCsv2accDir(name[0]));
+            File dbFile = FileUtils.getFile(baseDirectory, name[0], "db", name[1]);
+            if (!dbFile.exists()) {
+                loadFromUrl(name[2], dbFile);
+            }
         }
     }
 
