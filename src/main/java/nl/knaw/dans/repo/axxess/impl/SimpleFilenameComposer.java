@@ -2,7 +2,7 @@ package nl.knaw.dans.repo.axxess.impl;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.axxess.acc2csv.FilenameComposer;
+import nl.knaw.dans.repo.axxess.core.FilenameComposer;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class SimpleFilenameComposer implements FilenameComposer {
 
-    public String getDabaseMetadataFilename(Database db) throws IOException {
+    public String getMetadataFilename(Database db) throws IOException {
         String mdName = "_metadata";
         while (db.getTableNames().contains(mdName)) {
             mdName = "_" + mdName;
@@ -30,5 +30,15 @@ public class SimpleFilenameComposer implements FilenameComposer {
     public String getArchiveFilename(Database db) {
         String basename = db.getFile().getName();
         return String.format("%s.csv.zip", basename);
+    }
+
+    @Override
+    public String getMetadataFilenamePattern() {
+        return ".*\\.[_]*metadata\\.csv";
+    }
+
+    @Override
+    public String getDatabaseFilename(String metadataFilename, String extension) {
+        return metadataFilename.replaceAll("\\.[_]*metadata.csv", extension);
     }
 }

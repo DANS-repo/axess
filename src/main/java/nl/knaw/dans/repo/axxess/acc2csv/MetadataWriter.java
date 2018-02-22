@@ -52,7 +52,7 @@ public class MetadataWriter extends AbstractWriter {
      */
     public File writeDatabaseMetadata(Database db, CSVFormat format, boolean extended)
       throws IOException, AxxessException {
-        String filename = buildPaths(getFilenameComposer().getDabaseMetadataFilename(db));
+        String filename = buildPaths(getFilenameComposer().getMetadataFilename(db));
         File file = new File(filename);
         if (file.exists()) {
             throw new AxxessException("File exists: " + file.getAbsolutePath());

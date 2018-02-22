@@ -1,8 +1,10 @@
 package nl.knaw.dans.repo.axxess.csv2acc.xdb;
 
+import com.healthmarketscience.jackcess.DataType;
 import nl.knaw.dans.repo.axxess.core.KTV;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -63,6 +65,10 @@ public class XDatabaseObject {
           .orElse(0);
     }
 
+    public DataType getDataType(String key) {
+        return DataType.valueOf(getString(key));
+    }
+
     public List<String> getList(String key) {
         return ktvLines
           .stream()
@@ -70,6 +76,12 @@ public class XDatabaseObject {
           .findFirst()
           .map(ktv -> ((List<String>) ktv.getValue()))
           .orElse(Collections.emptyList());
+    }
+
+    public String[] getStringArray(String key) {
+        List<String> list = getList(key);
+        String[] strings = new String[list.size()];
+        return list.toArray(strings);
     }
 
 

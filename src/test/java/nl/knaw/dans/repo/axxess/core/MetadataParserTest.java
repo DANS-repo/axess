@@ -34,7 +34,7 @@ public class MetadataParserTest {
           "CLIWOC21,Geodata,Lookup_ES_WindDirection,Lookup_ES_WindForce,Lookup_FR_WindDirection,Lookup_FR_WindForce," +
             "Lookup_NL_WindDirection,Lookup_NL_WindForce,Lookup_UK_WindDirection,Lookup_UK_WindForce," +
             "Magnetic_Declinations,ShipLogbookID,Weather";
-        List<String> tablenNames = Arrays.asList(tableNameStr.split(KTV.CSV_DELIMITER));
+        List<String> tablenNames = Arrays.asList(tableNameStr.split(Axxess.CSV_DELIMITER));
         assertLinesMatch(tablenNames, xdb.getList("Table names"));
 
         assertEquals(0, xdb.getRelationships().size());

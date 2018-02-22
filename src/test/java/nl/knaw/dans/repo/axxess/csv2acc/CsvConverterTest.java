@@ -5,9 +5,9 @@ import org.junit.jupiter.api.Test;
 public class CsvConverterTest {
 
 
-    @Test
-    void createDb() throws Exception {
-        CsvConverter converter = new CsvConverter();
-        converter.builtDatabase();
-    }
+    // @Test
+    // void createDb() throws Exception {
+    //     Csv2AccessConverter converter = new Csv2AccessConverter();
+    //     converter.builtDatabase();
+    // }
 }

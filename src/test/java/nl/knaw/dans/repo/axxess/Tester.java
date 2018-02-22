@@ -7,10 +7,9 @@ public class Tester {
 
     public static void main(String[] args) {
 
-        String value = "theegoed en \n\r43ander porselein";
-        String nv  = value.replaceAll("[\r\n]", "\u0000");
+        String filename = "AccWebFAQ.MDB.___metadata.csv";
+        String name = filename.replaceAll("\\.[_]*metadata.csv", ".accdb");
 
-        System.out.println("value: " + value);
-        System.out.println("ralue: " + nv);
+        System.out.println(name);
     }
 }

@@ -3,6 +3,7 @@ package nl.knaw.dans.repo.axxess.csv2acc;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XColumn;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
+import nl.knaw.dans.repo.axxess.csv2acc.xdb.XIndex;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XQuery;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XRelationship;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XTable;
@@ -59,6 +60,9 @@ public class MetadataParser {
             int idxt = -1;
             XColumn xtc = null;
             int idxtc = -1;
+            XIndex xti = null;
+            int idxti = -1;
+
             int recordCount = 0;
             CSVParser parser = new CSVParser(reader, csvFormat);
             for (CSVRecord record : parser) {
@@ -90,6 +94,8 @@ public class MetadataParser {
                     } else if (ktv.isTableProp()) {
                         if (idxt != index) {
                             idxt = index;
+                            idxti = -1;
+                            idxtc = -1;
                             xt = null;
                         }
                         if (xt == null) {
@@ -97,6 +103,20 @@ public class MetadataParser {
                             xdb.addTable(xt);
                         }
                         xt.addKtv(ktv);
+                    } else if (ktv.isTableIndexProp()) {
+                        int secondIndex = ktv.getSecondIndex();
+                        if (idxti != secondIndex) {
+                            idxti = secondIndex;
+                            xti = null;
+                        }
+                        if (xti == null) {
+                            xti = new XIndex();
+                            if (xt == null) {
+                                throw new IOException("Bad format: Index without Table metadata");
+                            }
+                            xt.addIndex(xti);
+                        }
+                        xti.addKtv(ktv);
                     } else if (ktv.isTableColumnProp()) {
                         int secondIndex = ktv.getSecondIndex();
                         if (idxtc != secondIndex) {

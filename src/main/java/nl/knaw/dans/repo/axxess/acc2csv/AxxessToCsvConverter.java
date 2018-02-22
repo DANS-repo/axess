@@ -2,28 +2,25 @@ package nl.knaw.dans.repo.axxess.acc2csv;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
+import nl.knaw.dans.repo.axxess.core.AbstractConverter;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
+import nl.knaw.dans.repo.axxess.core.FilenameComposer;
 import nl.knaw.dans.repo.axxess.impl.SimpleEncodingDetector;
 import nl.knaw.dans.repo.axxess.impl.StaticEncodingDetector;
 import nl.knaw.dans.repo.axxess.impl.ZipArchiver;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.csv.CSVFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AxxessToCsvConverter {
+public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter> {
 
-    public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-out";
+    public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-csv-out";
 
     private static Logger LOG = LoggerFactory.getLogger(AxxessToCsvConverter.class);
 
@@ -31,45 +28,19 @@ public class AxxessToCsvConverter {
     private final TableDataWriter tableDataWriter;
 
     private EncodingDetector encodingDetector;
-    private CSVFormat csvFormat;
-    private File targetDirectory;
     private Archiver archiver;
     private boolean archiveResults;
     private boolean compressArchive;
-    private boolean addManifest;
-
-    private int dbCount;
-    private List<Throwable> errorList = new ArrayList<>();
 
     public AxxessToCsvConverter() {
         metadataWriter = new MetadataWriter();
         tableDataWriter = new TableDataWriter();
     }
 
-    public AxxessToCsvConverter withTargetDirectory(String targetDirectory) throws IOException {
-        return withTargetDirectory(new File(targetDirectory));
-    }
-
-    public AxxessToCsvConverter withTargetDirectory(File targetDirectory) throws IOException {
-        this.targetDirectory = targetDirectory.getAbsoluteFile();
-        assert this.targetDirectory.exists() || this.targetDirectory.mkdirs();
-        if (!this.targetDirectory.canWrite()) {
-            throw new IOException("Target directory not writable: " + this.targetDirectory.getAbsolutePath());
-        }
-        return this;
-    }
-
-    public File getTargetDirectory() {
-        if (targetDirectory == null) {
-            targetDirectory = new File(".", DEFAULT_OUTPUT_DIRECTORY).getAbsoluteFile();
-        }
-        return targetDirectory;
-    }
-
     public AxxessToCsvConverter withFilenameComposer(FilenameComposer filenameComposer) {
         metadataWriter.setFilenameComposer(filenameComposer);
         tableDataWriter.setFilenameComposer(filenameComposer);
-        return this;
+        return super.withFilenameComposer(filenameComposer);
     }
 
     public AxxessToCsvConverter withEncodingDetector(EncodingDetector detector) {
@@ -79,11 +50,6 @@ public class AxxessToCsvConverter {
 
     public AxxessToCsvConverter withForceSourceEncoding(String charsetName) {
         return withEncodingDetector(new StaticEncodingDetector(charsetName));
-    }
-
-    public AxxessToCsvConverter withCSVFormat(CSVFormat csvFormat) {
-        this.csvFormat = csvFormat;
-        return this;
     }
 
     public AxxessToCsvConverter withArchiveResults(boolean archiveResults) {
@@ -101,39 +67,20 @@ public class AxxessToCsvConverter {
         return this;
     }
 
-    public AxxessToCsvConverter withManifest(boolean addManifest) {
-        this.addManifest = addManifest;
-        return this;
+    @Override
+    public String getDefaultOutputDirectory() {
+        return DEFAULT_OUTPUT_DIRECTORY;
     }
 
-    public List<File> convert(String filename) throws AxxessException {
-        reset();
-        List<File> csvFiles = new ArrayList<>();
-        convert(new File(filename).getAbsoluteFile(), getTargetDirectory(), csvFiles);
-        return csvFiles;
-    }
-
+    @Override
     public List<File> convert(File file) throws AxxessException {
         reset();
-        List<File> csvFiles = new ArrayList<>();
-        convert(file.getAbsoluteFile(), getTargetDirectory(), csvFiles);
-        return csvFiles;
+        List<File> resultFiles = new ArrayList<>();
+        convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
+        return resultFiles;
     }
 
-    public int getConvertedDatabaseCount() {
-        return dbCount;
-    }
-
-    public List<Throwable> getErrorList() {
-        return errorList;
-    }
-
-    private void reset() {
-        errorList.clear();
-        dbCount = 0;
-    }
-
-    private void convert(File file, File targetDirectory, List<File> convertedFiles) throws AxxessException {
+    private void convert(File file, File targetDirectory, List<File> resultFiles) throws AxxessException {
         if (file.isDirectory()) {
             File td = new File(targetDirectory, file.getName());
             File[] files = file.listFiles();
@@ -141,15 +88,14 @@ public class AxxessToCsvConverter {
                 return;
             }
             for (File f : files) {
-                convert(f, td, convertedFiles);
+                convert(f, td, resultFiles);
             }
         } else if (isAccessFile(file)) {
             try {
-                List<File> csvFiles = doConvert(file, targetDirectory);
-                convertedFiles.addAll(csvFiles);
+                resultFiles.addAll(doConvert(file, targetDirectory));
             } catch (IOException e) {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
-                errorList.add(e);
+                addError(e);
             }
         } else {
             LOG.warn("File is not an access file: {}", file);
@@ -176,13 +122,13 @@ public class AxxessToCsvConverter {
             csvFiles.addAll(tableFiles);
             LOG.info("Converted {} to {}", file.getName(), targetDirectory.getAbsolutePath());
 
-            if (addManifest) {
+            if (hasManifest()) {
                 addManifest(csvFiles, targetDirectory);
             }
 
             if (archiveResults) {
                 File targetFile =
-                  new File(targetDirectory, metadataWriter.getFilenameComposer().getArchiveFilename(db));
+                  new File(targetDirectory, getFilenameComposer().getArchiveFilename(db));
                 File archived = getArchiver().archive(csvFiles, compressArchive, targetFile);
                 LOG.info("Archived {} to {}", file.getName(), archived.getAbsolutePath());
                 resultFiles.add(archived);
@@ -192,7 +138,7 @@ public class AxxessToCsvConverter {
             } else {
                 resultFiles = csvFiles;
             }
-            dbCount++;
+            increaseDbCount();
             return resultFiles;
         } finally {
             if (db != null) {
@@ -204,15 +150,9 @@ public class AxxessToCsvConverter {
     private Optional<Charset> getEncoding(Database db) throws IOException {
         if (encodingDetector == null) {
             encodingDetector = new SimpleEncodingDetector();
+            LOG.debug("Using EncodingDetector {}", encodingDetector);
         }
         return encodingDetector.detectEncoding(db);
-    }
-
-    private CSVFormat getCSVFormat() {
-        if (csvFormat == null) {
-            csvFormat = CSVFormat.RFC4180;
-        }
-        return csvFormat;
     }
 
     private boolean isAccessFile(File file) {
@@ -229,34 +169,6 @@ public class AxxessToCsvConverter {
             archiver = new ZipArchiver();
         }
         return archiver;
-    }
-
-    private void addManifest(List<File> files, File targetDirectory) throws IOException {
-        File manifest = new File(targetDirectory, "manifest-sha1.txt");
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(manifest, "UTF-8");
-            for (File file : files) {
-                out.println(String.format("%s %s", file.getName(), computeSHA1(file)));
-            }
-            files.add(manifest);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-        }
-    }
-
-    private String computeSHA1(File file) throws IOException {
-        BufferedInputStream buff = null;
-        try {
-            buff = new BufferedInputStream(new FileInputStream(file));
-            return DigestUtils.sha1Hex(buff);
-        } finally {
-            if (buff != null) {
-                buff.close();
-            }
-        }
     }
 
 

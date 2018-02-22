@@ -2,6 +2,7 @@ package nl.knaw.dans.repo.axxess;
 
 import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.acc2csv.AxxessToCsvConverter;
+import nl.knaw.dans.repo.axxess.csv2acc.Csv2AxxessConverter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IntegrationTest {
 
@@ -25,15 +27,17 @@ public class IntegrationTest {
     private static String[][] databases = {
       // File format: V1997 [VERSION_3]   AccessVersion: 07.53
       {"avereest", "avereest.mdb",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content" },
+        "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content"},
 
       // File format: V2000 [VERSION_4]   AccessVersion: 08.50
       {"walcheren", "Boedelbestand Walcheren 1755-1855.MDB",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content" },
+        "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content"},
 
       // File format: V2007 [VERSION_12]  AccessVersion: 09.50
       {"kohier", "KOHIER1748.accdb",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content" }
+        "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content"},
+
+      //{"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"}
     };
 
     @BeforeAll
@@ -74,7 +78,9 @@ public class IntegrationTest {
                 return false;
             }
         });
-        if (files == null || files.length < 1) throw new IOException("dbFile does not exist: " + name);
+        if (files == null || files.length < 1) {
+            throw new IOException("dbFile does not exist: " + name);
+        }
         return files[0];
     }
 
@@ -85,7 +91,7 @@ public class IntegrationTest {
 
     private static File getMetadataFile(String name) throws IOException {
         String metadataFilename = getDbName(name) + "._metadata.csv";
-        return  new File(getAcc2csvFilesDir(name), metadataFilename);
+        return new File(getAcc2csvFilesDir(name), metadataFilename);
     }
 
     private static File getAcc2csvDir(String name) {
@@ -106,34 +112,6 @@ public class IntegrationTest {
 
     private static String getDbName(String name) throws IOException {
         return getDbFile(name).getName();
-    }
-
-    @Test
-    void acc2csv2acc() throws Exception {
-        for (String name[] : databases) {
-            acc2csvZipped(name[0]);
-            acc2csvFiled(name[0]);
-        }
-    }
-
-    private void acc2csvZipped(String name) throws Exception {
-        List<File> fileList = new AxxessToCsvConverter()
-          .withTargetDirectory(getAcc2csvZipDir(name))
-          .withArchiveResults(true)
-          .withCompressArchive(true)
-          .withManifest(true)
-          .convert(getDbFile(name));
-        assertEquals(1, fileList.size());
-        assertEquals(getZipFile(name), fileList.get(0));
-    }
-
-    private void acc2csvFiled(String name) throws Exception {
-        List<File> fileList = new AxxessToCsvConverter()
-          .withTargetDirectory(getAcc2csvFilesDir(name))
-          .withManifest(true)
-          .convert(getDbFile(name));
-        assertTrue(fileList.contains(getMetadataFile(name)));
-        assertTrue(getMetadataFile(name).exists());
     }
 
     private static File loadFromUrl(String urlString, File file) throws IOException {
@@ -171,6 +149,51 @@ public class IntegrationTest {
                 bif.close();
             }
         }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    void acc2csv2acc() throws Exception {
+        for (String[] name : databases) {
+            File dbFile = FileUtils.getFile(baseDirectory, name[0], "db", name[1]);
+            if (!dbFile.exists()) {
+                System.out.println("dbFile does not exist: " + dbFile);
+            } else {
+                //acc2csvZipped(name[0]);
+                acc2csvFiled(name[0]);
+
+                csv2acc(name[0]);
+            }
+        }
+    }
+
+    private void acc2csvZipped(String name) throws Exception {
+        List<File> fileList = new AxxessToCsvConverter()
+          .withTargetDirectory(getAcc2csvZipDir(name))
+          .withArchiveResults(true)
+          .withCompressArchive(true)
+          .withManifest(true)
+          .convert(getDbFile(name));
+        assertEquals(1, fileList.size());
+        assertEquals(getZipFile(name), fileList.get(0));
+    }
+
+    private void acc2csvFiled(String name) throws Exception {
+        List<File> fileList = new AxxessToCsvConverter()
+          .withTargetDirectory(getAcc2csvFilesDir(name))
+          .withManifest(true)
+          .convert(getDbFile(name));
+        assertTrue(fileList.contains(getMetadataFile(name)));
+        assertTrue(getMetadataFile(name).exists());
+    }
+
+    private void csv2acc(String name) throws Exception {
+        List<File> fileList = new Csv2AxxessConverter()
+          .withTargetDirectory(getCsv2accDir(name))
+          .withManifest(true)
+          .convert(getAcc2csvFilesDir(name));
+
     }
 
 

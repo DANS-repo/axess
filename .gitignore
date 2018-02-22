@@ -27,7 +27,6 @@ hs_err_pid*
 /axxess.iml
 
 # loadable test resources
-/src/test/test-set/
 *.accdb
 *.mdb
 
@@ -35,3 +34,4 @@ hs_err_pid*
 /axxess-out/
 /src/test/resources/integration/*/acc2csv/
 /src/test/resources/integration/*/csv2acc/
+/src/test/test-set/

@@ -1,6 +1,7 @@
 package nl.knaw.dans.repo.axxess.acc2csv;
 
 
+import nl.knaw.dans.repo.axxess.core.FilenameComposer;
 import nl.knaw.dans.repo.axxess.impl.SimpleFilenameComposer;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FilenameUtils;

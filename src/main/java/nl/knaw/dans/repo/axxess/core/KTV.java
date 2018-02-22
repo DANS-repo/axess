@@ -1,7 +1,6 @@
 package nl.knaw.dans.repo.axxess.core;
 
 import com.healthmarketscience.jackcess.DataType;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 import java.util.Arrays;
@@ -11,7 +10,6 @@ import java.util.regex.Pattern;
 
 public class KTV {
 
-    public static final String CSV_DELIMITER = String.valueOf(CSVFormat.RFC4180.getDelimiter());
     private static Pattern indexPattern = Pattern.compile("-?\\d+");
 
     private final String key;
@@ -93,6 +91,10 @@ public class KTV {
         return Pattern.matches(ObjectType.TABLE.pattern(), prefix);
     }
 
+    public boolean isTableIndexProp() {
+        return Pattern.matches(ObjectType.TABLE_INDEX.pattern(), prefix);
+    }
+
     public boolean isTableColumnProp() {
         return Pattern.matches(ObjectType.TABLE_COLUMN.pattern(), prefix);
     }
@@ -107,11 +109,13 @@ public class KTV {
         } else if (DataType.BOOLEAN == dataType) {
             return value.equals("true");
         } else if (DataType.COMPLEX_TYPE == dataType) {
-            return Arrays.asList(value.split(CSV_DELIMITER));
+            return Arrays.asList(value.split(Axxess.CSV_DELIMITER));
         } else if (DataType.LONG == dataType) {
             return Long.parseLong(value);
         } else if (DataType.INT == dataType) {
             return Integer.parseInt(value);
+        } else if (DataType.BINARY == dataType) {
+            return value;
         } else {
             throw new IllegalArgumentException("Unknown DataType: " + type);
         }

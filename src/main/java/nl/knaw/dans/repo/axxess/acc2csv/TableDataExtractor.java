@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
 
 public class TableDataExtractor {
 
-    private static final String[] textDataArray = {"TEXT", "GUID", "MEMO"};
-    private static final List<String> textDataTypes = Arrays.asList(textDataArray);
-
 
     public int getTableData(Table table, Appendable out, CSVFormat format) throws IOException {
         List<? extends Column> columns = table.getColumns();
