@@ -37,7 +37,11 @@ public class IntegrationTest {
       {"kohier", "KOHIER1748.accdb",
         "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content"},
 
-      //{"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"}
+      {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
+
+      {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
+
+      {"polyglot", "Polyglot.mdb", "http://www.theaccessweb.com/downloads/Polygloth_pt.zip"}
     };
 
     @BeforeAll
@@ -169,30 +173,36 @@ public class IntegrationTest {
     }
 
     private void acc2csvZipped(String name) throws Exception {
-        List<File> fileList = new AxxessToCsvConverter()
+        AxxessToCsvConverter converter = new AxxessToCsvConverter()
           .withTargetDirectory(getAcc2csvZipDir(name))
           .withArchiveResults(true)
           .withCompressArchive(true)
-          .withManifest(true)
-          .convert(getDbFile(name));
+          .withManifest(true);
+        List<File> fileList = converter.convert(getDbFile(name));
         assertEquals(1, fileList.size());
         assertEquals(getZipFile(name), fileList.get(0));
+        assertEquals(1, converter.getConvertedDatabaseCount());
+        assertEquals(0, converter.getErrorCount());
     }
 
     private void acc2csvFiled(String name) throws Exception {
-        List<File> fileList = new AxxessToCsvConverter()
+        AxxessToCsvConverter converter = new AxxessToCsvConverter()
           .withTargetDirectory(getAcc2csvFilesDir(name))
-          .withManifest(true)
-          .convert(getDbFile(name));
+          .withManifest(true);
+        List<File> fileList = converter.convert(getDbFile(name));
         assertTrue(fileList.contains(getMetadataFile(name)));
         assertTrue(getMetadataFile(name).exists());
+        assertEquals(1, converter.getConvertedDatabaseCount());
+        assertEquals(0, converter.getErrorCount());
     }
 
     private void csv2acc(String name) throws Exception {
-        List<File> fileList = new Csv2AxxessConverter()
+        Csv2AxxessConverter converter = new Csv2AxxessConverter()
           .withTargetDirectory(getCsv2accDir(name))
           .withManifest(true)
-          .convert(getAcc2csvFilesDir(name));
+          .setIncludeIndexes(true);
+        List<File> fileList = converter.convert(getAcc2csvFilesDir(name));
+        //assertEquals(1, fileList.size());
 
     }
 

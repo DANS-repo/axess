@@ -1,15 +1,12 @@
 package nl.knaw.dans.repo.axxess;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.healthmarketscience.jackcess.DataType;
 
 public class Tester {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        System.out.println(DataType.TEXT.getUnitSize());
 
-        String filename = "AccWebFAQ.MDB.___metadata.csv";
-        String name = filename.replaceAll("\\.[_]*metadata.csv", ".accdb");
-
-        System.out.println(name);
     }
 }

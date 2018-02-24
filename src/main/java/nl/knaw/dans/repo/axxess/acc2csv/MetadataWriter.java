@@ -58,7 +58,7 @@ public class MetadataWriter extends AbstractWriter {
             throw new AxxessException("File exists: " + file.getAbsolutePath());
         }
         OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"));
-        extractor.getMetadata(db, extended).printVertical(osw, buildVerticalFormat(format));
+        extractor.getMetadata(db).printVertical(osw, buildVerticalFormat(format));
         LOG.debug("Wrote metadata: {}", file.getName());
         return file;
     }

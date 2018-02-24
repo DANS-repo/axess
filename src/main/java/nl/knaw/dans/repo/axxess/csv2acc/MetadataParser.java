@@ -1,5 +1,6 @@
 package nl.knaw.dans.repo.axxess.csv2acc;
 
+import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XColumn;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
@@ -135,7 +136,8 @@ public class MetadataParser {
                 }
                 recordCount++;
             }
-            LOG.info("Parsed {} records to intermediate class structure {}", recordCount, xdb);
+            LOG.info("Parsed {} records to intermediate class structure. FileFormat={}", recordCount,
+              xdb.getString(Axxess.DB_FILE_FORMAT));
             return xdb;
         } finally {
             reader.close();

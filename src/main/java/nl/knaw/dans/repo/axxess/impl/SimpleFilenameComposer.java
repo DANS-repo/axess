@@ -4,7 +4,9 @@ import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
 import nl.knaw.dans.repo.axxess.core.FilenameComposer;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * Created on 2018-02-13 13:46.
@@ -33,12 +35,21 @@ public class SimpleFilenameComposer implements FilenameComposer {
     }
 
     @Override
-    public String getMetadataFilenamePattern() {
-        return ".*\\.[_]*metadata\\.csv";
+    public boolean isMetadataFilename(File file) {
+        return Pattern.matches(".*\\.[_]*metadata\\.csv", file.getName());
     }
 
     @Override
     public String getDatabaseFilename(String metadataFilename, String extension) {
         return metadataFilename.replaceAll("\\.[_]*metadata.csv", extension);
+    }
+
+    @Override
+    public File getTableDataFile(File metadataFile, String tableName) {
+        if (!isMetadataFilename(metadataFile)) {
+            throw new IllegalArgumentException("Not a metadata file: " + metadataFile.getAbsolutePath());
+        }
+        String basename = metadataFile.getName().replaceAll("\\.[_]*metadata.csv", "");
+        return new File(metadataFile.getParent(), String.format("%s.%s.csv", basename, tableName));
     }
 }

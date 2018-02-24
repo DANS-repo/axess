@@ -3,7 +3,9 @@ package nl.knaw.dans.repo.axxess.core;
 import com.healthmarketscience.jackcess.DataType;
 import org.apache.commons.csv.CSVRecord;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +30,7 @@ public class KTV {
         prefix = iterator.next();
         key = iterator.next();
         type = DataType.valueOf(iterator.next());
-        value = convert(type, iterator.next());
+        value = Axxess.convert(type, iterator.next());
     }
 
     public String getKey() {
@@ -70,7 +72,7 @@ public class KTV {
     }
 
     public KTV cloneClean() {
-        KTV clone = new KTV(key.replaceAll("\\(.*?\\) ", ""), type, value);
+        KTV clone = new KTV(key.replaceAll("\\(.*?\\)", ""), type, value);
         clone.prefix = prefix;
         return clone;
     }
@@ -99,26 +101,5 @@ public class KTV {
         return Pattern.matches(ObjectType.TABLE_COLUMN.pattern(), prefix);
     }
 
-    public Object convert(DataType dataType, String value) {
-        if (DataType.TEXT == dataType) {
-            return value;
-        } else if (DataType.MEMO == dataType) {
-            return value;
-        } else if (DataType.GUID == dataType) {
-            return value;
-        } else if (DataType.BOOLEAN == dataType) {
-            return value.equals("true");
-        } else if (DataType.COMPLEX_TYPE == dataType) {
-            return Arrays.asList(value.split(Axxess.CSV_DELIMITER));
-        } else if (DataType.LONG == dataType) {
-            return Long.parseLong(value);
-        } else if (DataType.INT == dataType) {
-            return Integer.parseInt(value);
-        } else if (DataType.BINARY == dataType) {
-            return value;
-        } else {
-            throw new IllegalArgumentException("Unknown DataType: " + type);
-        }
-    }
 
 }

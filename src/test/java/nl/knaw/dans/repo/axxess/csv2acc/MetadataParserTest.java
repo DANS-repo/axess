@@ -24,4 +24,11 @@ public class MetadataParserTest {
             }
         }
     }
+
+    @Test
+    void getProps() throws Exception {
+        String filename = "src/test/resources/integration/kohier/acc2csv/files/KOHIER1748.accdb._metadata.csv";
+        XDatabase xdb = MetadataParser.parse(filename);
+
+    }
 }

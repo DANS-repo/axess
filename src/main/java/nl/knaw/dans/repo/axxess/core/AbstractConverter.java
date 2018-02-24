@@ -72,6 +72,10 @@ public abstract class AbstractConverter<T extends AbstractConverter> {
         return dbCount;
     }
 
+    public int getErrorCount() {
+        return errorList.size();
+    }
+
     public List<Throwable> getErrorList() {
         return errorList;
     }

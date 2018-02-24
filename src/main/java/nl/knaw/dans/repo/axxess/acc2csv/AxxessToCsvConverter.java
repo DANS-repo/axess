@@ -93,7 +93,7 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
         } else if (isAccessFile(file)) {
             try {
                 resultFiles.addAll(doConvert(file, targetDirectory));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
                 addError(e);
             }

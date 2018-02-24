@@ -19,16 +19,11 @@ import java.util.stream.Collectors;
 
 public class MetadataExtractor implements Axxess {
 
-    public KeyTypeValueMatrix getMetadata(Database db, boolean extended) throws IOException {
-        KeyTypeValueMatrix matrix = getDatabaseMetadata(db)
+    public KeyTypeValueMatrix getMetadata(Database db) throws IOException {
+        return getDatabaseMetadata(db)
           .append(getRelationshipMetadata(db))
-          .append(getQueryMetadata(db));
-        if (extended) {
-            matrix.append(getExtendedTableMetadata(db));
-        } else {
-            matrix.append(getTableMetadata(db));
-        }
-        return matrix;
+          .append(getQueryMetadata(db))
+          .append(getExtendedTableMetadata(db));
     }
 
     public KeyTypeValueMatrix getDatabaseMetadata(Database db) throws IOException {
@@ -39,16 +34,12 @@ public class MetadataExtractor implements Axxess {
           .add(DB_FILENAME, DataType.TEXT, db.getFile().getName())
           .add(DB_PASSWORD, DataType.TEXT, db.getDatabasePassword())
           .add(DB_FILE_FORMAT, DataType.TEXT, db.getFileFormat())
-          .add(DB_CHARSET, DataType.TEXT, db.getCharset());
+          .add(DB_CHARSET, DataType.TEXT, db.getCharset())
+          .add(DB_IS_ALLOW_AUTO_NUMBER_INSERT, DataType.BOOLEAN, db.isAllowAutoNumberInsert())
+          .add(DB_COLUMN_ORDER, DataType.TEXT, db.getColumnOrder());
 
-        PropertyMap propertyMap = db.getDatabaseProperties();
-        PropertyMap.Property accessVersion = propertyMap.get(PropertyMap.ACCESS_VERSION_PROP);
-        if (accessVersion != null) {
-            matrix.add(PropertyMap.ACCESS_VERSION_PROP, accessVersion.getType(), accessVersion.getValue());
-        }
-        PropertyMap.Property build = propertyMap.get(DB_BUILD);
-        if (build != null) {
-            matrix.add(DB_BUILD, build.getType(), build.getValue());
+        for (PropertyMap.Property prop : db.getDatabaseProperties()) {
+            matrix.add(DB_DATABASE_PROP + prop.getName(), prop.getType(), prop.getValue());
         }
         for (PropertyMap.Property prop : db.getSummaryProperties()) {
             matrix.add(DB_SUMMARY_PROP + prop.getName(), prop.getType(), prop.getValue());
@@ -66,18 +57,6 @@ public class MetadataExtractor implements Axxess {
         return matrix;
     }
 
-    public KeyTypeValueMatrix getTableMetadata(Database db) throws IOException {
-        KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
-        int tableCount = 0;
-        for (String tableName : db.getTableNames()) {
-            Table table = db.getTable(tableName);
-            KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
-            tableMatrix.prefixKeys(ObjectType.TABLE, tableCount);
-            matrix.append(tableMatrix);
-            ++tableCount;
-        }
-        return matrix;
-    }
 
     public KeyTypeValueMatrix getTableMetadata(Table table, boolean includeDbName) throws IOException {
         List<String> columnNames = table.getColumns()
@@ -93,11 +72,11 @@ public class MetadataExtractor implements Axxess {
                                        .map(Index::getName)
                                        .collect(Collectors.toList());
         String primaryKeyIndexName = table.getIndexes()
-                                      .stream()
-                                      .filter(Index::isPrimaryKey)
-                                      .map(Index::getName)
-                                      .findFirst()
-                                      .orElse(null);
+                                          .stream()
+                                          .filter(Index::isPrimaryKey)
+                                          .map(Index::getName)
+                                          .findFirst()
+                                          .orElse(null);
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
           .add(TABLE_NAME, DataType.TEXT, table.getName());
         if (includeDbName) {
@@ -110,6 +89,9 @@ public class MetadataExtractor implements Axxess {
               .add(TABLE_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, relationshipNames))
               .add(TABLE_INDEX_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, indexNames))
               .add(TABLE_PRIMARY_KEY_INDEX, DataType.TEXT, primaryKeyIndexName);
+        for (PropertyMap.Property prop : table.getProperties()) {
+            matrix.add(TABLE_PROP + prop.getName(), prop.getType(), prop.getValue());
+        }
         return matrix;
     }
 
@@ -162,6 +144,7 @@ public class MetadataExtractor implements Axxess {
         return new KeyTypeValueMatrix()
           .add(Q_NAME, DataType.TEXT, query.getName())
           .add(Q_TYPE, DataType.TEXT, query.getType())
+          .add(Q_IS_HIDDEN, DataType.BOOLEAN, query.isHidden())
           .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, query.getParameters()))
           .add(Q_SQL, DataType.TEXT, query.toSQLString().replaceAll("[\r\n]", " "));
     }
@@ -169,6 +152,7 @@ public class MetadataExtractor implements Axxess {
     public KeyTypeValueMatrix getExtendedTableMetadata(Database db) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
         int tableCount = 0;
+
         for (String tableName : db.getTableNames()) {
             Table table = db.getTable(tableName);
             KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
@@ -197,12 +181,13 @@ public class MetadataExtractor implements Axxess {
 
     public KeyTypeValueMatrix getIndexMetadata(Index index) throws IOException {
         List<String> columnNames = index.getColumns()
-          .stream()
-          .map(Index.Column::getName)
-          .collect(Collectors.toList());
-        String referencedIndexName = index.getReferencedIndex() == null? null : index.getReferencedIndex().getName();
-        KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
-          .add(I_NAME, DataType.TEXT, index.getName())
+                                        .stream()
+                                        .map(Index.Column::getName)
+                                        .collect(Collectors.toList());
+        String referencedIndexName =
+          index.getReferencedIndex() == null ? null : index.getReferencedIndex().getName().replaceAll("^\\.", "");
+        return new KeyTypeValueMatrix()
+          .add(I_NAME, DataType.TEXT, index.getName().replaceAll("^\\.", ""))
           .add(I_COLUMN_COUNT, DataType.INT, index.getColumnCount())
           .add(I_COLUMN_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, columnNames))
           .add(I_REFERENCED_INDEX, DataType.TEXT, referencedIndexName)
@@ -211,7 +196,6 @@ public class MetadataExtractor implements Axxess {
           .add(I_IS_REQUIRED, DataType.BOOLEAN, index.isRequired())
           .add(I_IS_UNIQUE, DataType.BOOLEAN, index.isUnique())
           .add(I_SHOULD_IGNORE_NULLS, DataType.BOOLEAN, index.shouldIgnoreNulls());
-        return matrix;
     }
 
     public KeyTypeValueMatrix getColumnMetadata(Column column) throws IOException {
@@ -228,9 +212,7 @@ public class MetadataExtractor implements Axxess {
           .add(C_IS_HYPERLINK, DataType.BOOLEAN, column.isHyperlink())
           .add(C_IS_VARIABLE_LENGTH, DataType.BOOLEAN, column.isVariableLength());
         for (PropertyMap.Property prop : column.getProperties()) {
-            if (!C_EXCLUDED_PROPERTIES.contains(prop.getName())) {
-                matrix.add(C_PROP + prop.getName(), prop.getType(), prop.getValue());
-            }
+            matrix.add(C_PROP + prop.getName(), prop.getType(), prop.getValue());
         }
         Column vhColumn = column.getVersionHistoryColumn();
         if (vhColumn != null) {

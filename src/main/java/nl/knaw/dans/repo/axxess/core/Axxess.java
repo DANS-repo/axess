@@ -1,20 +1,31 @@
 package nl.knaw.dans.repo.axxess.core;
 
+import com.healthmarketscience.jackcess.DataType;
 import org.apache.commons.csv.CSVFormat;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.List;
 
 public interface Axxess {
 
+    Logger LOG = LoggerFactory.getLogger(Axxess.class);
+
+    DateFormat dateParser = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
     String CSV_DELIMITER = String.valueOf(CSVFormat.RFC4180.getDelimiter());
 
     String DB_FILENAME = "Filename";
     String DB_PASSWORD = "Password";
     String DB_FILE_FORMAT = "File format";
-    String DB_BUILD = "Build";
     String DB_CHARSET = "Charset";
+    String DB_IS_ALLOW_AUTO_NUMBER_INSERT = "IsAllowAutoNumberInsert";
+    String DB_COLUMN_ORDER = "ColumnOrder";
 
+    String DB_DATABASE_PROP = "(Database)";
     String DB_SUMMARY_PROP = "(Summary)";
     String DB_USER_DEFINED_PROP = "(User defined)";
 
@@ -34,6 +45,7 @@ public interface Axxess {
     String TABLE_IS_ALLOW_AUTO_NUMBER_INSERT = "IsAllowAutoNumberInsert";
     String TABLE_INDEX_NAMES = "Index names";
     String TABLE_PRIMARY_KEY_INDEX = "PrimaryKeyIndex";
+    String TABLE_PROP = "(Property)";
 
     String R_NAME = "Relationship name";
     String R_CASCADE_DELETES = "CascadeDeletes";
@@ -51,6 +63,7 @@ public interface Axxess {
 
     String Q_NAME = "Query name";
     String Q_TYPE = "Query type";
+    String Q_IS_HIDDEN = "IsHidden";
     String Q_PARAMETERS = "Parameters";
     String Q_SQL = "SQL";
 
@@ -77,26 +90,59 @@ public interface Axxess {
     String C_VERSION_HISTORY_COLUMN = "VersionHistoryColumn";
     String C_PROP = "(Property)";
 
-    List<String> C_EXCLUDED_PROPERTIES = Arrays.asList(
-      "AggregateType",
-      "BoundColumn",
-      "ColumnCount",
-      "ColumnHeads",
-      "ColumnHidden",
-      "ColumnOrder",
-      "ColumnWidth",
-      "ColumnWidths",
-      "CurrencyLCID",
-      "DecimalPlaces",
-      "DisplayControl",
-      "IMEMode",
-      "IMESentenceMode",
-      "ListRows",
-      "ListWidth",
-      "ResultType",
-      "ShowDatePicker",
-      "ShowOnlyRowSourceValues",
-      "TextAlign"
-    );
+    static Object convert(DataType type, String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        if (DataType.BOOLEAN == type) {
+            return value.equals("true");
+        } else if (DataType.BYTE == type) {
+            return Byte.valueOf(value);
+        } else if (DataType.INT == type) {
+            return Integer.parseInt(value);
+        } else if (DataType.LONG == type) {
+            return Integer.parseInt(value);
+        } else if (DataType.MONEY == type) {
+            return new BigDecimal(value);
+        } else if (DataType.FLOAT == type) {
+            return Float.valueOf(value);
+        } else if (DataType.DOUBLE == type) {
+            return Double.valueOf(value);
+        } else if (DataType.SHORT_DATE_TIME == type) {
+            try {
+                return dateParser.parse(value);
+            } catch (ParseException e) {
+                LOG.warn("Could not parse {}", value, e);
+                return null;
+            }
+        } else if (DataType.BINARY == type) {
+            return value;
+        } else if (DataType.TEXT == type) {
+            return value;
+        } else if (DataType.OLE == type) {
+            return value;
+        } else if (DataType.MEMO == type) {
+            return value;
+        } else if (DataType.UNKNOWN_0D == type) {
+            return value;
+        } else if (DataType.GUID == type) {
+            return value;
+        } else if (DataType.NUMERIC == type) {
+            return new BigDecimal(value);
+        } else if (DataType.UNKNOWN_11 == type) {
+            return value;
+        } else if (DataType.COMPLEX_TYPE == type) {
+            return Arrays.asList(value.split(Axxess.CSV_DELIMITER));
+        } else if (DataType.BIG_INT == type) {
+            return Long.valueOf(value);
+        } else if (DataType.UNSUPPORTED_FIXEDLEN == type) {
+            return value;
+        } else if (DataType.UNSUPPORTED_VARLEN == type) {
+            return value;
+        } else {
+            LOG.warn("Unknown DataType: '{}'", type);
+            return value;
+        }
+    }
 
 }
