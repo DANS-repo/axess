@@ -4,7 +4,6 @@ import com.healthmarketscience.jackcess.DataType;
 import nl.knaw.dans.repo.axxess.core.KTV;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -83,8 +82,6 @@ public class XDatabaseObject {
         String[] strings = new String[list.size()];
         return list.toArray(strings);
     }
-
-
 
 
 }

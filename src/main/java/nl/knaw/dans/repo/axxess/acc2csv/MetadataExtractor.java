@@ -19,6 +19,14 @@ import java.util.stream.Collectors;
 
 public class MetadataExtractor implements Axxess {
 
+    private static void appendProperties(KeyTypeValueMatrix matrix, PropertyMap propMap, String keyPrefix) {
+        for (PropertyMap.Property prop : propMap) {
+            DataType dataType = prop.getType();
+            Object value = Axxess.encode(dataType, prop.getValue());
+            matrix.add(keyPrefix + prop.getName(), dataType, value);
+        }
+    }
+
     public KeyTypeValueMatrix getMetadata(Database db) throws IOException {
         return getDatabaseMetadata(db)
           .append(getRelationshipMetadata(db))
@@ -38,25 +46,19 @@ public class MetadataExtractor implements Axxess {
           .add(DB_IS_ALLOW_AUTO_NUMBER_INSERT, DataType.BOOLEAN, db.isAllowAutoNumberInsert())
           .add(DB_COLUMN_ORDER, DataType.TEXT, db.getColumnOrder());
 
-        for (PropertyMap.Property prop : db.getDatabaseProperties()) {
-            matrix.add(DB_DATABASE_PROP + prop.getName(), prop.getType(), prop.getValue());
-        }
-        for (PropertyMap.Property prop : db.getSummaryProperties()) {
-            matrix.add(DB_SUMMARY_PROP + prop.getName(), prop.getType(), prop.getValue());
-        }
-        for (PropertyMap.Property prop : db.getUserDefinedProperties()) {
-            matrix.add(DB_USER_DEFINED_PROP + prop.getName(), prop.getType(), prop.getValue());
-        }
+        appendProperties(matrix, db.getDatabaseProperties(), DB_DATABASE_PROP);
+        appendProperties(matrix, db.getSummaryProperties(), DB_SUMMARY_PROP);
+        appendProperties(matrix, db.getUserDefinedProperties(), DB_USER_DEFINED_PROP);
+
         matrix.add(DB_RELATIONSHIP_COUNT, DataType.INT, relationshipNames.size())
-              .add(DB_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, relationshipNames))
+              .add(DB_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(relationshipNames))
               .add(DB_QUERY_COUNT, DataType.INT, queryNames.size())
-              .add(DB_QUERY_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, queryNames))
+              .add(DB_QUERY_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(queryNames))
               .add(DB_TABLE_COUNT, DataType.INT, db.getTableNames().size())
-              .add(DB_TABLE_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, db.getTableNames()))
+              .add(DB_TABLE_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(db.getTableNames()))
               .prefixKeys(ObjectType.DATABASE);
         return matrix;
     }
-
 
     public KeyTypeValueMatrix getTableMetadata(Table table, boolean includeDbName) throws IOException {
         List<String> columnNames = table.getColumns()
@@ -84,14 +86,13 @@ public class MetadataExtractor implements Axxess {
         }
         matrix.add(TABLE_ROW_COUNT, DataType.INT, table.getRowCount())
               .add(TABLE_COLUMN_COUNT, DataType.INT, table.getColumnCount())
-              .add(TABLE_COLUMN_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, columnNames))
+              .add(TABLE_COLUMN_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(columnNames))
               .add(TABLE_IS_ALLOW_AUTO_NUMBER_INSERT, DataType.BOOLEAN, table.isAllowAutoNumberInsert())
-              .add(TABLE_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, relationshipNames))
-              .add(TABLE_INDEX_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, indexNames))
+              .add(TABLE_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(relationshipNames))
+              .add(TABLE_INDEX_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(indexNames))
               .add(TABLE_PRIMARY_KEY_INDEX, DataType.TEXT, primaryKeyIndexName);
-        for (PropertyMap.Property prop : table.getProperties()) {
-            matrix.add(TABLE_PROP + prop.getName(), prop.getType(), prop.getValue());
-        }
+
+        appendProperties(matrix, table.getProperties(), TABLE_PROP);
         return matrix;
     }
 
@@ -122,9 +123,9 @@ public class MetadataExtractor implements Axxess {
           .add(R_IS_ONE_TO_ONE, DataType.BOOLEAN, relationship.isOneToOne())
           .add(R_IS_RIGHT_OUTER_JOIN, DataType.BOOLEAN, relationship.isRightOuterJoin())
           .add(R_FROM_TABLE, DataType.TEXT, relationship.getFromTable().getName())
-          .add(R_FROM_COLUMNS, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, fromColumnNames))
+          .add(R_FROM_COLUMNS, DataType.COMPLEX_TYPE, Axxess.encodeCollection(fromColumnNames))
           .add(R_TO_TABLE, DataType.TEXT, relationship.getToTable().getName())
-          .add(R_TO_COLUMNS, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, toColumnNames))
+          .add(R_TO_COLUMNS, DataType.COMPLEX_TYPE, Axxess.encodeCollection(toColumnNames))
           .add(R_JOIN_TYPE, DataType.TEXT, relationship.getJoinType());
     }
 
@@ -145,7 +146,7 @@ public class MetadataExtractor implements Axxess {
           .add(Q_NAME, DataType.TEXT, query.getName())
           .add(Q_TYPE, DataType.TEXT, query.getType())
           .add(Q_IS_HIDDEN, DataType.BOOLEAN, query.isHidden())
-          .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, query.getParameters()))
+          .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, Axxess.encodeCollection(query.getParameters()))
           .add(Q_SQL, DataType.TEXT, query.toSQLString().replaceAll("[\r\n]", " "));
     }
 
@@ -189,7 +190,7 @@ public class MetadataExtractor implements Axxess {
         return new KeyTypeValueMatrix()
           .add(I_NAME, DataType.TEXT, index.getName().replaceAll("^\\.", ""))
           .add(I_COLUMN_COUNT, DataType.INT, index.getColumnCount())
-          .add(I_COLUMN_NAMES, DataType.COMPLEX_TYPE, String.join(CSV_DELIMITER, columnNames))
+          .add(I_COLUMN_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(columnNames))
           .add(I_REFERENCED_INDEX, DataType.TEXT, referencedIndexName)
           .add(I_IS_FOREIGN_KEY, DataType.BOOLEAN, index.isForeignKey())
           .add(I_IS_PRIMARY_KEY, DataType.BOOLEAN, index.isPrimaryKey())
@@ -211,9 +212,9 @@ public class MetadataExtractor implements Axxess {
           .add(C_IS_COMPRESSED_UNICODE, DataType.BOOLEAN, column.isCompressedUnicode())
           .add(C_IS_HYPERLINK, DataType.BOOLEAN, column.isHyperlink())
           .add(C_IS_VARIABLE_LENGTH, DataType.BOOLEAN, column.isVariableLength());
-        for (PropertyMap.Property prop : column.getProperties()) {
-            matrix.add(C_PROP + prop.getName(), prop.getType(), prop.getValue());
-        }
+
+        appendProperties(matrix, column.getProperties(), C_PROP);
+
         Column vhColumn = column.getVersionHistoryColumn();
         if (vhColumn != null) {
             matrix.add(C_VERSION_HISTORY_COLUMN, DataType.INT, vhColumn.getColumnIndex());

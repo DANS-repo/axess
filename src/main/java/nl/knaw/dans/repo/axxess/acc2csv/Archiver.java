@@ -1,7 +1,6 @@
 package nl.knaw.dans.repo.axxess.acc2csv;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 

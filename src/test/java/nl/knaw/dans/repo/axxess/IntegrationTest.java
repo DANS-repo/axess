@@ -37,6 +37,8 @@ public class IntegrationTest {
       {"kohier", "KOHIER1748.accdb",
         "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content"},
 
+      {"types", "all_datatypes.mdb", ""},
+
       {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
 
       {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
@@ -199,6 +201,7 @@ public class IntegrationTest {
     private void csv2acc(String name) throws Exception {
         Csv2AxxessConverter converter = new Csv2AxxessConverter()
           .withTargetDirectory(getCsv2accDir(name))
+          .withTargetDatabaseFileFormat(Database.FileFormat.V2010)
           .withManifest(true)
           .setIncludeIndexes(true);
         List<File> fileList = converter.convert(getAcc2csvFilesDir(name));

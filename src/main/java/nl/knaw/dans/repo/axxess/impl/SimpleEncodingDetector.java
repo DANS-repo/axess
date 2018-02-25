@@ -1,8 +1,8 @@
 package nl.knaw.dans.repo.axxess.impl;
 
 import com.healthmarketscience.jackcess.Database;
-import nl.knaw.dans.repo.axxess.acc2csv.MetadataExtractor;
 import nl.knaw.dans.repo.axxess.acc2csv.EncodingDetector;
+import nl.knaw.dans.repo.axxess.acc2csv.MetadataExtractor;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;

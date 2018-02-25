@@ -10,6 +10,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Date;
 
 public interface Axxess {
 
@@ -90,7 +93,20 @@ public interface Axxess {
     String C_VERSION_HISTORY_COLUMN = "VersionHistoryColumn";
     String C_PROP = "(Property)";
 
-    static Object convert(DataType type, String value) {
+    static Object encode(DataType type, Object value) {
+        if (value == null) {
+            return null;
+        } else if (DataType.TEXT == type || DataType.MEMO == type) {
+            return encodeString(value);
+        } else if (DataType.OLE == type) {
+            return encodeOLE(value);
+        } else if (DataType.COMPLEX_TYPE == type) {
+            return encodeCollection(value);
+        }
+        return value;
+    }
+
+    static Object decode(DataType type, String value) {
         if (value == null || value.isEmpty()) {
             return null;
         }
@@ -109,20 +125,15 @@ public interface Axxess {
         } else if (DataType.DOUBLE == type) {
             return Double.valueOf(value);
         } else if (DataType.SHORT_DATE_TIME == type) {
-            try {
-                return dateParser.parse(value);
-            } catch (ParseException e) {
-                LOG.warn("Could not parse {}", value, e);
-                return null;
-            }
+            return decodeDate(value);
         } else if (DataType.BINARY == type) {
             return value;
         } else if (DataType.TEXT == type) {
-            return value;
+            return decodeString(value);
         } else if (DataType.OLE == type) {
-            return value;
+            return decodeOLE(value);
         } else if (DataType.MEMO == type) {
-            return value;
+            return decodeString(value);
         } else if (DataType.UNKNOWN_0D == type) {
             return value;
         } else if (DataType.GUID == type) {
@@ -132,7 +143,7 @@ public interface Axxess {
         } else if (DataType.UNKNOWN_11 == type) {
             return value;
         } else if (DataType.COMPLEX_TYPE == type) {
-            return Arrays.asList(value.split(Axxess.CSV_DELIMITER));
+            return decodeCollection(value);
         } else if (DataType.BIG_INT == type) {
             return Long.valueOf(value);
         } else if (DataType.UNSUPPORTED_FIXEDLEN == type) {
@@ -140,9 +151,63 @@ public interface Axxess {
         } else if (DataType.UNSUPPORTED_VARLEN == type) {
             return value;
         } else {
-            LOG.warn("Unknown DataType: '{}'", type);
+            LOG.warn(">>>>>>>>>>>>>>> Unknown DataType: '{}'", type);
             return value;
         }
     }
+
+    static String encodeOLE(Object value) {
+        if (value instanceof byte[]) {
+            return Base64.getEncoder().encodeToString(((byte[]) value));
+        } else {
+            LOG.warn(">>>>>>>>>>>>>>> Unexpected OLE field type: " + value.getClass());
+            return null;
+        }
+    }
+
+    static byte[] decodeOLE(String value) {
+        return Base64.getDecoder().decode(value);
+    }
+
+    static String encodeString(Object value) {
+        if (value instanceof String) {
+            return ((String) value).replaceAll("\r", "\u0000").replaceAll("\n", "\u0001");
+        } else {
+            LOG.warn(">>>>>>>>>>>>>>> Unexpected String field type: " + value.getClass());
+            return null;
+        }
+    }
+
+    static String decodeString(String value) {
+        return value.replaceAll("\u0000", "\r").replaceAll("\u0001", "\n");
+    }
+
+    static Date decodeDate(String value) {
+        try {
+            return dateParser.parse(value);
+        } catch (ParseException e) {
+            LOG.warn(">>>>>>>>>>>>>>> Could not parse {}", value, e);
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static String encodeCollection(Object value) {
+        if (value instanceof Collection) {
+            return encodeCollection(((Collection) value));
+        } else {
+            LOG.warn(">>>>>>>>>>>>>>> Unexpected Complex Type field type: " + value.getClass());
+            return null;
+        }
+    }
+
+    static String encodeCollection(Collection<String> value) {
+        return String.join(CSV_DELIMITER, (value));
+    }
+
+    static Collection<String> decodeCollection(String value) {
+        return Arrays.asList(value.split(CSV_DELIMITER));
+    }
+
 
 }

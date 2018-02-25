@@ -6,8 +6,6 @@ import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XTable;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class MetadataParserTest {
 
     @Test

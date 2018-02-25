@@ -3,9 +3,6 @@ package nl.knaw.dans.repo.axxess.core;
 import com.healthmarketscience.jackcess.DataType;
 import org.apache.commons.csv.CSVRecord;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,7 +27,7 @@ public class KTV {
         prefix = iterator.next();
         key = iterator.next();
         type = DataType.valueOf(iterator.next());
-        value = Axxess.convert(type, iterator.next());
+        value = Axxess.decode(type, iterator.next());
     }
 
     public String getKey() {

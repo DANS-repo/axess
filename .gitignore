@@ -34,4 +34,5 @@ hs_err_pid*
 /axxess-out/
 /src/test/resources/integration/*/acc2csv/
 /src/test/resources/integration/*/csv2acc/
+!/src/test/resources/integration/types/db/all_datatypes.mdb
 /src/test/test-set/

@@ -2,19 +2,22 @@ package nl.knaw.dans.repo.axxess.acc2csv;
 
 
 import com.healthmarketscience.jackcess.Column;
-import com.healthmarketscience.jackcess.DataType;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
+import nl.knaw.dans.repo.axxess.core.Axxess;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TableDataExtractor {
+
+    private static Logger LOG = LoggerFactory.getLogger(TableDataExtractor.class);
 
 
     public int getTableData(Table table, Appendable out, CSVFormat format) throws IOException {
@@ -32,11 +35,7 @@ public class TableDataExtractor {
             rowCount++;
             List<Object> cells = new ArrayList<>();
             for (Column column : columns) {
-                Object value = row.get(column.getName());
-                if (value instanceof String) {
-                    value = ((String)value).replaceAll("[\r\n]", "\u0000");
-                }
-                cells.add(value);
+                cells.add(Axxess.encode(column.getType(), row.get(column.getName())));
             }
             printer.printRecord(cells);
         }

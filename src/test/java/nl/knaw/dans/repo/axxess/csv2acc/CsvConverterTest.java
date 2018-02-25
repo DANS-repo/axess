@@ -1,7 +1,5 @@
 package nl.knaw.dans.repo.axxess.csv2acc;
 
-import org.junit.jupiter.api.Test;
-
 public class CsvConverterTest {
 
 

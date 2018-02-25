@@ -1,6 +1,5 @@
 package nl.knaw.dans.repo.axxess.csv2acc;
 
-import com.healthmarketscience.jackcess.Column;
 import com.healthmarketscience.jackcess.ColumnBuilder;
 import com.healthmarketscience.jackcess.DataType;
 import com.healthmarketscience.jackcess.Database;
@@ -26,14 +25,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> implements Axxess {
 
@@ -45,7 +42,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
     private boolean includeIndexes = true;
     private boolean includeRelationships = true;
 
-    private String currentDatabaseVersion = null;
+    private String currentDatabaseFormat = null;
     private String currentTableName = null;
     private String currentColumnName = null;
     private String currentIndexName = null;
@@ -107,8 +104,8 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
 
     private String errorContext() {
         String context = "Context: ";
-        if (currentDatabaseVersion != null) {
-            context += " Version=" + currentDatabaseVersion;
+        if (currentDatabaseFormat != null) {
+            context += " Format=" + currentDatabaseFormat;
         }
         if (currentTableName != null) {
             context += " Table=" + currentTableName;
@@ -130,7 +127,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         assert targetDirectory.exists() || targetDirectory.mkdirs();
         LOG.info("Trying to parse {}", mdFile.getAbsolutePath());
         XDatabase xdb = MetadataParser.parse(mdFile);
-        currentDatabaseVersion = xdb.getString(DB_FILE_FORMAT);
+        currentDatabaseFormat = xdb.getString(DB_FILE_FORMAT);
 
         File targetFile = new File(targetDirectory,
           getFilenameComposer().getDatabaseFilename(mdFile.getName(), getTargetFileFormat().getFileExtension()));
@@ -186,11 +183,17 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                     currentColumnName = xc.getString(C_NAME);
 
                     int length = xc.getInt(C_LENGTH);
-                    if (xdb.getString(DB_FILE_FORMAT).startsWith("V1997") && xc.getDataType(C_DATA_TYPE) == DataType.TEXT) {
+                    DataType dataType = xc.getDataType(C_DATA_TYPE);
+                    if (xdb.getString(DB_FILE_FORMAT).startsWith("V1997") && dataType == DataType.TEXT) {
                         // See DataType:392 -> toUnitSize, return(size / getUnitSize());
                         // unitSize of TEXT = 2.
                         length = length * DataType.TEXT.getUnitSize();
                     }
+                    if (dataType == DataType.NUMERIC && length == 9) {
+                        // 	A decimal number uses 17 bytes of disk space.
+                        length = 17;
+                    }
+
                     ColumnBuilder columnBuilder = new ColumnBuilder(currentColumnName)
                       .setType(xc.getDataType(C_DATA_TYPE))
                       .setLength(length)
@@ -258,6 +261,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         }
         resultFiles.add(targetFile);
         LOG.debug("Finished building database '{}'", targetFile);
+        currentDatabaseFormat = null;
     }
 
     private Database.FileFormat getTargetFileFormat() {
@@ -279,7 +283,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                 for (int i = 0; i < xt.getColumns().size(); i++) {
                     XColumn xc = xt.getColumns().get(i);
                     DataType type = xc.getDataType(C_DATA_TYPE);
-                    data[i] = Axxess.convert(type, iterator.next());
+                    data[i] = Axxess.decode(type, iterator.next());
                 }
                 table.addRow(data);
                 recordCount++;
