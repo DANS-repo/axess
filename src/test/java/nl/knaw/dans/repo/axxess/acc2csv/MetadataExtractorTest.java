@@ -1,12 +1,6 @@
 package nl.knaw.dans.repo.axxess.acc2csv;
 
-import com.healthmarketscience.jackcess.Database;
-import com.healthmarketscience.jackcess.DatabaseBuilder;
-import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import org.junit.jupiter.api.Test;
-
-import java.io.File;
 
 /**
  * Created on 2018-02-14 16:35.
@@ -20,17 +14,6 @@ public class MetadataExtractorTest {
 
     @Test
     public void GetExtendedTableMetadata() throws Exception {
-        Database db = null;
-        try {
-            db = DatabaseBuilder.open(new File(databaseFile));
-            Table table = db.getTable(db.getTableNames().iterator().next());
-            MetadataExtractor extractor = new MetadataExtractor();
-            KeyTypeValueMatrix matrix = extractor.getExtendedTableMetadata(db);
 
-        } finally {
-            if (db != null) {
-                db.close();
-            }
-        }
     }
 }

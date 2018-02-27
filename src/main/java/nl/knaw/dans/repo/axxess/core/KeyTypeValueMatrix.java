@@ -23,10 +23,10 @@ public class KeyTypeValueMatrix {
         this.ktvLines = new ArrayList<>(ktvLines);
     }
 
-    public KeyTypeValueMatrix(Reader reader, CSVFormat csvFormat) throws IOException {
+    public KeyTypeValueMatrix(Reader reader, CSVFormat csvFormat, Codex codex) throws IOException {
         CSVParser parser = new CSVParser(reader, csvFormat);
         for (CSVRecord record : parser) {
-            add(record);
+            add(record, codex);
         }
     }
 
@@ -35,8 +35,8 @@ public class KeyTypeValueMatrix {
         return this;
     }
 
-    public KeyTypeValueMatrix add(CSVRecord record) {
-        ktvLines.add(new KTV(record));
+    public KeyTypeValueMatrix add(CSVRecord record, Codex codex) {
+        ktvLines.add(new KTV(record, codex));
         return this;
     }
 

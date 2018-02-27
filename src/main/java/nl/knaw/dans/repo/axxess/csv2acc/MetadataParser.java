@@ -1,6 +1,8 @@
 package nl.knaw.dans.repo.axxess.csv2acc;
 
 import nl.knaw.dans.repo.axxess.core.Axxess;
+import nl.knaw.dans.repo.axxess.core.Codex;
+import nl.knaw.dans.repo.axxess.core.DefaultCodex;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XColumn;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
@@ -29,28 +31,28 @@ public class MetadataParser {
     private static Logger LOG = LoggerFactory.getLogger(MetadataParser.class);
 
     public static XDatabase parse(String file) throws IOException {
-        return parse(file, Charset.forName("UTF-8"), CSVFormat.RFC4180);
+        return parse(file, Charset.forName("UTF-8"), CSVFormat.RFC4180, new DefaultCodex(null));
     }
 
-    public static XDatabase parse(String file, Charset charset, CSVFormat csvFormat) throws IOException {
+    public static XDatabase parse(String file, Charset charset, CSVFormat csvFormat, Codex codex) throws IOException {
         InputStreamReader reader = new InputStreamReader(new FileInputStream(file), charset);
-        return parse(reader, csvFormat);
+        return parse(reader, csvFormat, codex);
     }
 
     public static XDatabase parse(File file) throws IOException {
-        return parse(file, Charset.forName("UTF-8"), CSVFormat.RFC4180);
+        return parse(file, Charset.forName("UTF-8"), CSVFormat.RFC4180, new DefaultCodex(null));
     }
 
-    public static XDatabase parse(File file, Charset charset, CSVFormat csvFormat) throws IOException {
+    public static XDatabase parse(File file, Charset charset, CSVFormat csvFormat, Codex codex) throws IOException {
         InputStreamReader reader = new InputStreamReader(new FileInputStream(file), charset);
-        return parse(reader, csvFormat);
+        return parse(reader, csvFormat, codex);
     }
 
     public static XDatabase parse(Reader reader) throws IOException {
-        return parse(reader, CSVFormat.RFC4180);
+        return parse(reader, CSVFormat.RFC4180, new DefaultCodex(null));
     }
 
-    public static XDatabase parse(Reader reader, CSVFormat csvFormat) throws IOException {
+    public static XDatabase parse(Reader reader, CSVFormat csvFormat, Codex codex) throws IOException {
         try {
             XDatabase xdb = new XDatabase();
             XRelationship xr = null;
@@ -68,7 +70,7 @@ public class MetadataParser {
             CSVParser parser = new CSVParser(reader, csvFormat);
             for (CSVRecord record : parser) {
                 if (record.getRecordNumber() > 1) { // first line is header
-                    KTV ktv = new KTV(record);
+                    KTV ktv = new KTV(record, codex);
                     int index = ktv.getFirstIndex();
                     if (ktv.isDatabaseProp()) {
                         xdb.addKtv(ktv);

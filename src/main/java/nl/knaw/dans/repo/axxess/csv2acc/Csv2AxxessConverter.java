@@ -12,6 +12,7 @@ import com.healthmarketscience.jackcess.TableBuilder;
 import nl.knaw.dans.repo.axxess.core.AbstractConverter;
 import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
+import nl.knaw.dans.repo.axxess.core.Codex;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XColumn;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
@@ -41,6 +42,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
     private Database.FileFormat targetFormat;
     private boolean includeIndexes = true;
     private boolean includeRelationships = true;
+    private boolean autoNumberColumns;
 
     private String currentDatabaseFormat = null;
     private String currentTableName = null;
@@ -66,6 +68,11 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         if (includeRelationships) {
             includeIndexes = true;
         }
+        return this;
+    }
+
+    public Csv2AxxessConverter setAutoNumberColumns(boolean autoNumber) {
+        autoNumberColumns = autoNumber;
         return this;
     }
 
@@ -197,10 +204,12 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                     ColumnBuilder columnBuilder = new ColumnBuilder(currentColumnName)
                       .setType(xc.getDataType(C_DATA_TYPE))
                       .setLength(length)
-                      .setAutoNumber(xc.getBool(C_IS_AUTO_NUMBER))
                       .setCalculated(xc.getBool(C_IS_CALCULATED))
                       .setCompressedUnicode(xc.getBool(C_IS_COMPRESSED_UNICODE))
                       .setHyperlink(xc.getBool(C_IS_HYPERLINK));
+                    if (autoNumberColumns) {
+                        columnBuilder.setAutoNumber(xc.getBool(C_IS_AUTO_NUMBER));
+                    }
                     for (KTV ktv : xc.getProperties(C_PROP)) {
                         columnBuilder.putProperty(ktv.getKey(), ktv.getType(), ktv.getValue());
                     }
@@ -212,7 +221,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                 LOG.debug("Finished building table '{}'", currentTableName);
 
                 File tableDataFile = getFilenameComposer().getTableDataFile(mdFile, currentTableName);
-                parseTableData(tableDataFile, table, xt);
+                parseTableData(tableDataFile, table, xt, getCodex());
                 currentTableName = null;
             }
 
@@ -262,6 +271,11 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         resultFiles.add(targetFile);
         LOG.debug("Finished building database '{}'", targetFile);
         currentDatabaseFormat = null;
+        increaseDbCount();
+
+        if (includeManifest()) {
+            addManifest(resultFiles, targetDirectory);
+        }
     }
 
     private Database.FileFormat getTargetFileFormat() {
@@ -271,7 +285,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         return targetFormat;
     }
 
-    private void parseTableData(File tableDataFile, Table table, XTable xt) throws IOException {
+    private void parseTableData(File tableDataFile, Table table, XTable xt, Codex codex) throws IOException {
         LOG.debug("Trying to parse table data from {}", tableDataFile);
         InputStreamReader reader = new InputStreamReader(new FileInputStream(tableDataFile), Charset.forName("UTF-8"));
         CSVParser parser = new CSVParser(reader, getCSVFormat());
@@ -283,7 +297,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                 for (int i = 0; i < xt.getColumns().size(); i++) {
                     XColumn xc = xt.getColumns().get(i);
                     DataType type = xc.getDataType(C_DATA_TYPE);
-                    data[i] = Axxess.decode(type, iterator.next());
+                    data[i] = codex.decode(type, iterator.next());
                 }
                 table.addRow(data);
                 recordCount++;

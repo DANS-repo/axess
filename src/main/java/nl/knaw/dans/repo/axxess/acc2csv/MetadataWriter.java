@@ -3,6 +3,7 @@ package nl.knaw.dans.repo.axxess.acc2csv;
 
 import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
+import nl.knaw.dans.repo.axxess.core.Codex;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import org.apache.commons.csv.CSVFormat;
 import org.slf4j.Logger;
@@ -31,8 +32,8 @@ public class MetadataWriter extends AbstractWriter {
      * @param db the database
      * @throws IOException signals a failure in reading or writing
      */
-    public void writeDatabaseMetadata(Database db) throws IOException, AxxessException {
-        writeDatabaseMetadata(db, null, true);
+    public void writeDatabaseMetadata(Database db, Codex codex) throws IOException, AxxessException {
+        writeDatabaseMetadata(db, null, codex, true);
     }
 
     /**
@@ -50,7 +51,7 @@ public class MetadataWriter extends AbstractWriter {
      * @return the newly created .csv file
      * @throws IOException signals a failure in reading or writing
      */
-    public File writeDatabaseMetadata(Database db, CSVFormat format, boolean extended)
+    public File writeDatabaseMetadata(Database db, CSVFormat format, Codex codex, boolean extended)
       throws IOException, AxxessException {
         String filename = buildPaths(getFilenameComposer().getMetadataFilename(db));
         File file = new File(filename);
@@ -58,7 +59,7 @@ public class MetadataWriter extends AbstractWriter {
             throw new AxxessException("File exists: " + file.getAbsolutePath());
         }
         OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"));
-        extractor.getMetadata(db).printVertical(osw, buildVerticalFormat(format));
+        extractor.getMetadata(db, codex).printVertical(osw, buildVerticalFormat(format));
         LOG.debug("Wrote metadata: {}", file.getName());
         return file;
     }

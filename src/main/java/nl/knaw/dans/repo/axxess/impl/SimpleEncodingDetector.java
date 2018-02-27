@@ -3,6 +3,7 @@ package nl.knaw.dans.repo.axxess.impl;
 import com.healthmarketscience.jackcess.Database;
 import nl.knaw.dans.repo.axxess.acc2csv.EncodingDetector;
 import nl.knaw.dans.repo.axxess.acc2csv.MetadataExtractor;
+import nl.knaw.dans.repo.axxess.core.DefaultCodex;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;
@@ -32,7 +33,7 @@ public class SimpleEncodingDetector implements EncodingDetector {
         String tikaGuess = getTikaGuess(db);
         LOG.debug("Encoding. Tika detected '{}', for {}", tikaGuess, db.getFile().getName());
 
-        KeyTypeValueMatrix matrix = metadataExtractor.getDatabaseMetadata(db);
+        KeyTypeValueMatrix matrix = metadataExtractor.getDatabaseMetadata(db, new DefaultCodex(null));
         KTV ff = matrix.get(ObjectType.DATABASE, "File format");
         Database.FileFormat fileFormat = ff == null ? null : (Database.FileFormat) ff.getValue();
         KTV cs = matrix.get(ObjectType.DATABASE, "Charset");

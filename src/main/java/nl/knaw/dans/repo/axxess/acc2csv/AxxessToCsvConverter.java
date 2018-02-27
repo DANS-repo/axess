@@ -52,12 +52,12 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
         return withEncodingDetector(new StaticEncodingDetector(charsetName));
     }
 
-    public AxxessToCsvConverter withArchiveResults(boolean archiveResults) {
+    public AxxessToCsvConverter setArchiveResults(boolean archiveResults) {
         this.archiveResults = archiveResults;
         return this;
     }
 
-    public AxxessToCsvConverter withCompressArchive(boolean compressArchive) {
+    public AxxessToCsvConverter setCompressArchive(boolean compressArchive) {
         this.compressArchive = compressArchive;
         return this;
     }
@@ -115,14 +115,14 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
                 db.setCharset(maybeCharset.get());
             }
             metadataWriter.setTargetDirectory(targetDirectory);
-            File mdFile = metadataWriter.writeDatabaseMetadata(db, getCSVFormat(), true);
+            File mdFile = metadataWriter.writeDatabaseMetadata(db, getCSVFormat(), getCodex(), true);
             csvFiles.add(mdFile);
             tableDataWriter.setTargetDirectory(targetDirectory);
-            List<File> tableFiles = tableDataWriter.writeDatabaseData(db, getCSVFormat());
+            List<File> tableFiles = tableDataWriter.writeDatabaseData(db, getCSVFormat(), getCodex());
             csvFiles.addAll(tableFiles);
             LOG.info("Converted {} to {}", file.getName(), targetDirectory.getAbsolutePath());
 
-            if (hasManifest()) {
+            if (includeManifest()) {
                 addManifest(csvFiles, targetDirectory);
             }
 

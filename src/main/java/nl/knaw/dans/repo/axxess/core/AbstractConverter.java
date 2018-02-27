@@ -12,19 +12,28 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractConverter<T extends AbstractConverter> {
+public abstract class AbstractConverter<T extends AbstractConverter> implements Codex.Listener {
 
+    private Codex codex;
     private File targetDirectory;
     private CSVFormat csvFormat;
     private FilenameComposer filenameComposer;
     private boolean addManifest;
+
     private int dbCount;
     private List<Throwable> errorList = new ArrayList<>();
+    private List<Throwable> warningList = new ArrayList<>();
 
     public abstract String getDefaultOutputDirectory();
 
     public List<File> convert(String filename) throws AxxessException {
         return convert(new File(filename));
+    }
+
+    @SuppressWarnings("unchecked")
+    public T withCodex(Codex codex) {
+        this.codex = codex;
+        return (T) this;
     }
 
     public abstract List<File> convert(File file) throws AxxessException;
@@ -63,7 +72,7 @@ public abstract class AbstractConverter<T extends AbstractConverter> {
     }
 
     @SuppressWarnings("unchecked")
-    public T withManifest(boolean addManifest) {
+    public T setIncludeManifest(boolean addManifest) {
         this.addManifest = addManifest;
         return (T) this;
     }
@@ -76,8 +85,28 @@ public abstract class AbstractConverter<T extends AbstractConverter> {
         return errorList.size();
     }
 
+    public int getWarningCount() {
+        return warningList.size();
+    }
+
     public List<Throwable> getErrorList() {
         return errorList;
+    }
+
+    public List<Throwable> getWarningList() {
+        return warningList;
+    }
+
+    @Override
+    public void reportWarning(String message, Throwable cause) {
+        message = message + ", @" + Thread.currentThread().getStackTrace()[2];
+        warningList.add(new Throwable(message, cause));
+    }
+
+    @Override
+    public void reportError(String message, Throwable cause) {
+        message = message + ", @" + Thread.currentThread().getStackTrace()[2];
+        errorList.add(new Throwable(message, cause));
     }
 
     protected void reset() {
@@ -91,6 +120,13 @@ public abstract class AbstractConverter<T extends AbstractConverter> {
 
     protected void increaseDbCount() {
         dbCount++;
+    }
+
+    protected Codex getCodex() {
+        if (codex == null) {
+            codex = new DefaultCodex(this);
+        }
+        return codex;
     }
 
     protected FilenameComposer getFilenameComposer() {
@@ -108,7 +144,7 @@ public abstract class AbstractConverter<T extends AbstractConverter> {
         return csvFormat;
     }
 
-    protected boolean hasManifest() {
+    protected boolean includeManifest() {
         return addManifest;
     }
 

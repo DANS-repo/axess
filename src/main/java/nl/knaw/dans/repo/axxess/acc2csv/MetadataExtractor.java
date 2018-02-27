@@ -10,6 +10,7 @@ import com.healthmarketscience.jackcess.Relationship;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.query.Query;
 import nl.knaw.dans.repo.axxess.core.Axxess;
+import nl.knaw.dans.repo.axxess.core.Codex;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;
 
@@ -19,22 +20,23 @@ import java.util.stream.Collectors;
 
 public class MetadataExtractor implements Axxess {
 
-    private static void appendProperties(KeyTypeValueMatrix matrix, PropertyMap propMap, String keyPrefix) {
+    private static void appendProperties(KeyTypeValueMatrix matrix, PropertyMap propMap, String keyPrefix,
+                                         Codex codex) {
         for (PropertyMap.Property prop : propMap) {
             DataType dataType = prop.getType();
-            Object value = Axxess.encode(dataType, prop.getValue());
+            Object value = codex.encode(dataType, prop.getValue());
             matrix.add(keyPrefix + prop.getName(), dataType, value);
         }
     }
 
-    public KeyTypeValueMatrix getMetadata(Database db) throws IOException {
-        return getDatabaseMetadata(db)
-          .append(getRelationshipMetadata(db))
-          .append(getQueryMetadata(db))
-          .append(getExtendedTableMetadata(db));
+    public KeyTypeValueMatrix getMetadata(Database db, Codex codex) throws IOException {
+        return getDatabaseMetadata(db, codex)
+          .append(getRelationshipMetadata(db, codex))
+          .append(getQueryMetadata(db, codex))
+          .append(getExtendedTableMetadata(db, codex));
     }
 
-    public KeyTypeValueMatrix getDatabaseMetadata(Database db) throws IOException {
+    public KeyTypeValueMatrix getDatabaseMetadata(Database db, Codex codex) throws IOException {
         List<String> relationshipNames =
           db.getRelationships().stream().map(Relationship::getName).collect(Collectors.toList());
         List<String> queryNames = db.getQueries().stream().map(Query::getName).collect(Collectors.toList());
@@ -46,21 +48,21 @@ public class MetadataExtractor implements Axxess {
           .add(DB_IS_ALLOW_AUTO_NUMBER_INSERT, DataType.BOOLEAN, db.isAllowAutoNumberInsert())
           .add(DB_COLUMN_ORDER, DataType.TEXT, db.getColumnOrder());
 
-        appendProperties(matrix, db.getDatabaseProperties(), DB_DATABASE_PROP);
-        appendProperties(matrix, db.getSummaryProperties(), DB_SUMMARY_PROP);
-        appendProperties(matrix, db.getUserDefinedProperties(), DB_USER_DEFINED_PROP);
+        appendProperties(matrix, db.getDatabaseProperties(), DB_DATABASE_PROP, codex);
+        appendProperties(matrix, db.getSummaryProperties(), DB_SUMMARY_PROP, codex);
+        appendProperties(matrix, db.getUserDefinedProperties(), DB_USER_DEFINED_PROP, codex);
 
         matrix.add(DB_RELATIONSHIP_COUNT, DataType.INT, relationshipNames.size())
-              .add(DB_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(relationshipNames))
+              .add(DB_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(relationshipNames))
               .add(DB_QUERY_COUNT, DataType.INT, queryNames.size())
-              .add(DB_QUERY_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(queryNames))
+              .add(DB_QUERY_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(queryNames))
               .add(DB_TABLE_COUNT, DataType.INT, db.getTableNames().size())
-              .add(DB_TABLE_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(db.getTableNames()))
+              .add(DB_TABLE_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(db.getTableNames()))
               .prefixKeys(ObjectType.DATABASE);
         return matrix;
     }
 
-    public KeyTypeValueMatrix getTableMetadata(Table table, boolean includeDbName) throws IOException {
+    public KeyTypeValueMatrix getTableMetadata(Table table, Codex codex, boolean includeDbName) throws IOException {
         List<String> columnNames = table.getColumns()
                                         .stream()
                                         .map(Column::getName)
@@ -86,21 +88,21 @@ public class MetadataExtractor implements Axxess {
         }
         matrix.add(TABLE_ROW_COUNT, DataType.INT, table.getRowCount())
               .add(TABLE_COLUMN_COUNT, DataType.INT, table.getColumnCount())
-              .add(TABLE_COLUMN_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(columnNames))
+              .add(TABLE_COLUMN_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(columnNames))
               .add(TABLE_IS_ALLOW_AUTO_NUMBER_INSERT, DataType.BOOLEAN, table.isAllowAutoNumberInsert())
-              .add(TABLE_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(relationshipNames))
-              .add(TABLE_INDEX_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(indexNames))
+              .add(TABLE_RELATIONSHIP_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(relationshipNames))
+              .add(TABLE_INDEX_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(indexNames))
               .add(TABLE_PRIMARY_KEY_INDEX, DataType.TEXT, primaryKeyIndexName);
 
-        appendProperties(matrix, table.getProperties(), TABLE_PROP);
+        appendProperties(matrix, table.getProperties(), TABLE_PROP, codex);
         return matrix;
     }
 
-    public KeyTypeValueMatrix getRelationshipMetadata(Database db) throws IOException {
+    public KeyTypeValueMatrix getRelationshipMetadata(Database db, Codex codex) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
         int relationshipCount = 0;
         for (Relationship relationship : db.getRelationships()) {
-            KeyTypeValueMatrix relationshipMatrix = getRelationshipMetadata(relationship);
+            KeyTypeValueMatrix relationshipMatrix = getRelationshipMetadata(relationship, codex);
             relationshipMatrix.prefixKeys(ObjectType.RELATIONSHIP, relationshipCount);
             matrix.append(relationshipMatrix);
             ++relationshipCount;
@@ -108,7 +110,7 @@ public class MetadataExtractor implements Axxess {
         return matrix;
     }
 
-    public KeyTypeValueMatrix getRelationshipMetadata(Relationship relationship) {
+    public KeyTypeValueMatrix getRelationshipMetadata(Relationship relationship, Codex codex) {
         List<String> fromColumnNames =
           relationship.getFromColumns().stream().map(Column::getName).collect(Collectors.toList());
         List<String> toColumnNames =
@@ -123,17 +125,17 @@ public class MetadataExtractor implements Axxess {
           .add(R_IS_ONE_TO_ONE, DataType.BOOLEAN, relationship.isOneToOne())
           .add(R_IS_RIGHT_OUTER_JOIN, DataType.BOOLEAN, relationship.isRightOuterJoin())
           .add(R_FROM_TABLE, DataType.TEXT, relationship.getFromTable().getName())
-          .add(R_FROM_COLUMNS, DataType.COMPLEX_TYPE, Axxess.encodeCollection(fromColumnNames))
+          .add(R_FROM_COLUMNS, DataType.COMPLEX_TYPE, codex.encodeCollection(fromColumnNames))
           .add(R_TO_TABLE, DataType.TEXT, relationship.getToTable().getName())
-          .add(R_TO_COLUMNS, DataType.COMPLEX_TYPE, Axxess.encodeCollection(toColumnNames))
+          .add(R_TO_COLUMNS, DataType.COMPLEX_TYPE, codex.encodeCollection(toColumnNames))
           .add(R_JOIN_TYPE, DataType.TEXT, relationship.getJoinType());
     }
 
-    public KeyTypeValueMatrix getQueryMetadata(Database db) throws IOException {
+    public KeyTypeValueMatrix getQueryMetadata(Database db, Codex codex) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
         int queryCount = 0;
         for (Query query : db.getQueries()) {
-            KeyTypeValueMatrix queryMatrix = getQueryMetadata(query);
+            KeyTypeValueMatrix queryMatrix = getQueryMetadata(query, codex);
             queryMatrix.prefixKeys(ObjectType.QUERY, queryCount);
             matrix.append(queryMatrix);
             ++queryCount;
@@ -141,28 +143,28 @@ public class MetadataExtractor implements Axxess {
         return matrix;
     }
 
-    public KeyTypeValueMatrix getQueryMetadata(Query query) {
+    public KeyTypeValueMatrix getQueryMetadata(Query query, Codex codex) {
         return new KeyTypeValueMatrix()
           .add(Q_NAME, DataType.TEXT, query.getName())
           .add(Q_TYPE, DataType.TEXT, query.getType())
           .add(Q_IS_HIDDEN, DataType.BOOLEAN, query.isHidden())
-          .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, Axxess.encodeCollection(query.getParameters()))
+          .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, codex.encodeCollection(query.getParameters()))
           .add(Q_SQL, DataType.TEXT, query.toSQLString().replaceAll("[\r\n]", " "));
     }
 
-    public KeyTypeValueMatrix getExtendedTableMetadata(Database db) throws IOException {
+    public KeyTypeValueMatrix getExtendedTableMetadata(Database db, Codex codex) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
         int tableCount = 0;
 
         for (String tableName : db.getTableNames()) {
             Table table = db.getTable(tableName);
-            KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
+            KeyTypeValueMatrix tableMatrix = getTableMetadata(table, codex, false);
             tableMatrix.prefixKeys(ObjectType.TABLE, tableCount);
             matrix.append(tableMatrix);
 
             int indexCount = 0;
             for (Index index : table.getIndexes()) {
-                KeyTypeValueMatrix indexMatrix = getIndexMetadata(index);
+                KeyTypeValueMatrix indexMatrix = getIndexMetadata(index, codex);
                 indexMatrix.prefixKeys(ObjectType.TABLE_INDEX, tableCount, indexCount);
                 matrix.append(indexMatrix);
                 indexCount++;
@@ -170,7 +172,7 @@ public class MetadataExtractor implements Axxess {
 
             int columnCount = 0;
             for (Column column : table.getColumns()) {
-                KeyTypeValueMatrix columnMatrix = getColumnMetadata(column);
+                KeyTypeValueMatrix columnMatrix = getColumnMetadata(column, codex);
                 columnMatrix.prefixKeys(ObjectType.TABLE_COLUMN, tableCount, columnCount);
                 matrix.append(columnMatrix);
                 ++columnCount;
@@ -180,7 +182,7 @@ public class MetadataExtractor implements Axxess {
         return matrix;
     }
 
-    public KeyTypeValueMatrix getIndexMetadata(Index index) throws IOException {
+    public KeyTypeValueMatrix getIndexMetadata(Index index, Codex codex) throws IOException {
         List<String> columnNames = index.getColumns()
                                         .stream()
                                         .map(Index.Column::getName)
@@ -190,7 +192,7 @@ public class MetadataExtractor implements Axxess {
         return new KeyTypeValueMatrix()
           .add(I_NAME, DataType.TEXT, index.getName().replaceAll("^\\.", ""))
           .add(I_COLUMN_COUNT, DataType.INT, index.getColumnCount())
-          .add(I_COLUMN_NAMES, DataType.COMPLEX_TYPE, Axxess.encodeCollection(columnNames))
+          .add(I_COLUMN_NAMES, DataType.COMPLEX_TYPE, codex.encodeCollection(columnNames))
           .add(I_REFERENCED_INDEX, DataType.TEXT, referencedIndexName)
           .add(I_IS_FOREIGN_KEY, DataType.BOOLEAN, index.isForeignKey())
           .add(I_IS_PRIMARY_KEY, DataType.BOOLEAN, index.isPrimaryKey())
@@ -199,7 +201,7 @@ public class MetadataExtractor implements Axxess {
           .add(I_SHOULD_IGNORE_NULLS, DataType.BOOLEAN, index.shouldIgnoreNulls());
     }
 
-    public KeyTypeValueMatrix getColumnMetadata(Column column) throws IOException {
+    public KeyTypeValueMatrix getColumnMetadata(Column column, Codex codex) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
           .add(C_NAME, DataType.TEXT, column.getName())
           .add(C_INDEX, DataType.INT, column.getColumnIndex())
@@ -213,7 +215,7 @@ public class MetadataExtractor implements Axxess {
           .add(C_IS_HYPERLINK, DataType.BOOLEAN, column.isHyperlink())
           .add(C_IS_VARIABLE_LENGTH, DataType.BOOLEAN, column.isVariableLength());
 
-        appendProperties(matrix, column.getProperties(), C_PROP);
+        appendProperties(matrix, column.getProperties(), C_PROP, codex);
 
         Column vhColumn = column.getVersionHistoryColumn();
         if (vhColumn != null) {

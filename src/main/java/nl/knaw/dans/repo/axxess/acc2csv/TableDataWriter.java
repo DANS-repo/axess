@@ -4,6 +4,7 @@ package nl.knaw.dans.repo.axxess.acc2csv;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Table;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
+import nl.knaw.dans.repo.axxess.core.Codex;
 import org.apache.commons.csv.CSVFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,16 +27,17 @@ public class TableDataWriter extends AbstractWriter {
         extractor = new TableDataExtractor();
     }
 
-    public List<File> writeDatabaseData(Database db, CSVFormat format) throws IOException, AxxessException {
+    public List<File> writeDatabaseData(Database db, CSVFormat format, Codex codex)
+      throws IOException, AxxessException {
         List<File> convertedFiles = new ArrayList<>();
         for (String tableName : db.getTableNames()) {
             Table table = db.getTable(tableName);
-            convertedFiles.add(writeTableData(table, format));
+            convertedFiles.add(writeTableData(table, format, codex));
         }
         return convertedFiles;
     }
 
-    public File writeTableData(Table table, CSVFormat format) throws IOException, AxxessException {
+    public File writeTableData(Table table, CSVFormat format, Codex codex) throws IOException, AxxessException {
         String filename = buildPaths(getFilenameComposer().getTableDataFilename(table));
         File file = new File(filename);
         if (file.exists()) {
@@ -44,7 +46,7 @@ public class TableDataWriter extends AbstractWriter {
         OutputStreamWriter osw = null;
         try {
             osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"));
-            int rowCount = extractor.getTableData(table, osw, getCsvFormat(format));
+            int rowCount = extractor.getTableData(table, osw, getCsvFormat(format), codex);
             LOG.debug("Wrote {} records to {}", rowCount, file.getName());
         } finally {
             if (osw != null) {

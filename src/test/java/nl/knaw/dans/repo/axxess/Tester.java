@@ -1,16 +1,19 @@
 package nl.knaw.dans.repo.axxess;
 
 
+import java.util.regex.Pattern;
+
 public class Tester {
 
     public static void main(String[] args) throws Exception {
-        String value = "Foofoo" + "\r\n" + "Bar" + "\r\n" + "Bas";
-        System.out.println(value);
+        Pattern digitPattern = Pattern.compile("d?\\d+");
 
-        String encoded = value.replaceAll("\r", "\u0000").replaceAll("\n", "\u0001");
-        System.out.println(encoded);
+        System.out.println(Pattern.matches("[0-9]*", "2312345"));
 
-        String decoded = encoded.replaceAll("\u0000", "\r").replaceAll("\u0001", "\n");
-        System.out.println(decoded);
+        System.out.println(new Long(123456L));
+        System.out.println(Long.valueOf("123456"));
+        long x = 12345L;
+        Object y = x;
+        System.out.println(y instanceof Long);
     }
 }

@@ -4,7 +4,7 @@ package nl.knaw.dans.repo.axxess.acc2csv;
 import com.healthmarketscience.jackcess.Column;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
-import nl.knaw.dans.repo.axxess.core.Axxess;
+import nl.knaw.dans.repo.axxess.core.Codex;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ public class TableDataExtractor {
     private static Logger LOG = LoggerFactory.getLogger(TableDataExtractor.class);
 
 
-    public int getTableData(Table table, Appendable out, CSVFormat format) throws IOException {
+    public int getTableData(Table table, Appendable out, CSVFormat format, Codex codex) throws IOException {
         List<? extends Column> columns = table.getColumns();
         List<String> columnNames = columns
           .stream()
@@ -35,7 +35,7 @@ public class TableDataExtractor {
             rowCount++;
             List<Object> cells = new ArrayList<>();
             for (Column column : columns) {
-                cells.add(Axxess.encode(column.getType(), row.get(column.getName())));
+                cells.add(codex.encode(column.getType(), row.get(column.getName())));
             }
             printer.printRecord(cells);
         }

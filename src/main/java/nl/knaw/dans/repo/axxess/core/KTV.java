@@ -22,12 +22,12 @@ public class KTV {
         this.value = value;
     }
 
-    public KTV(CSVRecord record) {
+    public KTV(CSVRecord record, Codex codex) {
         Iterator<String> iterator = record.iterator();
         prefix = iterator.next();
         key = iterator.next();
         type = DataType.valueOf(iterator.next());
-        value = Axxess.decode(type, iterator.next());
+        value = codex.decode(type, iterator.next());
     }
 
     public String getKey() {
