@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Default {@link Codex} suitable for most use cases. A {@link Codex} is used to translate from java objects,
+ * Default {@link Codex} suitable for most use cases. A {@link Codex} is used to translate java objects,
  * representing values in an Access database,
  * to a suitable string representation for the csv file format.
  * And to get from csv file to a refurbished Access database, it translates string values back to these java objects.
@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * Caveat dates and times. Because we get both date time and time from
  * Jackcces as a java.util.{@link Date}, the only way to discriminate between them is on
  * the null-values for year, month and date which happen to be year=1899, month=12 and day=30.
- * As a consequence any real date time on January 30, 1899 will be interpreted as time.
+ * As a consequence any real date time on December 30, 1899 will be interpreted as time.
  * <p>
  * The representation for date time is {@link DateTimeFormatter#ISO_LOCAL_DATE_TIME} ('2011-12-03T10:15:30'),
  * that for time is {@link DateTimeFormatter#ISO_LOCAL_TIME} ('10:15:30').
@@ -147,7 +147,7 @@ public class DefaultCodex implements Codex {
         } else if (DataType.GUID == type) {
             return value;
         } else if (DataType.NUMERIC == type) {
-            return new BigDecimal(value);
+            return value; // alternatively: return BigDecimal.valueOf(Double.valueOf(value));
         } else if (DataType.UNKNOWN_11 == type) {
             return value;
         } else if (DataType.COMPLEX_TYPE == type) {
@@ -214,7 +214,7 @@ public class DefaultCodex implements Codex {
         // Access date times are unaware of time zones so we cannot use
         //      LocalDateTime ldt = LocalDateTime.ofInstant(((Date)value).toInstant(), ZoneId.systemDefault());
         // because ZoneId will (over)correct historical date times.
-        // i.e. ZoneId Europe/Amsterdam will give 1899-02-26T12:06:32 for 1899-02-26T12:47:00.
+        // see https://www.timeanddate.com/time/zone/netherlands/amsterdam?year=1909
         if (value instanceof Date) {
             Object dt = getJavaTime(((Date) value));
             if (dt instanceof LocalTime) {

@@ -5,6 +5,7 @@ import nl.knaw.dans.repo.axxess.acc2csv.AxxessToCsvConverter;
 import nl.knaw.dans.repo.axxess.csv2acc.Csv2AxxessConverter;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedInputStream;
@@ -44,6 +45,8 @@ public class IntegrationTest {
       // File format: V2000 [VERSION_4]  AccessVersion: 08.50
       {"types", "all_datatypes.mdb", ""},
 
+      {"types2", "decimal_types.accdb", ""},
+
       {"cliwoc", "CLIWOC21_97.mdb",
         "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
 
@@ -53,7 +56,10 @@ public class IntegrationTest {
 
       {"polyglot", "Polyglot.mdb", "http://www.theaccessweb.com/downloads/Polygloth_pt.zip"},
 
-      {"medicare", "DFCompare.mdb", "https://data.medicare.gov/data/dialysis-facility-compare"}
+      {"medicare", "DFCompare.mdb", "https://data.medicare.gov/data/dialysis-facility-compare"},
+
+      {"article17", "Art17_MS_EU27_2015.mdb",
+        "https://www.eea.europa.eu/data-and-maps/data/article-17-database-habitats-directive-92-43-eec-1/"}
 
     };
 
@@ -133,7 +139,7 @@ public class IntegrationTest {
     }
 
     private static File getCsv2accDb(String name) throws IOException {
-        return FileUtils.getFile(getCsv2accDir(name),"files", getDbName(name) +  ".accdb");
+        return FileUtils.getFile(getCsv2accDir(name), "files", getDbName(name) + ".accdb");
     }
 
     private static String getDbName(String name) throws IOException {
@@ -178,6 +184,7 @@ public class IntegrationTest {
 
     ///////////////////////////////////////////////////////////////////////////////////////
 
+    @Disabled
     @Test
     void acc2csv2acc() throws Exception {
         for (String[] name : databases) {
@@ -225,7 +232,7 @@ public class IntegrationTest {
         Csv2AxxessConverter converter = new Csv2AxxessConverter()
           .withTargetDirectory(getCsv2accDir(name))
           .withTargetDatabaseFileFormat(Database.FileFormat.V2010)
-          .setIncludeIndexes(true)
+          .setIncludeIndexes(false)
           .setAutoNumberColumns(false)
           .setIncludeManifest(true);
         List<File> fileList = converter.convert(getAcc2csvFilesDir(name));
@@ -280,7 +287,7 @@ public class IntegrationTest {
     }
 
     private boolean isTableFile(File file) {
-        return !file.getName().endsWith(".txt") && ! file.getName().endsWith("_metadata.csv");
+        return !file.getName().endsWith(".txt") && !file.getName().endsWith("_metadata.csv");
     }
 
     private List<String> listDiffs(File f1, File f2) throws IOException {
@@ -295,10 +302,8 @@ public class IntegrationTest {
         LineNumberReader reader2 = new LineNumberReader(insr2);
         String line1 = reader1.readLine();
         String line2 = reader2.readLine();
-        while (line1 != null && line2 != null)
-        {
-            if (!line1.equals(line2))
-            {
+        while (line1 != null && line2 != null) {
+            if (!line1.equals(line2)) {
                 diffs.add("File \"" + name1 + "\" and file \"" +
                   name2 + "\" differ at line " + reader1.getLineNumber() +
                   ":" + "\n" + line1 + "\n" + line2);
@@ -307,12 +312,14 @@ public class IntegrationTest {
             line1 = reader1.readLine();
             line2 = reader2.readLine();
         }
-        if (line1 == null && line2 != null)
+        if (line1 == null && line2 != null) {
             diffs.add("File \"" + name2 + "\" has extra lines at line " +
               reader2.getLineNumber() + ":\n" + line2);
-        if (line1 != null && line2 == null)
+        }
+        if (line1 != null && line2 == null) {
             diffs.add("File \"" + name1 + "\" has extra lines at line " +
               reader1.getLineNumber() + ":\n" + line1);
+        }
         reader1.close();
         reader2.close();
         return diffs;

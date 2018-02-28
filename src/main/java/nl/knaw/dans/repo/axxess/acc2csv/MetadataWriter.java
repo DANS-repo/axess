@@ -6,6 +6,8 @@ import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.core.Codex;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,10 +60,11 @@ public class MetadataWriter extends AbstractWriter {
         if (file.exists()) {
             throw new AxxessException("File exists: " + file.getAbsolutePath());
         }
-        OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"));
-        extractor.getMetadata(db, codex).printVertical(osw, buildVerticalFormat(format));
-        LOG.debug("Wrote metadata: {}", file.getName());
-        return file;
+        try(OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"))) {
+            extractor.getMetadata(db, codex).printVertical(osw, buildVerticalFormat(format));
+            LOG.debug("Wrote metadata: {}", file.getName());
+            return file;
+        }
     }
 
     private CSVFormat buildVerticalFormat(CSVFormat format) {

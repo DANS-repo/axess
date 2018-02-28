@@ -11,13 +11,19 @@ import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.query.Query;
 import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.Codex;
+import nl.knaw.dans.repo.axxess.core.DefaultCodex;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Extracts data from <a href="http://jackcess.sourceforge.net/apidocs/index.html">com.healthmarketscience.jackcess</a>
+ * objects.
+ */
 public class MetadataExtractor implements Axxess {
 
     private static void appendProperties(KeyTypeValueMatrix matrix, PropertyMap propMap, String keyPrefix,
@@ -29,11 +35,40 @@ public class MetadataExtractor implements Axxess {
         }
     }
 
+    /**
+     * Get metadata from the given {@link Database} using a {@link DefaultCodex} in a {@link KeyTypeValueMatrix}.
+     *
+     * @param db the {@link Database} to be questioned
+     * @return metadata in a {@link KeyTypeValueMatrix}
+     * @throws IOException for read errors
+     */
+    public KeyTypeValueMatrix getMetadata(Database db) throws IOException {
+        return getMetadata(db, new DefaultCodex(null));
+    }
+
+    /**
+     * Get metadata from the given {@link Database} using the given <{@link Codex} in a {@link KeyTypeValueMatrix}.
+     *
+     * @param db    the {@link Database} to be questioned
+     * @param codex the {@link Codex} to use for translation
+     * @return metadata in a {@link KeyTypeValueMatrix}
+     * @throws IOException for read errors
+     */
     public KeyTypeValueMatrix getMetadata(Database db, Codex codex) throws IOException {
-        return getDatabaseMetadata(db, codex)
+        return getExtractionMetadata(codex)
+          .append(getDatabaseMetadata(db, codex))
           .append(getRelationshipMetadata(db, codex))
           .append(getQueryMetadata(db, codex))
           .append(getExtendedTableMetadata(db, codex));
+    }
+
+    public KeyTypeValueMatrix getExtractionMetadata(Codex codex) throws IOException {
+        return new KeyTypeValueMatrix()
+          .add(EM_CONVERSION_DATE, DataType.TEXT, Instant.now().toString())
+          .add(EM_AXXESS_VERSION, DataType.TEXT, Axxess.getVersion())
+          .add(EM_AXXESS_BUILD, DataType.TEXT, Axxess.getBuild())
+          .add(EM_CODEX, DataType.TEXT, codex.getClass().getName())
+          .prefixKeys(ObjectType.EXTRACTION_METADATA);
     }
 
     public KeyTypeValueMatrix getDatabaseMetadata(Database db, Codex codex) throws IOException {
@@ -207,7 +242,10 @@ public class MetadataExtractor implements Axxess {
           .add(C_INDEX, DataType.INT, column.getColumnIndex())
           .add(C_DATA_TYPE, DataType.TEXT, column.getType())
           .add(C_LENGTH, DataType.INT, column.getLength())
-
+          .add(C_LENGTH_IN_UNITS, DataType.INT, column.getLengthInUnits())
+          .add(C_SCALE, DataType.BYTE, column.getScale())
+          .add(C_PRECISION, DataType.BYTE, column.getPrecision())
+          //.add(C_SQL_TYPE, DataType.INT, column.getSQLType())
           .add(C_IS_APPEND_ONLY, DataType.BOOLEAN, column.isAppendOnly())
           .add(C_IS_AUTO_NUMBER, DataType.BOOLEAN, column.isAutoNumber())
           .add(C_IS_CALCULATED, DataType.BOOLEAN, column.isCalculated())

@@ -2,6 +2,7 @@ package nl.knaw.dans.repo.axxess.core;
 
 public enum ObjectType {
 
+    EXTRACTION_METADATA("EM"),
     DATABASE("DB"),
     RELATIONSHIP("R"),
     QUERY("Q"),
@@ -11,14 +12,16 @@ public enum ObjectType {
     TABLE_INDEX("TX"),
     TABLE_COLUMN("TC");
 
-    String abrreviation;
+    public String abrreviation;
 
     ObjectType(String abbreviation) {
         this.abrreviation = abbreviation;
     }
 
-    String prefix(int... indexes) {
-        if (this == DATABASE) {
+    public String prefix(int... indexes) {
+        if (this == EXTRACTION_METADATA) {
+            return "[EM]";
+        } else if (this == DATABASE) {
             return "[DB]";
         } else if (this == TABLE_INDEX) {
             return String.format("[T%d][X%d]", indexes[0], indexes[1]);
@@ -29,8 +32,10 @@ public enum ObjectType {
         }
     }
 
-    String pattern() {
-        if (this == DATABASE) {
+    public String pattern() {
+        if (this == EXTRACTION_METADATA) {
+            return "\\[EM\\]";
+        } else if (this == DATABASE) {
             return "\\[DB\\]";
         } else if (this == TABLE_INDEX) {
             return "\\[T[0-9]*\\]\\[X[0-9]*\\]";

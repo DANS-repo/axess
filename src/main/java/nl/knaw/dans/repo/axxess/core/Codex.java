@@ -12,7 +12,7 @@ import java.util.Collection;
  * that is of DataType.X:
  * <code>
  * Object beta = codex.decode(DataType.X, codex.encode(DataType.X, alpha).toString());
- * and
+ * // and
  * beta.equals(alpha);
  * </code>
  * </p>

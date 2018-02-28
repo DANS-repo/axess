@@ -4,17 +4,25 @@ import org.apache.commons.csv.CSVFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Properties;
 import java.util.regex.Pattern;
 
 public interface Axxess {
 
+    Properties APP_PROPS = new Properties();
+
     Logger LOG = LoggerFactory.getLogger(Axxess.class);
 
-    DateFormat dateParser = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
-    String CSV_DELIMITER = String.valueOf(CSVFormat.RFC4180.getDelimiter());
-    Pattern digitPattern = Pattern.compile("d?\\d+");
+    String EM_CONVERSION_DATE = "Conversion date";
+    String EM_AXXESS_VERSION = "Axxess version";
+    String EM_AXXESS_BUILD = "Axxess build";
+    String EM_CODEX = "Codex";
 
     String DB_FILENAME = "Filename";
     String DB_PASSWORD = "Password";
@@ -79,6 +87,10 @@ public interface Axxess {
     String C_INDEX = "Column index";
     String C_DATA_TYPE = "Data type";
     String C_LENGTH = "Length";
+    String C_LENGTH_IN_UNITS = "Length in units";
+    String C_SCALE = "Scale";
+    String C_PRECISION = "Precision";
+    String C_SQL_TYPE = "SQL type";
     String C_IS_APPEND_ONLY = "IsAppendOnly";
     String C_IS_AUTO_NUMBER = "IsAutoNumber";
     String C_IS_CALCULATED = "IsCalculated";
@@ -87,5 +99,25 @@ public interface Axxess {
     String C_IS_VARIABLE_LENGTH = "IsVariableLength";
     String C_VERSION_HISTORY_COLUMN = "VersionHistoryColumn";
     String C_PROP = "(Property)";
+
+    static String getVersion() {
+        return getProperties().getProperty("version");
+    }
+
+    static String getBuild() {
+        return getProperties().getProperty("build");
+    }
+
+    static Properties getProperties() {
+        if (APP_PROPS.getProperty("loaded") == null) {
+            try {
+                APP_PROPS.load(Axxess.class.getClassLoader().getResourceAsStream("app.properties"));
+            } catch (Exception e) {
+                LOG.error("Could not load app.properties", e);
+            }
+            APP_PROPS.setProperty("loaded", Instant.now().toString());
+        }
+        return APP_PROPS;
+    }
 
 }

@@ -64,6 +64,15 @@ public class XDatabaseObject {
           .orElse(0);
     }
 
+    public byte getByte(String key) {
+        return ktvLines
+          .stream()
+          .filter(ktv -> ktv.getKey().equals(key))
+          .findFirst()
+          .map(ktv -> ((byte) ktv.getValue()))
+          .orElse((byte) 0);
+    }
+
     public DataType getDataType(String key) {
         return DataType.valueOf(getString(key));
     }

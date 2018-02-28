@@ -93,32 +93,18 @@ public class KeyTypeValueMatrix {
     }
 
     public void printVertical(Appendable out, CSVFormat format) throws IOException {
-        CSVPrinter printer = null;
-        try {
-            printer = new CSVPrinter(out, format);
-            for (KTV ktv : ktvLines) {
-                printer.printRecord(ktv.getPrefix(), ktv.getKey(), ktv.getType(), ktv.getValue());
-            }
-        } finally {
-            if (printer != null) {
-                printer.close();
-            }
+        CSVPrinter printer = new CSVPrinter(out, format);
+        for (KTV ktv : ktvLines) {
+            printer.printRecord(ktv.getPrefix(), ktv.getKey(), ktv.getType(), ktv.getValue());
         }
     }
 
     public void printHorizontal(Appendable out, CSVFormat format) throws IOException {
-        CSVPrinter printer = null;
-        try {
-            printer = new CSVPrinter(out, format);
-            printer.printRecord(getPrefixes());
-            printer.printRecord(getKeys());
-            printer.printRecord(getTypes());
-            printer.printRecord(getValues());
-        } finally {
-            if (printer != null) {
-                printer.close();
-            }
-        }
+        CSVPrinter printer = new CSVPrinter(out, format);
+        printer.printRecord(getPrefixes());
+        printer.printRecord(getKeys());
+        printer.printRecord(getTypes());
+        printer.printRecord(getValues());
     }
 
     public enum Orientation {

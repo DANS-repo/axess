@@ -115,16 +115,16 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
             context += " Format=" + currentDatabaseFormat;
         }
         if (currentTableName != null) {
-            context += " Table=" + currentTableName;
+            context += ", Table=" + currentTableName;
         }
         if (currentColumnName != null) {
-            context += " Column=" + currentColumnName;
+            context += ", Column=" + currentColumnName;
         }
         if (currentIndexName != null) {
-            context += " Index=" + currentIndexName;
+            context += ", Index=" + currentIndexName;
         }
         if (currentRelationshipName != null) {
-            context += " Relationship=" + currentRelationshipName;
+            context += ", Relationship=" + currentRelationshipName;
         }
         return context;
     }
@@ -196,7 +196,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                         // unitSize of TEXT = 2.
                         length = length * DataType.TEXT.getUnitSize();
                     }
-                    if (dataType == DataType.NUMERIC && length == 9) {
+                    if (dataType == DataType.NUMERIC) {
                         // 	A decimal number uses 17 bytes of disk space.
                         length = 17;
                     }
@@ -204,6 +204,9 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                     ColumnBuilder columnBuilder = new ColumnBuilder(currentColumnName)
                       .setType(xc.getDataType(C_DATA_TYPE))
                       .setLength(length)
+                      //.setLengthInUnits(xc.getInt(C_LENGTH_IN_UNITS)) // is this calculated? + see length exceptions
+                      .setScale(xc.getByte(C_SCALE))
+                      .setPrecision(xc.getByte(C_PRECISION))
                       .setCalculated(xc.getBool(C_IS_CALCULATED))
                       .setCompressedUnicode(xc.getBool(C_IS_COMPRESSED_UNICODE))
                       .setHyperlink(xc.getBool(C_IS_HYPERLINK));

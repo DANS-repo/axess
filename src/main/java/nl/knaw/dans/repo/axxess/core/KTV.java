@@ -98,5 +98,8 @@ public class KTV {
         return Pattern.matches(ObjectType.TABLE_COLUMN.pattern(), prefix);
     }
 
-
+    @Override
+    public String toString() {
+        return String.format("%s,%s,%s,%s", prefix, key, type.name(), value == null? null : value.toString());
+    }
 }
