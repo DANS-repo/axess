@@ -9,13 +9,12 @@ import java.util.Collection;
  * and back again.
  * <p>
  * The contract realised by implementations of this interface for any Object alpha
- * that is of DataType.X:
- * <code>
+ * that is of DataType.X: </p>
+ * <pre>
  * Object beta = codex.decode(DataType.X, codex.encode(DataType.X, alpha).toString());
  * // and
  * beta.equals(alpha);
- * </code>
- * </p>
+ * </pre>
  */
 public interface Codex {
 
@@ -37,6 +36,8 @@ public interface Codex {
      */
     Object decode(DataType type, String value);
 
+    void setListener(Listener listener);
+
     /**
      * Convenience method to encode a collection of strings. Same as
      * encode(DataType.COMPLEX_TYPE, value).
@@ -51,8 +52,9 @@ public interface Codex {
      */
     public interface Listener {
 
-        void reportWarning(String message, Throwable cause);
+        abstract void reportWarning(String message, Throwable cause);
 
-        void reportError(String message, Throwable cause);
+        abstract void reportError(String message, Throwable cause);
+
     }
 }

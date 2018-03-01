@@ -100,6 +100,6 @@ public class KTV {
 
     @Override
     public String toString() {
-        return String.format("%s,%s,%s,%s", prefix, key, type.name(), value == null? null : value.toString());
+        return String.format("%s,%s,%s,%s", prefix, key, type.name(), value == null ? null : value.toString());
     }
 }

@@ -40,3 +40,4 @@ hs_err_pid*
 !/src/test/resources/integration/types/db/all_datatypes.mdb
 /src/test/test-set/
 
+/docs/

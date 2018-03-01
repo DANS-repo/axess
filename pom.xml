@@ -33,8 +33,9 @@
   </prerequisites>
 
   <properties>
-    <version>${project.version}</version>
-    <build>${maven.build.timestamp}</build>
+    <axxess.version>${project.version}</axxess.version>
+    <axxess.build>${maven.build.timestamp}</axxess.build>
+    <axxess.url>${project.url}</axxess.url>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
@@ -170,7 +171,7 @@
             </goals>
             <configuration>
               <outputFile>
-                ${project.build.outputDirectory}/app.properties
+                ${project.build.outputDirectory}/axxess.properties
               </outputFile>
             </configuration>
           </execution>
@@ -184,13 +185,14 @@
         <configuration>
           <encoding>UTF-8</encoding>
           <outputDirectory>${project.basedir}/docs/site/apidocs</outputDirectory>
+          <detectLinks>true</detectLinks>
         </configuration>
         <executions>
           <execution>
             <goals>
               <goal>jar</goal>
             </goals>
-            <phase>site</phase>
+            <phase>package</phase>
           </execution>
         </executions>
       </plugin>

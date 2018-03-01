@@ -8,9 +8,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-/**
- * Created on 2018-02-13 13:46.
- */
 public class SimpleFilenameComposer implements FilenameComposer {
 
     public String getMetadataFilename(Database db) throws IOException {
@@ -40,12 +37,12 @@ public class SimpleFilenameComposer implements FilenameComposer {
     }
 
     @Override
-    public String getDatabaseFilename(String metadataFilename, String extension) {
+    public String getNewDatabaseFilename(String metadataFilename, String extension) {
         return metadataFilename.replaceAll("\\.[_]*metadata.csv", extension);
     }
 
     @Override
-    public File getTableDataFile(File metadataFile, String tableName) {
+    public File getTableDataFileFor(File metadataFile, String tableName) {
         if (!isMetadataFilename(metadataFile)) {
             throw new IllegalArgumentException("Not a metadata file: " + metadataFile.getAbsolutePath());
         }

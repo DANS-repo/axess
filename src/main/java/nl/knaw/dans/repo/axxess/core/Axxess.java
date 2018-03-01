@@ -1,18 +1,14 @@
 package nl.knaw.dans.repo.axxess.core;
 
-import org.apache.commons.csv.CSVFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Properties;
-import java.util.regex.Pattern;
 
+/**
+ * Axxess constants.
+ */
 public interface Axxess {
 
     Properties APP_PROPS = new Properties();
@@ -20,8 +16,12 @@ public interface Axxess {
     Logger LOG = LoggerFactory.getLogger(Axxess.class);
 
     String EM_CONVERSION_DATE = "Conversion date";
+    String EM_OS_NAME = "OS name";
+    String EM_OS_ARCH = "OS arch";
+    String EM_OS_VERSION = "OS version";
     String EM_AXXESS_VERSION = "Axxess version";
     String EM_AXXESS_BUILD = "Axxess build";
+    String EM_AXXESS_URL = "Axxess URL";
     String EM_CODEX = "Codex";
 
     String DB_FILENAME = "Filename";
@@ -100,18 +100,14 @@ public interface Axxess {
     String C_VERSION_HISTORY_COLUMN = "VersionHistoryColumn";
     String C_PROP = "(Property)";
 
-    static String getVersion() {
-        return getProperties().getProperty("version");
-    }
-
-    static String getBuild() {
-        return getProperties().getProperty("build");
+    static String getProperty(String propertyName) {
+        return getProperties().getProperty(propertyName);
     }
 
     static Properties getProperties() {
         if (APP_PROPS.getProperty("loaded") == null) {
             try {
-                APP_PROPS.load(Axxess.class.getClassLoader().getResourceAsStream("app.properties"));
+                APP_PROPS.load(Axxess.class.getClassLoader().getResourceAsStream("axxess.properties"));
             } catch (Exception e) {
                 LOG.error("Could not load app.properties", e);
             }

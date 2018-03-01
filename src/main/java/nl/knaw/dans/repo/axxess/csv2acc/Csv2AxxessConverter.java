@@ -9,10 +9,10 @@ import com.healthmarketscience.jackcess.Relationship;
 import com.healthmarketscience.jackcess.RelationshipBuilder;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.TableBuilder;
-import nl.knaw.dans.repo.axxess.core.AbstractConverter;
 import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.core.Codex;
+import nl.knaw.dans.repo.axxess.core.Converter;
 import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XColumn;
 import nl.knaw.dans.repo.axxess.csv2acc.xdb.XDatabase;
@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> implements Axxess {
+public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implements Axxess {
 
-    public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-csv-out";
+    public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-db-out";
 
     private static Logger LOG = LoggerFactory.getLogger(Csv2AxxessConverter.class);
 
@@ -104,7 +104,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                 builtFromFile(file, getTargetFileFormat(), targetDirectory, resultFiles);
             } catch (Exception e) {
                 LOG.error(errorContext() + " file: " + file.getAbsolutePath(), e);
-                addError(e);
+                reportError("File: " + file.getAbsolutePath(), e);
             }
         }
     }
@@ -137,7 +137,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         currentDatabaseFormat = xdb.getString(DB_FILE_FORMAT);
 
         File targetFile = new File(targetDirectory,
-          getFilenameComposer().getDatabaseFilename(mdFile.getName(), getTargetFileFormat().getFileExtension()));
+          getFilenameComposer().getNewDatabaseFilename(mdFile.getName(), getTargetFileFormat().getFileExtension()));
         assert targetFile.exists() || targetFile.createNewFile();
         LOG.info("Trying to built database with format {} at {}", targetFormat, targetFile.getAbsolutePath());
         Database db = null;
@@ -223,7 +223,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
                 Table table = tableBuilder.toTable(db);
                 LOG.debug("Finished building table '{}'", currentTableName);
 
-                File tableDataFile = getFilenameComposer().getTableDataFile(mdFile, currentTableName);
+                File tableDataFile = getFilenameComposer().getTableDataFileFor(mdFile, currentTableName);
                 parseTableData(tableDataFile, table, xt, getCodex());
                 currentTableName = null;
             }
@@ -276,7 +276,7 @@ public class Csv2AxxessConverter extends AbstractConverter<Csv2AxxessConverter> 
         currentDatabaseFormat = null;
         increaseDbCount();
 
-        if (includeManifest()) {
+        if (isIncludingManifest()) {
             addManifest(resultFiles, targetDirectory);
         }
     }

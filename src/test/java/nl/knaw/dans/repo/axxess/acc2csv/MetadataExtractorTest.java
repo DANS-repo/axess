@@ -1,15 +1,12 @@
 package nl.knaw.dans.repo.axxess.acc2csv;
 
-import com.healthmarketscience.jackcess.DataType;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.DefaultCodex;
-import nl.knaw.dans.repo.axxess.core.KTV;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;
 import org.apache.commons.csv.CSVFormat;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -25,6 +22,7 @@ class MetadataExtractorTest {
         String databaseFile = "src/test/resources/integration/types/db/all_datatypes.mdb";
         Database database = DatabaseBuilder.open(new File(databaseFile));
         MetadataExtractor metadataExtractor = new MetadataExtractor();
+
         KeyTypeValueMatrix matrix = metadataExtractor.getMetadata(database);
         // matrix.printVertical(System.out, CSVFormat.RFC4180);
         assertTrue(matrix.getPrefixes().contains(ObjectType.EXTRACTION_METADATA.prefix()));
@@ -53,6 +51,6 @@ class MetadataExtractorTest {
         assertTrue(matrix.getKeys().contains(Axxess.EM_CODEX));
         assertTrue(matrix.getValues().contains(DefaultCodex.class.getName()));
 
-        assertEquals("[DB],Filename,TEXT,all_datatypes.mdb", matrix.getLines().get(4).toString());
+        assertEquals("[DB],Filename,TEXT,all_datatypes.mdb", matrix.getLines().get(8).toString());
     }
 }

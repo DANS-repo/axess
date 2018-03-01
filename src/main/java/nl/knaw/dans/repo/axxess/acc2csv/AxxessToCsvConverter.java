@@ -2,9 +2,8 @@ package nl.knaw.dans.repo.axxess.acc2csv;
 
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
-import nl.knaw.dans.repo.axxess.core.AbstractConverter;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
-import nl.knaw.dans.repo.axxess.core.FilenameComposer;
+import nl.knaw.dans.repo.axxess.core.Converter;
 import nl.knaw.dans.repo.axxess.impl.SimpleEncodingDetector;
 import nl.knaw.dans.repo.axxess.impl.StaticEncodingDetector;
 import nl.knaw.dans.repo.axxess.impl.ZipArchiver;
@@ -18,14 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter> {
+public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
 
     public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-csv-out";
 
     private static Logger LOG = LoggerFactory.getLogger(AxxessToCsvConverter.class);
 
-    private final MetadataWriter metadataWriter;
-    private final TableDataWriter tableDataWriter;
+    private final MetadataExtractor metadataWriter;
+    private final TableDataExtractor tableDataWriter;
 
     private EncodingDetector encodingDetector;
     private Archiver archiver;
@@ -33,14 +32,8 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
     private boolean compressArchive;
 
     public AxxessToCsvConverter() {
-        metadataWriter = new MetadataWriter();
-        tableDataWriter = new TableDataWriter();
-    }
-
-    public AxxessToCsvConverter withFilenameComposer(FilenameComposer filenameComposer) {
-        metadataWriter.setFilenameComposer(filenameComposer);
-        tableDataWriter.setFilenameComposer(filenameComposer);
-        return super.withFilenameComposer(filenameComposer);
+        metadataWriter = new MetadataExtractor();
+        tableDataWriter = new TableDataExtractor();
     }
 
     public AxxessToCsvConverter withEncodingDetector(EncodingDetector detector) {
@@ -73,14 +66,14 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
     }
 
     @Override
-    public List<File> convert(File file) throws AxxessException {
+    public List<File> convert(File file) {
         reset();
         List<File> resultFiles = new ArrayList<>();
         convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
         return resultFiles;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles) throws AxxessException {
+    private void convert(File file, File targetDirectory, List<File> resultFiles) {
         if (file.isDirectory()) {
             File td = new File(targetDirectory, file.getName());
             File[] files = file.listFiles();
@@ -95,7 +88,7 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
                 resultFiles.addAll(doConvert(file, targetDirectory));
             } catch (Exception e) {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
-                addError(e);
+                reportError("File: " + file.getAbsolutePath(), e);
             }
         } else {
             LOG.warn("File is not an access file: {}", file);
@@ -114,15 +107,15 @@ public class AxxessToCsvConverter extends AbstractConverter<AxxessToCsvConverter
                 LOG.info("Setting encoding to '{}' for '{}'", maybeCharset.get(), db.getFile());
                 db.setCharset(maybeCharset.get());
             }
-            metadataWriter.setTargetDirectory(targetDirectory);
-            File mdFile = metadataWriter.writeDatabaseMetadata(db, getCSVFormat(), getCodex(), true);
+            metadataWriter.setExtractorDef(getExtractorDef());
+            File mdFile = metadataWriter.writeDatabaseMetadata(db);
             csvFiles.add(mdFile);
-            tableDataWriter.setTargetDirectory(targetDirectory);
+            tableDataWriter.setExtractorDef(getExtractorDef());
             List<File> tableFiles = tableDataWriter.writeDatabaseData(db, getCSVFormat(), getCodex());
             csvFiles.addAll(tableFiles);
             LOG.info("Converted {} to {}", file.getName(), targetDirectory.getAbsolutePath());
 
-            if (includeManifest()) {
+            if (isIncludingManifest()) {
                 addManifest(csvFiles, targetDirectory);
             }
 

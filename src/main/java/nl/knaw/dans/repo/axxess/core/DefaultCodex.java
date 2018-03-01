@@ -316,5 +316,10 @@ public class DefaultCodex implements Codex {
         return listener;
     }
 
+    @Override
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
 
 }
