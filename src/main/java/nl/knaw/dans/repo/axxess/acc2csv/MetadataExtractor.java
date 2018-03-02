@@ -51,8 +51,9 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
      */
     public File writeDatabaseMetadata(Database db)
       throws IOException, AxxessException {
-        String filename = buildPaths(getFilenameComposer().getMetadataFilename(db));
-        File file = new File(filename);
+        String dirName = getFilenameComposer().getCsvDirectoryName(db);
+        String filename = getFilenameComposer().getMetadataFilename(db);
+        File file = buildPaths(dirName, filename);
         if (file.exists()) {
             throw new AxxessException("File exists: " + file.getAbsolutePath());
         }

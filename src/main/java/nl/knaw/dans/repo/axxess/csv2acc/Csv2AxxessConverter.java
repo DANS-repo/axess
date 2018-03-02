@@ -277,7 +277,7 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
         increaseDbCount();
 
         if (isIncludingManifest()) {
-            addManifest(resultFiles, targetDirectory);
+            addManifest(resultFiles);
         }
     }
 

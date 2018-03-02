@@ -184,7 +184,7 @@
         <version>2.10.4</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <outputDirectory>${project.basedir}/docs/site/apidocs</outputDirectory>
+          <outputDirectory>${project.build.directory}/docs/site/apidocs</outputDirectory>
           <detectLinks>true</detectLinks>
         </configuration>
         <executions>
@@ -192,7 +192,7 @@
             <goals>
               <goal>jar</goal>
             </goals>
-            <phase>package</phase>
+            <phase>site</phase>
           </execution>
         </executions>
       </plugin>

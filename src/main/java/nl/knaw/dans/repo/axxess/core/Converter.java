@@ -44,8 +44,12 @@ public abstract class Converter<T extends Converter> extends Extractor<T> {
         dbCount++;
     }
 
-    protected void addManifest(List<File> files, File targetDirectory) throws IOException {
-        File manifest = new File(targetDirectory, "manifest-sha1.txt");
+    protected void addManifest(List<File> files) throws IOException {
+        if (files.isEmpty()) {
+            return;
+        }
+        File directory = files.get(0).getParentFile();
+        File manifest = new File(directory, "manifest-sha1.txt");
         PrintWriter out = null;
         try {
             out = new PrintWriter(manifest, "UTF-8");

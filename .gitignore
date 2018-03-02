@@ -34,10 +34,14 @@ hs_err_pid*
 /axxess-out/
 /axxess-csv-out/
 
-/src/test/resources/integration/*/acc2csv/
-/src/test/resources/integration/*/acc2csv2/
-/src/test/resources/integration/*/csv2acc/
+/src/test/resources/integration/
 !/src/test/resources/integration/types/db/all_datatypes.mdb
+!/src/test/resources/integration/avereest/db/README
+!/src/test/resources/integration/kohier/db/README
+!/src/test/resources/integration/walcheren/db/README
 /src/test/test-set/
 
 /docs/
+/docker/example/
+!/docker/example/db/simple.mdb
+

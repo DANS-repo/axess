@@ -15,6 +15,16 @@ public class ExtractorDef {
     private Codex codex;
     private CSVFormat csvFormat;
 
+    public ExtractorDef copy() {
+        ExtractorDef copy = new ExtractorDef();
+        copy.targetDirectory = targetDirectory;
+        copy.targetCharset = targetCharset;
+        copy.filenameComposer = filenameComposer;
+        copy.codex = codex;
+        copy.csvFormat = csvFormat;
+        return copy;
+    }
+
     public File getTargetDirectory(String defaultOutput) {
         if (targetDirectory == null) {
             targetDirectory = new File(defaultOutput).getAbsoluteFile();
@@ -24,7 +34,9 @@ public class ExtractorDef {
 
     public void setTargetDirectory(File targetDirectory) throws IOException {
         this.targetDirectory = targetDirectory.getAbsoluteFile();
-        assert this.targetDirectory.exists() || this.targetDirectory.mkdirs();
+        if (!targetDirectory.exists()) {
+            this.targetDirectory.mkdirs();
+        }
         if (!this.targetDirectory.canWrite()) {
             throw new IOException("Target directory not writable: " + this.targetDirectory.getAbsolutePath());
         }

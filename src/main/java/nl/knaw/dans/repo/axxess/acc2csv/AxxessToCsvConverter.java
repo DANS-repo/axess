@@ -42,7 +42,11 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
     }
 
     public AxxessToCsvConverter withForceSourceEncoding(String charsetName) {
-        return withEncodingDetector(new StaticEncodingDetector(charsetName));
+        if (charsetName == null || charsetName.isEmpty()) {
+            return withEncodingDetector(null);
+        } else {
+            return withEncodingDetector(new StaticEncodingDetector(charsetName));
+        }
     }
 
     public AxxessToCsvConverter setArchiveResults(boolean archiveResults) {
@@ -66,16 +70,29 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
     }
 
     @Override
-    public List<File> convert(File file) {
+    public List<File> convert(File file) throws AxxessException {
         reset();
         List<File> resultFiles = new ArrayList<>();
-        convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
+        try {
+            convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
+        } catch (IOException e) {
+            throw new AxxessException("Exception during conversion of " + file.getAbsolutePath(), e);
+        }
         return resultFiles;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles) {
+    private void convert(File file, File targetDirectory, List<File> resultFiles) throws IOException {
+        if (!file.exists()) {
+            LOG.warn("File not found: {}", file);
+            return;
+        }
         if (file.isDirectory()) {
-            File td = new File(targetDirectory, file.getName());
+            File td;
+            if (file.getCanonicalPath().equals(targetDirectory.getCanonicalPath())) {
+                td = targetDirectory;
+            } else {
+                td = new File(targetDirectory, file.getName());
+            }
             File[] files = file.listFiles();
             if (files == null) {
                 return;
@@ -107,16 +124,18 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
                 LOG.info("Setting encoding to '{}' for '{}'", maybeCharset.get(), db.getFile());
                 db.setCharset(maybeCharset.get());
             }
-            metadataWriter.setExtractorDef(getExtractorDef());
+            metadataWriter.setExtractorDef(getExtractorDef().copy());
+            metadataWriter.withTargetDirectory(targetDirectory);
             File mdFile = metadataWriter.writeDatabaseMetadata(db);
             csvFiles.add(mdFile);
-            tableDataWriter.setExtractorDef(getExtractorDef());
+            tableDataWriter.setExtractorDef(getExtractorDef().copy());
+            tableDataWriter.withTargetDirectory(targetDirectory);
             List<File> tableFiles = tableDataWriter.writeDatabaseData(db, getCSVFormat(), getCodex());
             csvFiles.addAll(tableFiles);
             LOG.info("Converted {} to {}", file.getName(), targetDirectory.getAbsolutePath());
 
             if (isIncludingManifest()) {
-                addManifest(csvFiles, targetDirectory);
+                addManifest(csvFiles);
             }
 
             if (archiveResults) {
@@ -126,7 +145,10 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
                 LOG.info("Archived {} to {}", file.getName(), archived.getAbsolutePath());
                 resultFiles.add(archived);
                 for (File f : csvFiles) {
-                    assert f.delete();
+                    f.delete();
+                }
+                if (csvFiles.size() > 0) {
+                    csvFiles.get(0).getParentFile().delete();
                 }
             } else {
                 resultFiles = csvFiles;

@@ -11,6 +11,10 @@ import java.io.IOException;
  */
 public interface FilenameComposer {
 
+    String getCsvDirectoryName(Database db);
+
+    String getCsvDirectoryName(Table table);
+
     /**
      * Get a file name for the metadata file of the given {@link Database}.
      *

@@ -36,8 +36,9 @@ public class TableDataExtractor extends Extractor<TableDataExtractor> {
     }
 
     public File writeTableData(Table table, CSVFormat format, Codex codex) throws IOException, AxxessException {
-        String filename = buildPaths(getFilenameComposer().getTableDataFilename(table));
-        File file = new File(filename);
+        String dirName = getFilenameComposer().getCsvDirectoryName(table);
+        String filename = getFilenameComposer().getTableDataFilename(table);
+        File file = buildPaths(dirName, filename);
         if (file.exists()) {
             throw new AxxessException("File exists: " + file.getAbsolutePath());
         }

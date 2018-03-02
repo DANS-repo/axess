@@ -2,7 +2,7 @@ package nl.knaw.dans.repo.axxess.core;
 
 
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +54,16 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
     }
 
     @SuppressWarnings("unchecked")
-    public T withTargetCharset(Charset charset) {
+    public T withTargetEncoding(String charsetName) {
+        if (charsetName == null || charsetName.isEmpty()) {
+            return (T) this;
+        } else {
+            return withTargetEncoding(Charset.forName(charsetName));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public T withTargetEncoding(Charset charset) {
         extractorDef.setTargetCharset(charset);
         return (T) this;
     }
@@ -71,6 +80,15 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
 
     public Codex getCodex() {
         return extractorDef.getCodex(this);
+    }
+
+    @SuppressWarnings("unchecked")
+    public T withCSVFormat(String formatName) {
+        if (formatName == null || formatName.isEmpty()) {
+            return (T) this;
+        } else {
+            return withCSVFormat(CSVFormat.valueOf(formatName));
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -116,11 +134,13 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
         warningList.clear();
     }
 
-    protected String buildPaths(String basename) {
-        String filename = FilenameUtils.concat(getTargetDirectory().getAbsolutePath(), basename);
-        File directory = new File(filename).getParentFile();
-        assert directory.exists() || directory.mkdirs();
-        return filename;
+    protected File buildPaths(String dirName, String filename) {
+        File file = FileUtils.getFile(getTargetDirectory().getAbsolutePath(), dirName, filename);
+        File directory = file.getParentFile();
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+        return file;
     }
 
 }
