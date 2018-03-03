@@ -39,6 +39,7 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
 
     private static Logger LOG = LoggerFactory.getLogger(Csv2AxxessConverter.class);
 
+    private Charset sourceEncoding;
     private Database.FileFormat targetFormat;
     private boolean includeIndexes = true;
     private boolean includeRelationships = true;
@@ -50,9 +51,39 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
     private String currentIndexName = null;
     private String currentRelationshipName = null;
 
+    private int metadataFilenameCount;
+
+    public Csv2AxxessConverter withSourceEncoding(Charset sourceEncoding) {
+        this.sourceEncoding = sourceEncoding;
+        return this;
+    }
+
+    public Csv2AxxessConverter withSourceEncoding(String sourceEncoding) {
+        if (sourceEncoding == null || sourceEncoding.isEmpty()) {
+            return this;
+        } else {
+            return withSourceEncoding(Charset.forName(sourceEncoding));
+        }
+    }
+
+    public Charset getSourceEncoding() {
+        if (sourceEncoding == null) {
+            sourceEncoding = Charset.forName("UTF-8");
+        }
+        return sourceEncoding;
+    }
+
     public Csv2AxxessConverter withTargetDatabaseFileFormat(Database.FileFormat format) {
         targetFormat = format;
         return this;
+    }
+
+    public Csv2AxxessConverter withTargetDatabaseFileFormat(String dbFormat) {
+        if (dbFormat == null || dbFormat.isEmpty()) {
+            return this;
+        } else {
+            return withTargetDatabaseFileFormat(Database.FileFormat.valueOf(dbFormat));
+        }
     }
 
     public Csv2AxxessConverter setIncludeIndexes(boolean include) {
@@ -81,17 +112,40 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
         return DEFAULT_OUTPUT_DIRECTORY;
     }
 
+    public int getMetadataFilenameCount() {
+        return metadataFilenameCount;
+    }
+
     @Override
     public List<File> convert(File file) throws AxxessException {
         reset();
         List<File> resultFiles = new ArrayList<>();
-        convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
+        try {
+            convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
+        } catch (IOException e) {
+            throw new AxxessException("Exception during conversion of " + file.getAbsolutePath(), e);
+        }
         return resultFiles;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles) throws AxxessException {
+    @Override
+    protected void reset() {
+        super.reset();
+        metadataFilenameCount = 0;
+    }
+
+    private void convert(File file, File targetDirectory, List<File> resultFiles) throws AxxessException, IOException {
+        if (!file.exists()) {
+            LOG.warn("File not found: {}", file);
+            return;
+        }
         if (file.isDirectory()) {
-            File td = new File(targetDirectory, file.getName());
+            File td;
+            if (file.getCanonicalPath().equals(targetDirectory.getCanonicalPath())) {
+                td = targetDirectory;
+            } else {
+                td = new File(targetDirectory, file.getName());
+            }
             File[] files = file.listFiles();
             if (files == null) {
                 return;
@@ -101,11 +155,14 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
             }
         } else if (getFilenameComposer().isMetadataFilename(file)) {
             try {
-                builtFromFile(file, getTargetFileFormat(), targetDirectory, resultFiles);
+                builtFromFile(file, getTargetFileFormat(), targetDirectory.getParentFile(), resultFiles);
+                metadataFilenameCount += 1;
             } catch (Exception e) {
                 LOG.error(errorContext() + " file: " + file.getAbsolutePath(), e);
                 reportError("File: " + file.getAbsolutePath(), e);
             }
+        } else {
+            LOG.debug("File is not a metadata file: {}", file);
         }
     }
 
@@ -132,13 +189,21 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
     public void builtFromFile(File mdFile, Database.FileFormat targetFormat, File targetDirectory,
                               List<File> resultFiles) throws IOException {
         assert targetDirectory.exists() || targetDirectory.mkdirs();
-        LOG.info("Trying to parse {}", mdFile.getAbsolutePath());
-        XDatabase xdb = MetadataParser.parse(mdFile);
+        LOG.info("Trying to parse {}, encoding={}", mdFile.getAbsolutePath(), getSourceEncoding());
+        XDatabase xdb = MetadataParser.parse(mdFile, getSourceEncoding(), getCSVFormat(), getCodex());
         currentDatabaseFormat = xdb.getString(DB_FILE_FORMAT);
 
         File targetFile = new File(targetDirectory,
           getFilenameComposer().getNewDatabaseFilename(mdFile.getName(), getTargetFileFormat().getFileExtension()));
-        assert targetFile.exists() || targetFile.createNewFile();
+
+        File targetDir = targetFile.getParentFile();
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        if (!targetFile.exists()) {
+            targetFile.createNewFile();
+        }
         LOG.info("Trying to built database with format {} at {}", targetFormat, targetFile.getAbsolutePath());
         Database db = null;
         try {
@@ -212,6 +277,8 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
                       .setHyperlink(xc.getBool(C_IS_HYPERLINK));
                     if (autoNumberColumns) {
                         columnBuilder.setAutoNumber(xc.getBool(C_IS_AUTO_NUMBER));
+                    } else {
+                        columnBuilder.setAutoNumber(false);
                     }
                     for (KTV ktv : xc.getProperties(C_PROP)) {
                         columnBuilder.putProperty(ktv.getKey(), ktv.getType(), ktv.getValue());
@@ -272,7 +339,7 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
             }
         }
         resultFiles.add(targetFile);
-        LOG.debug("Finished building database '{}'", targetFile);
+        LOG.info("Finished building database '{}'", targetFile);
         currentDatabaseFormat = null;
         increaseDbCount();
 
@@ -290,7 +357,7 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
 
     private void parseTableData(File tableDataFile, Table table, XTable xt, Codex codex) throws IOException {
         LOG.debug("Trying to parse table data from {}", tableDataFile);
-        InputStreamReader reader = new InputStreamReader(new FileInputStream(tableDataFile), Charset.forName("UTF-8"));
+        InputStreamReader reader = new InputStreamReader(new FileInputStream(tableDataFile), getSourceEncoding());
         CSVParser parser = new CSVParser(reader, getCSVFormat());
         int recordCount = 0;
         for (CSVRecord record : parser) {

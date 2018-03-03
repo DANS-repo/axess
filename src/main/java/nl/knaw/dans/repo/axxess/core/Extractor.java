@@ -3,6 +3,8 @@ package nl.knaw.dans.repo.axxess.core;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Extractor<T extends Extractor> implements Codex.Listener {
+
+    private static Logger LOG = LoggerFactory.getLogger(Extractor.class);
 
     private ExtractorDef extractorDef = new ExtractorDef();
 

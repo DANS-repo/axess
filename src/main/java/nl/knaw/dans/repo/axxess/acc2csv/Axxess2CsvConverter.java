@@ -17,11 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
+public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
 
     public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-csv-out";
 
-    private static Logger LOG = LoggerFactory.getLogger(AxxessToCsvConverter.class);
+    private static Logger LOG = LoggerFactory.getLogger(Axxess2CsvConverter.class);
 
     private final MetadataExtractor metadataWriter;
     private final TableDataExtractor tableDataWriter;
@@ -31,17 +31,17 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
     private boolean archiveResults;
     private boolean compressArchive;
 
-    public AxxessToCsvConverter() {
+    public Axxess2CsvConverter() {
         metadataWriter = new MetadataExtractor();
         tableDataWriter = new TableDataExtractor();
     }
 
-    public AxxessToCsvConverter withEncodingDetector(EncodingDetector detector) {
+    public Axxess2CsvConverter withEncodingDetector(EncodingDetector detector) {
         this.encodingDetector = detector;
         return this;
     }
 
-    public AxxessToCsvConverter withForceSourceEncoding(String charsetName) {
+    public Axxess2CsvConverter withForceSourceEncoding(String charsetName) {
         if (charsetName == null || charsetName.isEmpty()) {
             return withEncodingDetector(null);
         } else {
@@ -49,17 +49,17 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
         }
     }
 
-    public AxxessToCsvConverter setArchiveResults(boolean archiveResults) {
+    public Axxess2CsvConverter setArchiveResults(boolean archiveResults) {
         this.archiveResults = archiveResults;
         return this;
     }
 
-    public AxxessToCsvConverter setCompressArchive(boolean compressArchive) {
+    public Axxess2CsvConverter setCompressArchive(boolean compressArchive) {
         this.compressArchive = compressArchive;
         return this;
     }
 
-    public AxxessToCsvConverter withArchiver(Archiver archiver) {
+    public Axxess2CsvConverter withArchiver(Archiver archiver) {
         this.archiver = archiver;
         return this;
     }
@@ -81,7 +81,7 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
         return resultFiles;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles) throws IOException {
+    private void convert(File file, File targetDirectory, List<File> resultFiles) throws IOException, AxxessException {
         if (!file.exists()) {
             LOG.warn("File not found: {}", file);
             return;
@@ -103,12 +103,12 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
         } else if (isAccessFile(file)) {
             try {
                 resultFiles.addAll(doConvert(file, targetDirectory));
-            } catch (Exception e) {
+            } catch (IOException e) {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
                 reportError("File: " + file.getAbsolutePath(), e);
             }
         } else {
-            LOG.warn("File is not an access file: {}", file);
+            LOG.debug("File is not an access file: {}", file);
         }
     }
 
@@ -144,12 +144,12 @@ public class AxxessToCsvConverter extends Converter<AxxessToCsvConverter> {
                 File archived = getArchiver().archive(csvFiles, compressArchive, targetFile);
                 LOG.info("Archived {} to {}", file.getName(), archived.getAbsolutePath());
                 resultFiles.add(archived);
-                for (File f : csvFiles) {
-                    f.delete();
-                }
-                if (csvFiles.size() > 0) {
-                    csvFiles.get(0).getParentFile().delete();
-                }
+                // for (File f : csvFiles) {
+                //     f.delete();
+                // }
+                // if (csvFiles.size() > 0) {
+                //     csvFiles.get(0).getParentFile().delete();
+                // }
             } else {
                 resultFiles = csvFiles;
             }

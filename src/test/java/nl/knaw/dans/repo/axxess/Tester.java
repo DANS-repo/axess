@@ -14,9 +14,12 @@ import java.io.File;
 public class Tester {
 
     public static void main(String[] args) throws Exception {
-        for (CSVFormat.Predefined format : CSVFormat.Predefined.values()) {
+        for (Database.FileFormat format : Database.FileFormat.values()) {
             System.out.print(" | " + format);
         }
+
+        System.out.println();
+        System.out.println(Database.FileFormat.valueOf("V1997"));
 
     }
 }

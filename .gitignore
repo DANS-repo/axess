@@ -41,7 +41,5 @@ hs_err_pid*
 !/src/test/resources/integration/walcheren/db/README
 /src/test/test-set/
 
-/docs/
-/docker/example/
 !/docker/example/db/simple.mdb
 

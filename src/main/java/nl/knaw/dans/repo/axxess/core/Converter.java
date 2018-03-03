@@ -31,7 +31,7 @@ public abstract class Converter<T extends Converter> extends Extractor<T> {
         return addManifest;
     }
 
-    public int getConvertedDatabaseCount() {
+    public int getDatabaseCount() {
         return dbCount;
     }
 
