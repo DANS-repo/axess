@@ -74,31 +74,28 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
         reset();
         List<File> resultFiles = new ArrayList<>();
         try {
-            convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles);
+            convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles, false);
         } catch (IOException e) {
             throw new AxxessException("Exception during conversion of " + file.getAbsolutePath(), e);
         }
         return resultFiles;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles) throws IOException, AxxessException {
+    private void convert(File file, File targetDirectory, List<File> resultFiles, boolean updateTarget) throws IOException, AxxessException {
         if (!file.exists()) {
             LOG.warn("File not found: {}", file);
             return;
         }
         if (file.isDirectory()) {
-            File td;
-            if (file.getCanonicalPath().equals(targetDirectory.getCanonicalPath())) {
-                td = targetDirectory;
-            } else {
-                td = new File(targetDirectory, file.getName());
+            if (updateTarget) {
+                targetDirectory = new File(targetDirectory, file.getName());
             }
             File[] files = file.listFiles();
             if (files == null) {
                 return;
             }
             for (File f : files) {
-                convert(f, td, resultFiles);
+                convert(f, targetDirectory, resultFiles, true);
             }
         } else if (isAccessFile(file)) {
             try {
