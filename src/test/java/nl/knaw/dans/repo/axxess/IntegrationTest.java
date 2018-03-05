@@ -32,33 +32,33 @@ public class IntegrationTest {
     private static SimpleFilenameComposer sfc = new SimpleFilenameComposer();
 
     private static String[][] databases = {
-      // // File format: V1997 [VERSION_3]   AccessVersion: 07.53
-      // {"avereest", "avereest.mdb",
-      //   "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content", "download"},
-      //
-      // // File format: V2000 [VERSION_4]   AccessVersion: 08.50
-      // {"walcheren", "Boedelbestand Walcheren 1755-1855.MDB",
-      //   "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content", "download"},
-      //
-      // // File format: V2007 [VERSION_12]  AccessVersion: 09.50
-      // {"kohier", "KOHIER1748.accdb",
-      //   "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content", "download"},
-      //
-      // // File format: V2000 [VERSION_4]  AccessVersion: 08.50
-      // {"types", "all_datatypes.mdb"},
-      //
-      // {"types2", "decimal_types.accdb"},
-      //
-      // {"cliwoc", "CLIWOC21_97.mdb",
-      //   "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
-      //
-      // {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
-      //
-      // {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
-      //
-      // {"polyglot", "Polyglot.mdb", "http://www.theaccessweb.com/downloads/Polygloth_pt.zip"},
-      //
-      // {"medicare", "DFCompare.mdb", "https://data.medicare.gov/data/dialysis-facility-compare"},
+      // File format: V1997 [VERSION_3]   AccessVersion: 07.53
+      {"avereest", "avereest.mdb",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content", "download"},
+
+      // File format: V2000 [VERSION_4]   AccessVersion: 08.50
+      {"walcheren", "Boedelbestand Walcheren 1755-1855.MDB",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content", "download"},
+
+      // File format: V2007 [VERSION_12]  AccessVersion: 09.50
+      {"kohier", "KOHIER1748.accdb",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content", "download"},
+
+      // File format: V2000 [VERSION_4]  AccessVersion: 08.50
+      {"types", "all_datatypes.mdb"},
+
+      {"types2", "decimal_types.accdb"},
+
+      {"cliwoc", "CLIWOC21_97.mdb",
+        "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
+
+      {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
+
+      {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
+
+      {"polyglot", "Polyglot.mdb", "http://www.theaccessweb.com/downloads/Polygloth_pt.zip"},
+
+      {"medicare", "DFCompare.mdb", "https://data.medicare.gov/data/dialysis-facility-compare"},
 
       {"article17", "Art17_MS_EU27_2015.mdb",
         "https://www.eea.europa.eu/data-and-maps/data/article-17-database-habitats-directive-92-43-eec-1/"},
@@ -74,6 +74,7 @@ public class IntegrationTest {
             deleteDirectory(getTargetDirectory(name[0]));
             deleteDirectory(getTargetDirectoryFor2ndConv(name[0]));
             deleteDirectory(getTargetDirectoryForZippedConv(name[0]));
+
             File dbFile = FileUtils.getFile(baseDirectory, name[0], "db", name[1]);
             if (!dbFile.exists() && name.length > 3 && name[3].equals("download")) {
                 loadFromUrl(name[2], dbFile);
@@ -134,7 +135,7 @@ public class IntegrationTest {
     private static File getCreatedDbFile(String name) throws IOException {
         String metaddataFilename = getMetadataFile(name).getName();
         String createdDbName = sfc.getNewDatabaseFilename(metaddataFilename, ".accdb");
-        return FileUtils.getFile(getTargetDirectory(name).getParentFile(), createdDbName);
+        return FileUtils.getFile(getTargetDirectory(name), createdDbName);
     }
 
     private static File getZipFile(String name) throws IOException {
@@ -236,7 +237,7 @@ public class IntegrationTest {
           .setIncludeIndexes(false)
           .setAutoNumberColumns(false)
           .setIncludeManifest(true);
-        List<File> fileList = converter.convert(getMetadataFile(name));
+        List<File> fileList = converter.convert(getTargetDirectory(name));
         assertEquals(2, fileList.size());
         assertEquals(1, converter.getDatabaseCount());
         assertEquals(0, converter.getErrorCount());

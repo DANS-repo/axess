@@ -183,7 +183,7 @@ public class DefaultCodex implements Codex {
 
     private String encodeString(Object value) {
         if (value instanceof String) {
-            return ((String) value).replaceAll("\r", "\u0000").replaceAll("\n", "\u0001");
+            return ((String) value).replaceAll("\r", "\u0002").replaceAll("\n", "\u0001");
         } else {
             getListener().reportWarning(">> Unexpected String field type: " + value.getClass(), null);
             return null;
@@ -191,7 +191,7 @@ public class DefaultCodex implements Codex {
     }
 
     private String decodeString(String value) {
-        return value.replaceAll("\u0000", "\r").replaceAll("\u0001", "\n");
+        return value.replaceAll("\u0002", "\r").replaceAll("\u0001", "\n");
     }
 
     private Object getJavaTime(Date value) {

@@ -77,6 +77,7 @@ public class XDatabaseObject {
         return DataType.valueOf(getString(key));
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getList(String key) {
         return ktvLines
           .stream()

@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
 
-    public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-csv-out";
+    public static final String DEFAULT_OUTPUT_DIRECTORY = "work/axxess-csv-out";
 
     private static Logger LOG = LoggerFactory.getLogger(Axxess2CsvConverter.class);
 

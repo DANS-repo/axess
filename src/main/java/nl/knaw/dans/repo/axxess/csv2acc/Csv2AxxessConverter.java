@@ -35,7 +35,7 @@ import java.util.List;
 
 public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implements Axxess {
 
-    public static final String DEFAULT_OUTPUT_DIRECTORY = "axxess-db-out";
+    public static final String DEFAULT_OUTPUT_DIRECTORY = "work/axxess-db-out";
 
     private static Logger LOG = LoggerFactory.getLogger(Csv2AxxessConverter.class);
 
