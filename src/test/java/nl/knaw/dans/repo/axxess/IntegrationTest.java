@@ -26,7 +26,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class IntegrationTest {
+@Disabled
+class IntegrationTest {
 
     private static File baseDirectory = new File("src/test/resources/integration").getAbsoluteFile();
     private static SimpleFilenameComposer sfc = new SimpleFilenameComposer();
