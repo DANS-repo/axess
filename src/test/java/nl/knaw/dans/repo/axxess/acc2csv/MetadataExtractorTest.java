@@ -6,12 +6,10 @@ import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.DefaultCodex;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;
-import org.apache.commons.csv.CSVFormat;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 

@@ -134,7 +134,8 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
         metadataFilenameCount = 0;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles, boolean updateTarget) throws AxxessException, IOException {
+    private void convert(File file, File targetDirectory, List<File> resultFiles, boolean updateTarget)
+      throws AxxessException, IOException {
         if (!file.exists()) {
             LOG.warn("File not found: {}", file);
             return;
@@ -201,7 +202,7 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
         if (!targetFile.exists()) {
             targetFile.createNewFile();
         }
-        LOG.info("Trying to built database with format {} at {}", targetFormat, targetFile.getAbsolutePath());
+        LOG.info("Trying to build database with format {} at {}", targetFormat, targetFile.getAbsolutePath());
         Database db = null;
         try {
             DatabaseBuilder databaseBuilder = new DatabaseBuilder()
@@ -243,7 +244,7 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
                             indexBuilder.setIgnoreNulls();
                         }
                         tableBuilder.addIndex(indexBuilder);
-                        LOG.debug("Build index '{}' on table '{}'", currentIndexName, currentTableName);
+                        LOG.debug("Finished building index '{}' on table '{}'", currentIndexName, currentTableName);
                         currentIndexName = null;
                     }
                 }

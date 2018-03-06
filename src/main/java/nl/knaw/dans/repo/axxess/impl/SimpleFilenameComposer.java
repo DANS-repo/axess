@@ -83,6 +83,6 @@ public class SimpleFilenameComposer implements FilenameComposer {
     }
 
     private String cleanDatabaseName(File dbFile) {
-        return dbFile.getName().replaceAll(" ", "_");
+        return dbFile.getName().replaceAll(" ", " ");
     }
 }

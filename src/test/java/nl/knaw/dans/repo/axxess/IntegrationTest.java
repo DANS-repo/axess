@@ -53,6 +53,8 @@ class IntegrationTest {
       {"cliwoc", "CLIWOC21_97.mdb",
         "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
 
+      // {"rhijn", "Rhijn_1848.mdb"},
+
       {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
 
       {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
@@ -66,7 +68,7 @@ class IntegrationTest {
 
       {"red_list", "European_Red_List_November2017.mdb",
         "https://www.eea.europa.eu/data-and-maps/data/european-red-lists-6/"}
-
+        
     };
 
     @BeforeAll
@@ -208,6 +210,7 @@ class IntegrationTest {
     private void acc2csvZipped(String name) throws Exception {
         Axxess2CsvConverter converter = new Axxess2CsvConverter()
           .withTargetDirectory(getTargetDirectoryForZippedConv(name))
+          .withForceSourceEncoding("UTF-8")
           .setArchiveResults(true)
           .setCompressArchive(true)
           .setIncludeManifest(true);

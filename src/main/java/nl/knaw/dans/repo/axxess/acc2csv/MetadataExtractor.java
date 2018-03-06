@@ -46,7 +46,7 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
      *
      * @param db the database
      * @return the newly created .csv file
-     * @throws IOException signals a failure in reading or writing
+     * @throws IOException     signals a failure in reading or writing
      * @throws AxxessException signals an insoluble conflict
      */
     public File writeDatabaseMetadata(Database db)

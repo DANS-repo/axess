@@ -15,9 +15,6 @@ public class AxxessMain {
 
     private static final String AXXESS_DEF = "cfg/axxess.properties";
     private static final String MODE_ACA = "aca";
-
-    private static Logger LOG = LoggerFactory.getLogger(AxxessMain.class);
-
     private static final String AXXESS_ART = "\n\n" +
 
       "           %#@      \n" +
@@ -28,21 +25,36 @@ public class AxxessMain {
       "      %#@^^^^^^^&!* \n" +
       "     %#@        &!*~ \n" +
       "   ___________________\n";
-
+    private static Logger LOG = LoggerFactory.getLogger(AxxessMain.class);
     private static Properties PROPS = new Properties();
 
     public static void main(String[] args) throws Exception {
         LOG.info(AXXESS_ART);
+        File propFile = null;
         File baseDir = new File(".");
-        File propFile = new File(baseDir, AXXESS_DEF);
+        if (args.length > 0) {
+            String propFilename = args[0];
+            propFile = new File(propFilename).getCanonicalFile();
+            if (!propFile.exists()) {
+                LOG.error(" Cannot find properties file at " + propFile.getAbsolutePath());
+                System.exit(-1);
+            }
+        }
+
+        if (propFile == null || !propFile.exists()) {
+            propFile = new File(baseDir, AXXESS_DEF).getCanonicalFile();
+        }
+
         if (!propFile.exists()) {
+            LOG.info("No properties file at " + propFile.getAbsolutePath());
             baseDir = new File("docker");
-            propFile = new File(baseDir, AXXESS_DEF);
+            propFile = new File(baseDir, AXXESS_DEF).getCanonicalFile();
         }
         if (!propFile.exists()) {
-            LOG.error(" Cannot find properties file at " + propFile.getAbsolutePath());
+            LOG.error("Cannot find properties file at " + propFile.getAbsolutePath());
             System.exit(-1);
         }
+
         LOG.info("Configuring Axxess run from {}", propFile.getPath());
         FileInputStream fis = new FileInputStream(propFile);
         PROPS.load(fis);
@@ -61,14 +73,14 @@ public class AxxessMain {
         }
         File dbSourceFile = new File(dbSource);
         if (!dbSourceFile.isAbsolute()) {
-            dbSourceFile = new File(baseDir, dbSource);
+            dbSourceFile = new File(baseDir, dbSource).getCanonicalFile();
         }
 
         File csvTargetDir = null;
         String csvTarget = getProp("csv.target.directory", Axxess2CsvConverter.DEFAULT_OUTPUT_DIRECTORY);
         csvTargetDir = new File(csvTarget);
         if (!csvTargetDir.isAbsolute()) {
-            csvTargetDir = new File(baseDir, csvTarget);
+            csvTargetDir = new File(baseDir, csvTarget).getCanonicalFile();
         }
         LOG.info("Absolute csv.target.directory={}", csvTargetDir.getAbsolutePath());
 
@@ -77,8 +89,8 @@ public class AxxessMain {
             csvSource = csvTargetDir.getPath();
         }
         File csvSourceFile = new File(csvSource);
-        if (!csvSourceFile.isAbsolute() && !csvSource.startsWith(baseDir.getName())) {
-            csvSourceFile = new File(baseDir, csvSource);
+        if (!csvSourceFile.isAbsolute()) {
+            csvSourceFile = new File(baseDir, csvSource).getCanonicalFile();
         }
 
         String csvTargetEncoding = getProp("csv.target.encoding");
@@ -98,24 +110,24 @@ public class AxxessMain {
         }
 
         if (mode.endsWith("a")) {
-             LOG.info("Absolute      csv.source.file={}", csvSourceFile.getAbsolutePath());
+            LOG.info("Absolute      csv.source.file={}", csvSourceFile.getAbsolutePath());
 
-             String dbTarget = getProp("db.target.directory", Csv2AxxessConverter.DEFAULT_OUTPUT_DIRECTORY);
-             File dbTargetDir = new File(dbTarget);
-             if (!dbTargetDir.isAbsolute()) {
-                 dbTargetDir = new File(baseDir, dbTarget);
-             }
-             LOG.info("Absolute  db.target.directory={}", dbTargetDir.getAbsolutePath());
+            String dbTarget = getProp("db.target.directory", Csv2AxxessConverter.DEFAULT_OUTPUT_DIRECTORY);
+            File dbTargetDir = new File(dbTarget);
+            if (!dbTargetDir.isAbsolute()) {
+                dbTargetDir = new File(baseDir, dbTarget).getCanonicalFile();
+            }
+            LOG.info("Absolute  db.target.directory={}", dbTargetDir.getAbsolutePath());
 
-             c2a = new Csv2AxxessConverter()
-               .withTargetDirectory(dbTargetDir)
-               .withSourceEncoding(getProp("csv.source.encoding", csvTargetEncoding))
-               .withCSVFormat(getProp("csv.source.csvformat", csvTargetFormat))
-               .withTargetDatabaseFileFormat(getProp("db.target.database.format"))
-               .setAutoNumberColumns("true".equalsIgnoreCase(getProp("db.target.autonumber.columns", "false")))
-               .setIncludeRelationships("true".equalsIgnoreCase(getProp("db.target.include.relationships", "true")))
-               .setIncludeIndexes("true".equalsIgnoreCase(getProp("db.target.include.indexes", "true")))
-               .setIncludeManifest("true".equalsIgnoreCase(getProp("db.target.manifest", "true")));
+            c2a = new Csv2AxxessConverter()
+              .withTargetDirectory(dbTargetDir)
+              .withSourceEncoding(getProp("csv.source.encoding", csvTargetEncoding))
+              .withCSVFormat(getProp("csv.source.csvformat", csvTargetFormat))
+              .withTargetDatabaseFileFormat(getProp("db.target.database.format"))
+              .setAutoNumberColumns("true".equalsIgnoreCase(getProp("db.target.autonumber.columns", "false")))
+              .setIncludeRelationships("true".equalsIgnoreCase(getProp("db.target.include.relationships", "true")))
+              .setIncludeIndexes("true".equalsIgnoreCase(getProp("db.target.include.indexes", "true")))
+              .setIncludeManifest("true".equalsIgnoreCase(getProp("db.target.manifest", "true")));
 
         }
 

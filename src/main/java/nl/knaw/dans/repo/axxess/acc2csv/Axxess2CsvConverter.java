@@ -17,8 +17,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Converts ms access databases to csv files.
+ */
 public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
 
+    /**
+     * Default location for output.
+     */
     public static final String DEFAULT_OUTPUT_DIRECTORY = "work/axxess-csv-out";
 
     private static Logger LOG = LoggerFactory.getLogger(Axxess2CsvConverter.class);
@@ -31,16 +37,38 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
     private boolean archiveResults;
     private boolean compressArchive;
 
+    /**
+     * Constructs a new {@link Axxess2CsvConverter}.
+     */
     public Axxess2CsvConverter() {
         metadataWriter = new MetadataExtractor();
         tableDataWriter = new TableDataExtractor();
     }
 
+    /**
+     * Use the given {@link EncodingDetector} for detection of the encoding of the source database(s).
+     * With a <code>null</code> parameter will reset encoding detection to default.
+     * Default is {@link SimpleEncodingDetector}.
+     *
+     * @param detector {@link EncodingDetector} to use
+     * @return this for chaining method calls
+     */
     public Axxess2CsvConverter withEncodingDetector(EncodingDetector detector) {
         this.encodingDetector = detector;
         return this;
     }
 
+    /**
+     * Force reading databases with the given character set (encoding).
+     * Encoding of access database files after 2000 is (most likely) UTF-16LE. access '97 (V1997) encoding is not
+     * properly detected so Axxess enforces ISO8859-1. If you think your database has another encoding you can set
+     * the character set.
+     * See also: <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/intl/encoding.doc.html">encoding
+     * .doc</a>
+     *
+     * @param charsetName canonical Name for java.nio API
+     * @return this for chaining method calls
+     */
     public Axxess2CsvConverter withForceSourceEncoding(String charsetName) {
         if (charsetName == null || charsetName.isEmpty()) {
             return withEncodingDetector(null);
@@ -49,16 +77,44 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
         }
     }
 
+    /**
+     * Zip or archive the result files in one file per database converted.
+     * Default <code>false</code>.
+     *
+     * @param archiveResults <code>true</code> for archiving (zipping).
+     * @return this for chaining method calls
+     * @see #withArchiver(Archiver)
+     * @see #setCompressArchive(boolean)
+     */
     public Axxess2CsvConverter setArchiveResults(boolean archiveResults) {
         this.archiveResults = archiveResults;
         return this;
     }
 
+    /**
+     * If {@link #setArchiveResults(boolean)} is set to <code>true</code> determines if archived files will be
+     * compressed.
+     * Default <code>false</code>.
+     *
+     * @param compressArchive <code>true</code> if archived files should be compressed.
+     * @return this for chaining method calls
+     * @see #setArchiveResults(boolean)
+     * @see #withArchiver(Archiver)
+     */
     public Axxess2CsvConverter setCompressArchive(boolean compressArchive) {
         this.compressArchive = compressArchive;
         return this;
     }
 
+    /**
+     * Use the given {@link Archiver} when archiving result files.
+     * Default archiver is {@link ZipArchiver}.
+     *
+     * @param archiver {@link Archiver} to use
+     * @return this for chaining method calls
+     * @see #setArchiveResults(boolean)
+     * @see #setCompressArchive(boolean)
+     */
     public Axxess2CsvConverter withArchiver(Archiver archiver) {
         this.archiver = archiver;
         return this;
@@ -81,7 +137,8 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
         return resultFiles;
     }
 
-    private void convert(File file, File targetDirectory, List<File> resultFiles, boolean updateTarget) throws IOException, AxxessException {
+    private void convert(File file, File targetDirectory, List<File> resultFiles, boolean updateTarget)
+      throws IOException, AxxessException {
         if (!file.exists()) {
             LOG.warn("File not found: {}", file);
             return;

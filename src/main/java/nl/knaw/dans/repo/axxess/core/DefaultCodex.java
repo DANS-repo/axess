@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * </p>
  * <p>
  * Carriage return and line break characters in {@link String}s of data types
- * {@link DataType#TEXT} and {@link DataType#MEMO} are encoded as <code>u+0000</code> and
+ * {@link DataType#TEXT} and {@link DataType#MEMO} are encoded as <code>u+0002</code> and
  * <code>u+0001</code> respectively - and decoded back to the original characters.
  * </p>
  * <p>

@@ -26,7 +26,7 @@ public class SimpleFilenameComposerTest {
         database = DatabaseBuilder.create(Database.FileFormat.V2010, dbFile);
         new TableBuilder("a simple table")
           .addColumn(new ColumnBuilder("a simple column")
-          .setType(DataType.TEXT))
+            .setType(DataType.TEXT))
           .toTable(database);
         composer = new SimpleFilenameComposer();
     }
@@ -40,11 +40,11 @@ public class SimpleFilenameComposerTest {
     @Test
     void returnsCorrectFilenames() throws Exception {
         //@formatter:off
-        String csvDirectoryName =       "example_db_mdb";
-        String metadataFilename =       "example_db.mdb._metadata.csv";
-        String tableFilename =          "example_db.mdb.a_simple_table.csv";
-        String zipFilename =            "example_db.mdb.csv.zip";
-        String newDatabaseFilename =    "example_db.mdb.ext";
+        String csvDirectoryName =       "example db_mdb";
+        String metadataFilename =       "example db.mdb._metadata.csv";
+        String tableFilename =          "example db.mdb.a_simple_table.csv";
+        String zipFilename =            "example db.mdb.csv.zip";
+        String newDatabaseFilename =    "example db.mdb.ext";
         //@formatter:on
 
         assertEquals(csvDirectoryName, composer.getCsvDirectoryName(database));
@@ -52,7 +52,7 @@ public class SimpleFilenameComposerTest {
         assertEquals(tableFilename, composer.getTableDataFilename(database.getTable("a simple table")));
         assertEquals(zipFilename, composer.getArchiveFilename(database));
         assertEquals(newDatabaseFilename,
-          composer.getNewDatabaseFilename("example_db.mdb.____metadata.csv", ".ext"));
+          composer.getNewDatabaseFilename("example db.mdb.____metadata.csv", ".ext"));
         assertEquals(tableFilename,
           composer.getTableDataFileFor(new File(metadataFilename), "a simple table").getName());
     }
