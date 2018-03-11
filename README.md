@@ -54,6 +54,10 @@ If not specified as the first argument on the command line Axxess wil look in `c
 Nearly all properties can be left to their default settings except for `axxess.mode`, `db.source.file` 
 (when used for access to csv) and `csv.source.file` (when used for csv to access).
 
+As a second argument you can specify the logback configuration file.
+```
+java -jar axxess-jar-with-dependencies.jar axxess.properties logback.xml
+```
 
 ### Run as a docker container
 
