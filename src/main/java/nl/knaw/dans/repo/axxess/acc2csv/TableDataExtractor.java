@@ -25,17 +25,17 @@ public class TableDataExtractor extends Extractor<TableDataExtractor> {
 
     private static Logger LOG = LoggerFactory.getLogger(TableDataExtractor.class);
 
-    public List<File> writeDatabaseData(Database db, CSVFormat format, Codex codex)
+    public List<File> writeDatabaseData(Database db)
       throws IOException, AxxessException {
         List<File> convertedFiles = new ArrayList<>();
         for (String tableName : db.getTableNames()) {
             Table table = db.getTable(tableName);
-            convertedFiles.add(writeTableData(table, format, codex));
+            convertedFiles.add(writeTableData(table));
         }
         return convertedFiles;
     }
 
-    public File writeTableData(Table table, CSVFormat format, Codex codex) throws IOException, AxxessException {
+    public File writeTableData(Table table) throws IOException, AxxessException {
         String dirName = getFilenameComposer().getCsvDirectoryName(table);
         String filename = getFilenameComposer().getTableDataFilename(table);
         File file = buildPaths(dirName, filename);

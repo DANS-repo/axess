@@ -33,6 +33,7 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
     private final TableDataExtractor tableDataWriter;
 
     private EncodingDetector encodingDetector;
+    private boolean extractMetadata = true;
     private Archiver archiver;
     private boolean archiveResults;
     private boolean compressArchive;
@@ -75,6 +76,20 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
         } else {
             return withEncodingDetector(new StaticEncodingDetector(charsetName));
         }
+    }
+
+    /**
+     * Extract metadata about database, relations, queries, tables, indexes and columns.
+     * Default is <code>true</code>. If Access files are damaged or corrupt try with this
+     * option set to <code>false</code>. It may well be that table data can still be rescued and converted
+     * to csv.
+     *
+     * @param extractMetadata <code>true</code> for extracting metadata, <code>false</code> to skip this step
+     * @return this for chaining method calls
+     */
+    public Axxess2CsvConverter setExtractMetadata(boolean extractMetadata) {
+        this.extractMetadata = extractMetadata;
+        return this;
     }
 
     /**
@@ -157,9 +172,12 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
         } else if (isAccessFile(file)) {
             try {
                 resultFiles.addAll(doConvert(file, targetDirectory));
-            } catch (IOException e) {
+            } catch (Exception e) {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
                 reportError("File: " + file.getAbsolutePath(), e);
+                if (e instanceof AxxessException) {
+                    throw e;
+                }
             }
         } else {
             LOG.debug("File is not an access file: {}", file);
@@ -178,13 +196,15 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
                 LOG.info("Setting encoding to '{}' for '{}'", maybeCharset.get(), db.getFile());
                 db.setCharset(maybeCharset.get());
             }
-            metadataWriter.setExtractorDef(getExtractorDef().copy());
-            metadataWriter.withTargetDirectory(targetDirectory);
-            File mdFile = metadataWriter.writeDatabaseMetadata(db);
-            csvFiles.add(mdFile);
+            if (extractMetadata) {
+                metadataWriter.setExtractorDef(getExtractorDef().copy());
+                metadataWriter.withTargetDirectory(targetDirectory);
+                File mdFile = metadataWriter.writeDatabaseMetadata(db);
+                csvFiles.add(mdFile);
+            }
             tableDataWriter.setExtractorDef(getExtractorDef().copy());
             tableDataWriter.withTargetDirectory(targetDirectory);
-            List<File> tableFiles = tableDataWriter.writeDatabaseData(db, getCSVFormat(), getCodex());
+            List<File> tableFiles = tableDataWriter.writeDatabaseData(db);
             csvFiles.addAll(tableFiles);
             LOG.info("Converted {} to {}", file.getName(), targetDirectory.getAbsolutePath());
 
@@ -198,12 +218,6 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
                 File archived = getArchiver().archive(csvFiles, compressArchive, targetFile);
                 LOG.info("Archived {} to {}", file.getName(), archived.getAbsolutePath());
                 resultFiles.add(archived);
-                // for (File f : csvFiles) {
-                //     f.delete();
-                // }
-                // if (csvFiles.size() > 0) {
-                //     csvFiles.get(0).getParentFile().delete();
-                // }
             } else {
                 resultFiles = csvFiles;
             }

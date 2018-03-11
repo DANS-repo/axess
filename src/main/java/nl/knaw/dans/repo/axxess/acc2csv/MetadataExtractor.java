@@ -41,7 +41,7 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
     }
 
     /**
-     * Writes metadata of the given database in vertical orientation in the given {@link CSVFormat} as a
+     * Writes metadata of the given database in vertical orientation as a
      * <code>n x 4</code> <code>.csv</code> file.
      *
      * @param db the database

@@ -140,6 +140,9 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.0.2</version>
         <configuration>
+          <excludes>
+            <exclude>logback.xml</exclude>
+          </excludes>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
@@ -168,6 +171,7 @@
               </descriptorRefs>
               <archive>
                 <manifest>
+                  <addClasspath>true</addClasspath>
                   <mainClass>nl.knaw.dans.repo.axxess.app.AxxessMain</mainClass>
                 </manifest>
               </archive>

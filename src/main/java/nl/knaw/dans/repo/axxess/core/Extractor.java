@@ -50,7 +50,7 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
      * @return default output directory
      */
     public String getDefaultOutputDirectory() {
-        return "axxess-out";
+        return "work/axxess-out";
     }
 
     /**
@@ -229,7 +229,7 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
     }
 
     /**
-     * List errors during conversion.
+     * List errors encountered during conversion.
      *
      * @return errors during conversion
      */
@@ -238,7 +238,7 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
     }
 
     /**
-     * List warnings during conversion.
+     * List warnings encountered during conversion.
      *
      * @return warnings during conversion
      */

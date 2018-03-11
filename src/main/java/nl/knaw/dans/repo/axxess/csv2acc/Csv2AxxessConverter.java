@@ -153,11 +153,15 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
             }
         } else if (getFilenameComposer().isMetadataFilename(file)) {
             try {
-                builtFromFile(file, getTargetFileFormat(), targetDirectory.getParentFile(), resultFiles);
+                builtFromFile(file, getTargetFileFormat(), targetDirectory, resultFiles);
+
                 metadataFilenameCount += 1;
             } catch (Exception e) {
                 LOG.error(errorContext() + " file: " + file.getAbsolutePath(), e);
                 reportError("File: " + file.getAbsolutePath(), e);
+                if (e instanceof AxxessException) {
+                    throw e;
+                }
             }
         } else {
             LOG.debug("File is not a metadata file: {}", file);
@@ -186,7 +190,6 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
 
     public void builtFromFile(File mdFile, Database.FileFormat targetFormat, File targetDirectory,
                               List<File> resultFiles) throws IOException {
-        assert targetDirectory.exists() || targetDirectory.mkdirs();
         LOG.info("Trying to parse {}, encoding={}", mdFile.getAbsolutePath(), getSourceEncoding());
         XDatabase xdb = MetadataParser.parse(mdFile, getSourceEncoding(), getCSVFormat(), getCodex());
         currentDatabaseFormat = xdb.getString(DB_FILE_FORMAT);
@@ -336,14 +339,18 @@ public class Csv2AxxessConverter extends Converter<Csv2AxxessConverter> implemen
                 db.close();
             }
         }
-        resultFiles.add(targetFile);
+
+        List<File> targetFiles = new ArrayList<>();
+        if (isIncludingManifest()) {
+            targetFiles.add(targetFile);
+            addManifest(targetFiles);
+        }
+        resultFiles.addAll(targetFiles);
+
         LOG.info("Finished building database '{}'", targetFile);
         currentDatabaseFormat = null;
         increaseDbCount();
 
-        if (isIncludingManifest()) {
-            addManifest(resultFiles);
-        }
     }
 
     private Database.FileFormat getTargetFileFormat() {

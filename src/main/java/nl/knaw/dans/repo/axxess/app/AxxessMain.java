@@ -1,5 +1,9 @@
 package nl.knaw.dans.repo.axxess.app;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.joran.JoranConfigurator;
+import ch.qos.logback.core.joran.spi.JoranException;
+import ch.qos.logback.core.util.StatusPrinter;
 import nl.knaw.dans.repo.axxess.acc2csv.Axxess2CsvConverter;
 import nl.knaw.dans.repo.axxess.csv2acc.Csv2AxxessConverter;
 import org.slf4j.Logger;
@@ -10,6 +14,7 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class AxxessMain {
 
@@ -29,6 +34,23 @@ public class AxxessMain {
     private static Properties PROPS = new Properties();
 
     public static void main(String[] args) throws Exception {
+        if (args.length > 1) {
+            // assume SLF4J is bound to logback in the current environment
+            LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+
+            try {
+                JoranConfigurator configurator = new JoranConfigurator();
+                configurator.setContext(context);
+                // Call context.reset() to clear any previous configuration, e.g. default
+                // configuration. For multi-step configuration, omit calling context.reset().
+                context.reset();
+                configurator.doConfigure(args[1]);
+            } catch (JoranException je) {
+                // StatusPrinter will handle this
+            }
+            StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+        }
+
         LOG.info(AXXESS_ART);
         File propFile = null;
         File baseDir = new File(".");
@@ -66,14 +88,11 @@ public class AxxessMain {
         Axxess2CsvConverter a2c = null;
         Csv2AxxessConverter c2a = null;
 
+        File dbSourceFile = null;
         String dbSource = getProp("db.source.file");
-        if (dbSource == null || dbSource.isEmpty()) {
+        if ((dbSource == null || dbSource.isEmpty()) && mode.startsWith("a")) {
             LOG.warn("No source file or source directory specified. See cfg/axxess.properties, db.source.file");
             return;
-        }
-        File dbSourceFile = new File(dbSource);
-        if (!dbSourceFile.isAbsolute()) {
-            dbSourceFile = new File(baseDir, dbSource).getCanonicalFile();
         }
 
         File csvTargetDir = null;
@@ -97,6 +116,10 @@ public class AxxessMain {
         String csvTargetFormat = getProp("csv.target.csvformat");
 
         if (mode.startsWith("a")) {
+            dbSourceFile = new File(dbSource);
+            if (!dbSourceFile.isAbsolute()) {
+                dbSourceFile = new File(baseDir, dbSource).getCanonicalFile();
+            }
             LOG.info("Absolute       db.source.file={}", dbSourceFile.getAbsolutePath());
 
             a2c = new Axxess2CsvConverter()
@@ -104,7 +127,8 @@ public class AxxessMain {
               .withForceSourceEncoding(getProp("db.force.source.encoding"))
               .withTargetEncoding(csvTargetEncoding)
               .withCSVFormat(csvTargetFormat)
-              .setIncludeManifest("true".equalsIgnoreCase(getProp("csv.target.manifest", "true")))
+              .setExtractMetadata("true".equalsIgnoreCase(getProp("csv.target.include.metadata", "true")))
+              .setIncludeManifest("true".equalsIgnoreCase(getProp("csv.target.include.manifest", "true")))
               .setArchiveResults("true".equalsIgnoreCase(getProp("create.zip", "false")))
               .setCompressArchive("true".equalsIgnoreCase(getProp("compress.zip", "false")));
         }
@@ -127,7 +151,7 @@ public class AxxessMain {
               .setAutoNumberColumns("true".equalsIgnoreCase(getProp("db.target.autonumber.columns", "false")))
               .setIncludeRelationships("true".equalsIgnoreCase(getProp("db.target.include.relationships", "true")))
               .setIncludeIndexes("true".equalsIgnoreCase(getProp("db.target.include.indexes", "true")))
-              .setIncludeManifest("true".equalsIgnoreCase(getProp("db.target.manifest", "true")));
+              .setIncludeManifest("true".equalsIgnoreCase(getProp("db.target.include.manifest", "true")));
 
         }
 
@@ -142,10 +166,38 @@ public class AxxessMain {
         if (a2c != null) {
             LOG.info("Converted {} database(s) to {} result files, with {} error(s) and {} warnings(s).",
               a2c.getDatabaseCount(), csvResultFiles.size(), a2c.getErrorCount(), a2c.getWarningCount());
+            if (a2c.getErrorCount() > 0) {
+                LOG.info("Errors during conversion from Access to csv:");
+                LOG.info(a2c.getErrorList()
+                            .stream()
+                            .map(Throwable::getMessage)
+                            .collect(Collectors.joining("\n\t")));
+            }
+            if (a2c.getWarningCount() > 0) {
+                LOG.info("Warnings during conversion from Access to csv:");
+                LOG.info(a2c.getWarningList()
+                            .stream()
+                            .map(Throwable::getMessage)
+                            .collect(Collectors.joining("\n\t")));
+            }
         }
         if (c2a != null) {
             LOG.info("Converted {} metadata file(s) to {} database(s), with {} error(s) and {} warning(s)",
               c2a.getMetadataFilenameCount(), c2a.getDatabaseCount(), c2a.getErrorCount(), c2a.getWarningCount());
+            if (c2a.getErrorCount() > 0) {
+                LOG.info("Errors during conversion from csv to Access:");
+                LOG.info(c2a.getErrorList()
+                            .stream()
+                            .map(Throwable::getMessage)
+                            .collect(Collectors.joining("\n\t")));
+            }
+            if (c2a.getWarningCount() > 0) {
+                LOG.info("Warnings during conversion from csv to Access:");
+                LOG.info(c2a.getWarningList()
+                            .stream()
+                            .map(Throwable::getMessage)
+                            .collect(Collectors.joining("\n\t")));
+            }
         }
     }
 

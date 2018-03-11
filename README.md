@@ -51,7 +51,7 @@ and you will find csv files in `work/axxess-csv-out` and a converted database in
 Configuration can be done with a properties file. An example can be found in
 [docker/cfg/axxess.properties](https://github.com/DANS-repo/axxess/blob/master/docker/cfg/axxess.properties).
 If not specified as the first argument on the command line Axxess wil look in `cfg/axxess.properties`. 
-Nearly all arguments can be left to their default settings except for `axxess.mode`, `db.source.file` 
+Nearly all properties can be left to their default settings except for `axxess.mode`, `db.source.file` 
 (when used for access to csv) and `csv.source.file` (when used for csv to access).
 
 

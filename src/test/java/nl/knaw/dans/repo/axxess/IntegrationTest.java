@@ -34,41 +34,41 @@ class IntegrationTest {
 
     private static String[][] databases = {
       // File format: V1997 [VERSION_3]   AccessVersion: 07.53
-      {"avereest", "avereest.mdb",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content", "download"},
-
-      // File format: V2000 [VERSION_4]   AccessVersion: 08.50
-      {"walcheren", "Boedelbestand Walcheren 1755-1855.MDB",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content", "download"},
-
-      // File format: V2007 [VERSION_12]  AccessVersion: 09.50
-      {"kohier", "KOHIER1748.accdb",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content", "download"},
+      // {"avereest", "avereest.mdb",
+      //   "https://easy.dans.knaw.nl/ui/rest/datasets/61704/files/4917456/content", "download"},
+      //
+      // // File format: V2000 [VERSION_4]   AccessVersion: 08.50
+      // {"walcheren", "Boedelbestand Walcheren 1755-1855.MDB",
+      //   "https://easy.dans.knaw.nl/ui/rest/datasets/48968/files/2964358/content", "download"},
+      //
+      // // File format: V2007 [VERSION_12]  AccessVersion: 09.50
+      // {"kohier", "KOHIER1748.accdb",
+      //   "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content", "download"},
 
       // File format: V2000 [VERSION_4]  AccessVersion: 08.50
       {"types", "all_datatypes.mdb"},
 
-      {"types2", "decimal_types.accdb"},
+      // {"types2", "decimal_types.accdb"},
+      //
+      // {"cliwoc", "CLIWOC21_97.mdb",
+      //   "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
+      //
+      // // {"rhijn", "Rhijn_1848.mdb"},
+      //
+      // {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
+      //
+      // {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
+      //
+      // {"polyglot", "Polyglot.mdb", "http://www.theaccessweb.com/downloads/Polygloth_pt.zip"},
+      //
+      // {"medicare", "DFCompare.mdb", "https://data.medicare.gov/data/dialysis-facility-compare"},
+      //
+      // {"article17", "Art17_MS_EU27_2015.mdb",
+      //   "https://www.eea.europa.eu/data-and-maps/data/article-17-database-habitats-directive-92-43-eec-1/"},
+      //
+      // {"red_list", "European_Red_List_November2017.mdb",
+      //   "https://www.eea.europa.eu/data-and-maps/data/european-red-lists-6/"}
 
-      {"cliwoc", "CLIWOC21_97.mdb",
-        "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
-
-      // {"rhijn", "Rhijn_1848.mdb"},
-
-      {"webfaq", "AccWebFAQ.mdb", "http://access.mvps.org/access/downloads/accwebfaq-10-10-00-A8.zip"},
-
-      {"kb", "KB.mdb", "http://www.theaccessweb.com/downloads/kb.zip"},
-
-      {"polyglot", "Polyglot.mdb", "http://www.theaccessweb.com/downloads/Polygloth_pt.zip"},
-
-      {"medicare", "DFCompare.mdb", "https://data.medicare.gov/data/dialysis-facility-compare"},
-
-      {"article17", "Art17_MS_EU27_2015.mdb",
-        "https://www.eea.europa.eu/data-and-maps/data/article-17-database-habitats-directive-92-43-eec-1/"},
-
-      {"red_list", "European_Red_List_November2017.mdb",
-        "https://www.eea.europa.eu/data-and-maps/data/european-red-lists-6/"}
-        
     };
 
     @BeforeAll
@@ -120,6 +120,10 @@ class IntegrationTest {
         return FileUtils.getFile(baseDirectory, name, "output");
     }
 
+    private static File getTargetDirectoryForDb(String name) {
+        return FileUtils.getFile(baseDirectory, name, "output_db");
+    }
+
     private static File getTargetDirectoryFor2ndConv(String name) {
         return FileUtils.getFile(baseDirectory, name, "output2nd");
     }
@@ -137,8 +141,9 @@ class IntegrationTest {
 
     private static File getCreatedDbFile(String name) throws IOException {
         String metaddataFilename = getMetadataFile(name).getName();
+        String csvDirectoryName = sfc.getCsvDirectoryName(getDbFile(name));
         String createdDbName = sfc.getNewDatabaseFilename(metaddataFilename, ".accdb");
-        return FileUtils.getFile(getTargetDirectory(name), createdDbName);
+        return FileUtils.getFile(getTargetDirectoryForDb(name), csvDirectoryName, createdDbName);
     }
 
     private static File getZipFile(String name) throws IOException {
@@ -210,7 +215,6 @@ class IntegrationTest {
     private void acc2csvZipped(String name) throws Exception {
         Axxess2CsvConverter converter = new Axxess2CsvConverter()
           .withTargetDirectory(getTargetDirectoryForZippedConv(name))
-          .withForceSourceEncoding("UTF-8")
           .setArchiveResults(true)
           .setCompressArchive(true)
           .setIncludeManifest(true);
@@ -236,7 +240,7 @@ class IntegrationTest {
 
     private void csv2acc(String name) throws Exception {
         Csv2AxxessConverter converter = new Csv2AxxessConverter()
-          .withTargetDirectory(getTargetDirectory(name))
+          .withTargetDirectory(getTargetDirectoryForDb(name))
           .withTargetDatabaseFileFormat(Database.FileFormat.V2010)
           .setIncludeIndexes(false)
           .setAutoNumberColumns(false)
