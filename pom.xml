@@ -6,7 +6,7 @@
 
   <groupId>nl.knaw.dans.repo</groupId>
   <artifactId>axxess</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>Library for converting MS Access databases to and from csv.</description>
   <url>https://github.com/DANS-repo/axxess</url>
 
@@ -140,9 +140,6 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.0.2</version>
         <configuration>
-          <excludes>
-            <exclude>logback.xml</exclude>
-          </excludes>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
@@ -192,7 +189,7 @@
             </goals>
             <configuration>
               <outputFile>
-                ${project.build.outputDirectory}/axxess.properties
+                ${project.build.outputDirectory}/axxess_version.properties
               </outputFile>
             </configuration>
           </execution>
