@@ -5,12 +5,17 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import nl.knaw.dans.repo.axxess.acc2csv.Axxess2CsvConverter;
+import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.csv2acc.Csv2AxxessConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -34,10 +39,15 @@ public class AxxessMain {
     private static Properties PROPS = new Properties();
 
     public static void main(String[] args) throws Exception {
+        if (args.length > 0) {
+            if (args[0].equals("-h") || args[0].equals("--help")) {
+                help();
+                System.exit(0);
+            }
+        }
         if (args.length > 1) {
             // assume SLF4J is bound to logback in the current environment
             LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-
             try {
                 JoranConfigurator configurator = new JoranConfigurator();
                 configurator.setContext(context);
@@ -49,16 +59,21 @@ public class AxxessMain {
                 // StatusPrinter will handle this
             }
             StatusPrinter.printInCaseOfErrorsOrWarnings(context);
+        } else {
+            // Logging as configured in resources/logback.xml
+            System.out.println("No log configuration given. Using default. See: logs/axxess.log");
         }
 
         LOG.info(AXXESS_ART);
         File propFile = null;
         File baseDir = new File(".");
+        baseDir = baseDir.getCanonicalFile();
         if (args.length > 0) {
             String propFilename = args[0];
             propFile = new File(propFilename).getCanonicalFile();
             if (!propFile.exists()) {
                 LOG.error(" Cannot find properties file at " + propFile.getAbsolutePath());
+                help();
                 System.exit(-1);
             }
         }
@@ -70,13 +85,19 @@ public class AxxessMain {
         if (!propFile.exists()) {
             LOG.info("No properties file at " + propFile.getAbsolutePath());
             baseDir = new File("docker");
+            baseDir = baseDir.getCanonicalFile();
             propFile = new File(baseDir, AXXESS_DEF).getCanonicalFile();
         }
         if (!propFile.exists()) {
             LOG.error("Cannot find properties file at " + propFile.getAbsolutePath());
+            help();
             System.exit(-1);
         }
 
+        doConvert(propFile, baseDir);
+    }
+
+    private static void doConvert(File propFile, File baseDir) throws IOException, AxxessException {
         LOG.info("Configuring Axxess run from {}", propFile.getPath());
         FileInputStream fis = new FileInputStream(propFile);
         PROPS.load(fis);
@@ -180,6 +201,11 @@ public class AxxessMain {
                             .map(Throwable::getMessage)
                             .collect(Collectors.joining("\n\t")));
             }
+            String csvResultListFile = getProp("csv.result.list.file", null);
+            if (csvResultListFile != null) {
+                boolean absoluteNames = "true".equalsIgnoreCase(getProp("csv.result.list.absolute.filenames", "false"));
+                writeResultFiles(csvResultFiles, csvResultListFile, baseDir, absoluteNames);
+            }
         }
         if (c2a != null) {
             LOG.info("Converted {} metadata file(s) to {} database(s), with {} error(s) and {} warning(s)",
@@ -197,6 +223,11 @@ public class AxxessMain {
                             .stream()
                             .map(Throwable::getMessage)
                             .collect(Collectors.joining("\n\t")));
+            }
+            String dbResultListFile = getProp("db.result.list.file", null);
+            if (dbResultListFile != null) {
+                boolean absoluteNames = "true".equalsIgnoreCase(getProp("db.result.list.absolute.filenames", "false"));
+                writeResultFiles(dbResultFiles, dbResultListFile, baseDir, absoluteNames);
             }
         }
     }
@@ -218,5 +249,56 @@ public class AxxessMain {
             LOG.info("{}={}", key, prop);
         }
         return prop;
+    }
+
+    private static void writeResultFiles(List<File> resultFiles, String filename, File baseDir, boolean absoluteNames)
+      throws IOException {
+        File file = new File(filename);
+        if (!file.isAbsolute()) {
+            file = new File(baseDir, filename);
+        }
+        File dir = file.getParentFile();
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"))) {
+            for (File resultFile : resultFiles) {
+                String path = resultFile.getPath();
+                if (!absoluteNames) {
+                    path = path.substring(baseDir.getPath().length() + 1);
+                }
+                osw.write(path + "\n");
+            }
+            osw.close();
+        }
+        LOG.info("Wrote result file list to {}", file.getAbsolutePath());
+    }
+
+    private static void help() {
+        System.out.println("Axxess is a tool for converting MS Access databases to and from csv files.");
+        System.out.println("See also: https://github.com/DANS-repo/axxess\n");
+        String jarFile = new java.io.File(AxxessMain.class.getProtectionDomain()
+                                                          .getCodeSource()
+                                                          .getLocation()
+                                                          .getPath())
+          .getName();
+        if ("classes".equals(jarFile)) {
+            System.out.println("USAGE:\n\n" +
+              "      java " + AxxessMain.class.getName() + " [axxess.properties] [logback configuration]");
+        } else {
+            System.out.println("USAGE:\n\n" +
+              "          java -jar " + jarFile + " [axxess.properties] [logback configuration]");
+        }
+        System.out.println("\naxxess.properties      - configuration file.");
+        System.out.println("                         " +
+          "See https://github.com/DANS-repo/axxess/blob/master/docker/cfg/axxess.properties");
+        System.out.println("                         " +
+          "If no properties file given will look for cfg/axxess.properties");
+
+        System.out.println("\nlogback configuration  - logging configuration.");
+        System.out.println("                         " +
+          "See https://logback.qos.ch/manual/configuration.html");
+        System.out.println("                         " +
+          "If no logging configuration given will log to logs/axxess.log");
     }
 }

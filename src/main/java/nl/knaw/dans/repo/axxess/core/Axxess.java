@@ -107,9 +107,9 @@ public interface Axxess {
     static Properties getProperties() {
         if (APP_PROPS.getProperty("loaded") == null) {
             try {
-                APP_PROPS.load(Axxess.class.getClassLoader().getResourceAsStream("axxess.properties"));
+                APP_PROPS.load(Axxess.class.getClassLoader().getResourceAsStream("axxess_version.properties"));
             } catch (Exception e) {
-                LOG.error("Could not load app.properties", e);
+                LOG.error("Could not load axxess_version.properties", e);
             }
             APP_PROPS.setProperty("loaded", Instant.now().toString());
         }
