@@ -185,8 +185,10 @@ public class AxxessMain {
         }
 
         if (a2c != null) {
-            LOG.info("Converted {} database(s) to {} result files, with {} error(s) and {} warnings(s).",
+            String msg = String.format("Converted %d database(s) to %d result files, with %d error(s) and %d warnings(s).",
               a2c.getDatabaseCount(), csvResultFiles.size(), a2c.getErrorCount(), a2c.getWarningCount());
+            System.out.println(msg);
+            LOG.info(msg);
             if (a2c.getErrorCount() > 0) {
                 LOG.info("Errors during conversion from Access to csv:");
                 LOG.info(a2c.getErrorList()
@@ -208,8 +210,10 @@ public class AxxessMain {
             }
         }
         if (c2a != null) {
-            LOG.info("Converted {} metadata file(s) to {} database(s), with {} error(s) and {} warning(s)",
+            String msg = String.format("Converted %d metadata file(s) to %d database(s), with %d error(s) and %d warning(s)",
               c2a.getMetadataFilenameCount(), c2a.getDatabaseCount(), c2a.getErrorCount(), c2a.getWarningCount());
+            System.out.println(msg);
+            LOG.info(msg);
             if (c2a.getErrorCount() > 0) {
                 LOG.info("Errors during conversion from csv to Access:");
                 LOG.info(c2a.getErrorList()
@@ -230,6 +234,7 @@ public class AxxessMain {
                 writeResultFiles(dbResultFiles, dbResultListFile, baseDir, absoluteNames);
             }
         }
+        System.out.println("See logs for details");
     }
 
     private static String getProp(String key, String defaultValue) {
