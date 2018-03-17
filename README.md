@@ -13,6 +13,9 @@ Axxess can be deployed in several ways:
 - as a docker container, configured with a property file.
 - as a library in your java project
 
+As jar-with-dependencies it can also run within a [Jupyter](http://jupyter.org/) Notebook.
+See the examples on [Axxess-Jupyter](https://github.com/DANS-repo/axxess-jupyter).
+
 ### Run as jar-with-dependencies
 
 *Prerequisite: Java 8*
