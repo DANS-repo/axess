@@ -1,0 +1,1670 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:java="http://www.yworks.com/xml/yfiles-common/1.0/java" xmlns:sys="http://www.yworks.com/xml/yfiles-common/markup/primitives/2.0" xmlns:x="http://www.yworks.com/xml/yfiles-common/markup/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xmlns:yed="http://www.yworks.com/xml/yed/3" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://www.yworks.com/xml/schema/graphml/1.1/ygraphml.xsd">
+  <!--Created by yEd 3.17-->
+  <key attr.name="Description" attr.type="string" for="graph" id="d0"/>
+  <key for="port" id="d1" yfiles.type="portgraphics"/>
+  <key for="port" id="d2" yfiles.type="portgeometry"/>
+  <key for="port" id="d3" yfiles.type="portuserdata"/>
+  <key attr.name="url" attr.type="string" for="node" id="d4"/>
+  <key attr.name="description" attr.type="string" for="node" id="d5"/>
+  <key for="node" id="d6" yfiles.type="nodegraphics"/>
+  <key for="graphml" id="d7" yfiles.type="resources"/>
+  <key attr.name="url" attr.type="string" for="edge" id="d8"/>
+  <key attr.name="description" attr.type="string" for="edge" id="d9"/>
+  <key for="edge" id="d10" yfiles.type="edgegraphics"/>
+  <graph edgedefault="directed" id="G">
+    <data key="d0"/>
+    <node id="n0">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="144.60826873779297" width="55.79736328125" x="137.5" y="366.39173126220703"/>
+          <y:Fill color="#871B0A7C" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFF9B" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="74.6640625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="45.91796875" x="4.939697265625" y="34.972103118896484">
+Axxess
+Java
+Library
+ </y:NodeLabel>
+          <y:Shape type="rectangle3d"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n1">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="34.101593017578125" x="103.39840698242188" y="409.28346252441406"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="15.050796508789062" y="10.804134368896484"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="1"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n2">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="32.851593017578125" x="104.02340698242188" y="464.89173126220703"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="14.425796508789062" y="10.804134368896484"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="2"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n3">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="144.60826873779297" width="63.648406982421875" x="39.75" y="366.39173126220703"/>
+          <y:Fill color="#50657A84" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFF9B" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="74.6640625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="52.5859375" x="5.5312347412109375" y="34.972103118896484">
+Jackcess
+Java
+Library
+ </y:NodeLabel>
+          <y:Shape type="rectangle3d"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n4">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="144.60826873779297" width="55.79736328125" x="-50.148956298828125" y="366.39173126220703"/>
+          <y:Fill color="#87490D7A" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFF9B" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="88.796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="47.60546875" x="4.095947265625" y="27.905696868896484">
+MS
+Access
+*.mdb
+*.accdb
+
+</y:NodeLabel>
+          <y:Shape type="rectangle3d"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n5">
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="56.60826873779297" width="44.58247375488281" x="276.0914001464844" y="434.1958656311035"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="sandwich" modelPosition="s" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="20.291236877441406" y="60.60826873779297"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="3"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n6">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="74.20263671875" x="193.29736328125" y="449.6958656311035"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFFAA" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" textColor="#000000" verticalTextPosition="bottom" visible="true" width="59.669921875" x="4.0" y="3.7377281188964844">    data    </y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="2"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n7">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="83.20263671875" x="193.29736328125" y="386.0"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFFAA" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" textColor="#000000" verticalTextPosition="bottom" visible="true" width="65.892578125" x="4.0" y="3.7377281188964844"> metadata </y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="1"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n8">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="39.0" x="461.625" y="406.28346252441406"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="17.5" y="10.804134368896484"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="1"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n9">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="37.75" x="462.25" y="461.89173126220703"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="16.875" y="10.804134368896484"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="2"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n10">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="50.60826873779297" width="40.0" x="563.6484069824219" y="413.39173126220703"/>
+          <y:Fill color="#50657A" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="18.0" y="23.304134368896484"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="4"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n11">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="73.36343383789062" x="330.6484069824219" y="457.08759689331055"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFFAA" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" textColor="#000000" verticalTextPosition="bottom" visible="true" width="59.669921875" x="4.0" y="3.7377281188964844">    data    </y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="2"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n12">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="25.60826873779297" width="75.93695831298828" x="330.6484069824219" y="385.0"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFFAA" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="l" textColor="#000000" verticalTextPosition="bottom" visible="true" width="65.892578125" x="4.0" y="3.7377281188964844"> metadata </y:NodeLabel>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="1"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n13">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="45.60826873779297" width="39.0" x="280.375" y="505.3041343688965"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="sandwich" modelPosition="s" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="17.5" y="49.60826873779297"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="5"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n14">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="56.60826873779297" width="34.101593017578125" x="5.648406982421875" y="417.6958656311035"/>
+          <y:Fill color="#50657A" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="15.050796508789062" y="26.304134368896484"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="4"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n15">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="144.60826873779297" width="55.79736328125" x="406.45263671875" y="366.39173126220703"/>
+          <y:Fill color="#871B0A7C" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFF9B" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="74.6640625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="45.91796875" x="4.939697265625" y="34.972103118896484">
+Axxess
+Java
+Library
+ </y:NodeLabel>
+          <y:Shape type="rectangle3d"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n16">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="144.60826873779297" width="63.648406982421875" x="500.0" y="366.39173126220703"/>
+          <y:Fill color="#50657A84" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFF9B" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="74.6640625" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="52.5859375" x="5.5312347412109375" y="34.972103118896484">
+Jackcess
+Java
+Library
+ </y:NodeLabel>
+          <y:Shape type="rectangle3d"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n17">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="144.60826873779297" width="55.79736328125" x="603.6484069824219" y="366.39173126220703"/>
+          <y:Fill color="#87490D7A" transparent="false"/>
+          <y:BorderStyle color="#000000" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" backgroundColor="#FFFFFF9B" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasLineColor="false" height="88.796875" horizontalTextPosition="center" iconTextGap="4" modelName="internal" modelPosition="c" textColor="#000000" verticalTextPosition="bottom" visible="true" width="47.60546875" x="4.095947265625" y="27.905696868896484">
+MS
+Access
+*.mdb
+*.accdb
+
+</y:NodeLabel>
+          <y:Shape type="rectangle3d"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n18">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="94.39840698242188" y="319.39173126220703"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="67.55078125" x="-3.775390625" y="5.93359375">Java values<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.5" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n19">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="466.125" y="319.39173126220703"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="67.55078125" x="-18.775390625" y="5.93359375">Java values<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n20">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="56.60826873779297" width="210.7144775390625" x="113.74299621582031" y="558.2603359222412"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#C0C0C0" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="46.3984375" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="203.65234375" x="3.53106689453125" y="5.104915618896484">* long-term preservation &amp; access
+* grand scale analysis
+   i.e. Jupyter Notebooks
+<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n21">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="37.804134368896484" width="124.7144775390625" x="204.9044647216797" y="309.39173126220703"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#C0C0C0" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="88.884765625" x="17.91485595703125" y="2.769254684448242">csv
+representation
+<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n22">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="37.804134368896484" width="102.76789855957031" x="-50.148956298828125" y="311.58759689331055"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#C0C0C0" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="left" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="88.884765625" x="6.941566467285156" y="2.769254684448242">binary
+representation
+<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n23">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="37.804134368896484" width="102.76789855957031" x="556.6778717041016" y="309.39173126220703"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle color="#C0C0C0" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="right" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="32.265625" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="88.884765625" x="6.941566467285156" y="2.769254684448242">binary
+representation
+<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n24">
+      <data key="d5"/>
+      <data key="d6">
+        <y:SVGNode>
+          <y:Geometry height="50.60826873779297" width="40.0" x="279.875" y="367.8260335922241"/>
+          <y:Fill color="#CCCCFF" transparent="false"/>
+          <y:BorderStyle color="#000000" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="sandwich" modelPosition="s" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="18.0" y="54.60826873779297"/>
+          <y:SVGNodeProperties usingVisualBounds="true"/>
+          <y:SVGModel svgBoundsPolicy="0">
+            <y:SVGContent refid="6"/>
+          </y:SVGModel>
+        </y:SVGNode>
+      </data>
+    </node>
+    <node id="n25">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="103.39840698242188" y="520.5"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="48.982421875" x="-9.4912109375" y="5.93359375">acc2csv<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n26">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="30.0" width="30.0" x="466.125" y="520.9124031066895"/>
+          <y:Fill hasColor="false" transparent="false"/>
+          <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="18.1328125" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="48.982421875" x="-9.4912109375" y="5.93359375">csv2acc<y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+    <node id="n27">
+      <data key="d5"/>
+      <data key="d6">
+        <y:ShapeNode>
+          <y:Geometry height="189.0650839805603" width="339.0" x="329.26527404785156" y="355.84731912612915"/>
+          <y:Fill color="#C0C0C075" transparent="false"/>
+          <y:BorderStyle hasColor="false" raised="false" type="line" width="1.0"/>
+          <y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" hasText="false" height="4.0" horizontalTextPosition="center" iconTextGap="4" modelName="custom" textColor="#000000" verticalTextPosition="bottom" visible="true" width="4.0" x="167.5" y="92.53254199028015">
+            <y:LabelModel>
+              <y:SmartNodeLabelModel distance="4.0"/>
+            </y:LabelModel>
+            <y:ModelParameter>
+              <y:SmartNodeLabelModelParameter labelRatioX="0.0" labelRatioY="0.0" nodeRatioX="0.0" nodeRatioY="0.0" offsetX="0.0" offsetY="0.0" upX="0.0" upY="-1.0"/>
+            </y:ModelParameter>
+          </y:NodeLabel>
+          <y:Shape type="rectangle"/>
+        </y:ShapeNode>
+      </data>
+    </node>
+  </graph>
+  <data key="d7">
+    <y:Resources>
+      <y:Resource id="1">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+&lt;svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    id="svg2"
+    sodipodi:docname="arrow.svg"
+    viewBox="0 0 118.97 23.969"
+    version="1.1"
+    inkscape:version="0.48.4 r9939"
+  &gt;
+  &lt;defs
+      id="defs4"
+    &gt;
+    &lt;linearGradient
+        id="linearGradient5395"
+        y2="613.86"
+        gradientUnits="userSpaceOnUse"
+        x2="650.5"
+        gradientTransform="matrix(.19027 0 0 .19027 22.882 447.06)"
+        y1="613.86"
+        x1="25.764"
+        inkscape:collect="always"
+      &gt;
+      &lt;stop
+          id="stop5391"
+          style="stop-color:#33ffff;stop-opacity:.60870"
+          offset="0"
+      /&gt;
+      &lt;stop
+          id="stop5393"
+          style="stop-color:#abfeff;stop-opacity:.38261"
+          offset="1"
+      /&gt;
+    &lt;/linearGradient
+    &gt;
+  &lt;/defs
+  &gt;
+  &lt;sodipodi:namedview
+      id="base"
+      fit-margin-left="0"
+      inkscape:zoom="5.6"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="29.000578"
+      inkscape:cy="31.566965"
+      inkscape:window-maximized="0"
+      showgrid="true"
+      fit-margin-right="0"
+      units="in"
+      inkscape:document-units="px"
+      bordercolor="#666666"
+      inkscape:window-x="39"
+      inkscape:window-y="11"
+      objecttolerance="40"
+      fit-margin-bottom="0"
+      inkscape:window-width="1355"
+      inkscape:pageopacity="0.0"
+      inkscape:pageshadow="2"
+      pagecolor="#ffffff"
+      inkscape:window-height="900"
+      fit-margin-top="0"
+    &gt;
+    &lt;inkscape:grid
+        id="grid3004"
+        spacingx="2px"
+        originy="-476.52093px"
+        enabled="true"
+        originx="-27.78125px"
+        spacingy="2px"
+        visible="true"
+        snapvisiblegridlinesonly="true"
+        type="xygrid"
+        empspacing="25"
+    /&gt;
+  &lt;/sodipodi:namedview
+  &gt;
+  &lt;g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(-27.781 -551.88)"
+    &gt;
+    &lt;path
+        id="Arrow"
+        style="stroke-opacity:.81778;stroke:#333333;stroke-width:.19;fill:url(#linearGradient5395)"
+        d="m32.636 551.97c-2.6353 0-4.7569 5.3985-4.7569 11.987 0 6.5882 2.1216 11.798 4.7569 11.798h94.418l19.506-11.798-19.506-11.987z"
+        sodipodi:nodetypes="ssscccs"
+        inkscape:connector-curvature="0"
+        inkscape:label="#arrow01"
+      &gt;
+      &lt;title
+          id="title3077"
+          style="fill:url(#linearGradient5395)"
+        &gt;Arrow&lt;/title
+      &gt;
+    &lt;/path
+    &gt;
+  &lt;/g
+  &gt;
+  &lt;metadata
+    &gt;
+    &lt;rdf:RDF
+      &gt;
+      &lt;cc:Work
+        &gt;
+        &lt;dc:format
+          &gt;image/svg+xml&lt;/dc:format
+        &gt;
+        &lt;dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        /&gt;
+        &lt;cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        /&gt;
+        &lt;dc:publisher
+          &gt;
+          &lt;cc:Agent
+              rdf:about="http://openclipart.org/"
+            &gt;
+            &lt;dc:title
+              &gt;Openclipart&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:publisher
+        &gt;
+        &lt;dc:title
+          &gt;Arrow Right Cyan&lt;/dc:title
+        &gt;
+        &lt;dc:date
+          &gt;2013-03-21T02:08:07&lt;/dc:date
+        &gt;
+        &lt;dc:description
+          &gt;Cyan arrow pointing right suitable for sign-here type flags.&lt;/dc:description
+        &gt;
+        &lt;dc:source
+          &gt;https://openclipart.org/detail/176417/arrow-right-cyan-by-dougransom-176417&lt;/dc:source
+        &gt;
+        &lt;dc:creator
+          &gt;
+          &lt;cc:Agent
+            &gt;
+            &lt;dc:title
+              &gt;dougransom&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:creator
+        &gt;
+        &lt;dc:subject
+          &gt;
+          &lt;rdf:Bag
+            &gt;
+            &lt;rdf:li
+              &gt;Arrow&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;Flag&lt;/rdf:li
+            &gt;
+          &lt;/rdf:Bag
+          &gt;
+        &lt;/dc:subject
+        &gt;
+      &lt;/cc:Work
+      &gt;
+      &lt;cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        &gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        /&gt;
+      &lt;/cc:License
+      &gt;
+    &lt;/rdf:RDF
+    &gt;
+  &lt;/metadata
+  &gt;
+&lt;/svg
+&gt;
+</y:Resource>
+      <y:Resource id="2">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+&lt;svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    id="svg2"
+    sodipodi:docname="arrow-right-mag.svg"
+    viewBox="0 0 118.97 23.969"
+    version="1.1"
+    inkscape:version="0.48.4 r9939"
+  &gt;
+  &lt;defs
+      id="defs4"
+    &gt;
+    &lt;linearGradient
+        id="linearGradient5395"
+        y2="613.86"
+        gradientUnits="userSpaceOnUse"
+        x2="650.5"
+        gradientTransform="matrix(.19027 0 0 .19027 22.882 447.06)"
+        y1="613.86"
+        x1="25.764"
+        inkscape:collect="always"
+      &gt;
+      &lt;stop
+          id="stop5391"
+          style="stop-color:#ff3dff;stop-opacity:.60870"
+          offset="0"
+      /&gt;
+      &lt;stop
+          id="stop5393"
+          style="stop-color:#ffecff;stop-opacity:.38261"
+          offset="1"
+      /&gt;
+    &lt;/linearGradient
+    &gt;
+  &lt;/defs
+  &gt;
+  &lt;sodipodi:namedview
+      id="base"
+      fit-margin-left="0"
+      inkscape:zoom="5.6"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="29.000578"
+      inkscape:cy="31.566965"
+      inkscape:window-maximized="0"
+      showgrid="true"
+      fit-margin-right="0"
+      units="in"
+      inkscape:document-units="px"
+      bordercolor="#666666"
+      inkscape:window-x="126"
+      inkscape:window-y="41"
+      objecttolerance="40"
+      fit-margin-bottom="0"
+      inkscape:window-width="1355"
+      inkscape:pageopacity="0.0"
+      inkscape:pageshadow="2"
+      pagecolor="#ffffff"
+      inkscape:window-height="674"
+      fit-margin-top="0"
+    &gt;
+    &lt;inkscape:grid
+        id="grid3004"
+        spacingx="2px"
+        originy="-476.52093px"
+        enabled="true"
+        originx="-27.78125px"
+        spacingy="2px"
+        visible="true"
+        snapvisiblegridlinesonly="true"
+        type="xygrid"
+        empspacing="25"
+    /&gt;
+  &lt;/sodipodi:namedview
+  &gt;
+  &lt;g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(-27.781 -551.88)"
+    &gt;
+    &lt;path
+        id="Arrow"
+        style="stroke-opacity:.81778;stroke:#333333;stroke-width:.19;fill:url(#linearGradient5395)"
+        d="m32.636 551.97c-2.6353 0-4.7569 5.3985-4.7569 11.987 0 6.5882 2.1216 11.798 4.7569 11.798h94.418l19.506-11.798-19.506-11.987z"
+        sodipodi:nodetypes="ssscccs"
+        inkscape:connector-curvature="0"
+        inkscape:label="#arrow01"
+      &gt;
+      &lt;title
+          id="title3077"
+          style="fill:url(#linearGradient5395)"
+        &gt;Arrow&lt;/title
+      &gt;
+    &lt;/path
+    &gt;
+  &lt;/g
+  &gt;
+  &lt;metadata
+    &gt;
+    &lt;rdf:RDF
+      &gt;
+      &lt;cc:Work
+        &gt;
+        &lt;dc:format
+          &gt;image/svg+xml&lt;/dc:format
+        &gt;
+        &lt;dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        /&gt;
+        &lt;cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        /&gt;
+        &lt;dc:publisher
+          &gt;
+          &lt;cc:Agent
+              rdf:about="http://openclipart.org/"
+            &gt;
+            &lt;dc:title
+              &gt;Openclipart&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:publisher
+        &gt;
+        &lt;dc:title
+          &gt;Arrow Right Magenta&lt;/dc:title
+        &gt;
+        &lt;dc:date
+          &gt;2013-03-21T02:07:18&lt;/dc:date
+        &gt;
+        &lt;dc:description
+          &gt;Magenta arrow pointing right suitable for sign-here type flags.&lt;/dc:description
+        &gt;
+        &lt;dc:source
+          &gt;https://openclipart.org/detail/176416/arrow-right-magenta-by-dougransom-176416&lt;/dc:source
+        &gt;
+        &lt;dc:creator
+          &gt;
+          &lt;cc:Agent
+            &gt;
+            &lt;dc:title
+              &gt;dougransom&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:creator
+        &gt;
+        &lt;dc:subject
+          &gt;
+          &lt;rdf:Bag
+            &gt;
+            &lt;rdf:li
+              &gt;Arrow&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;Flag&lt;/rdf:li
+            &gt;
+          &lt;/rdf:Bag
+          &gt;
+        &lt;/dc:subject
+        &gt;
+      &lt;/cc:Work
+      &gt;
+      &lt;cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        &gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        /&gt;
+      &lt;/cc:License
+      &gt;
+    &lt;/rdf:RDF
+    &gt;
+  &lt;/metadata
+  &gt;
+&lt;/svg
+&gt;
+</y:Resource>
+      <y:Resource id="3">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+&lt;svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:cc="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    id="svg1468"
+    sodipodi:docname="paper4.svg"
+    viewBox="0 0 187.5 187.5"
+    sodipodi:version="0.32"
+    version="1.0"
+    y="0"
+    x="0"
+    inkscape:version="0.42"
+    sodipodi:docbase="C:\Documents and Settings\Jarno\Omat tiedostot\vanhasta\opencliparts\omat\symbols"
+  &gt;
+  &lt;sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:pageshadow="2"
+      inkscape:window-width="704"
+      pagecolor="#ffffff"
+      inkscape:zoom="1.8346667"
+      inkscape:window-x="0"
+      borderopacity="1.0"
+      inkscape:current-layer="svg1468"
+      inkscape:cx="93.750002"
+      inkscape:cy="93.750002"
+      inkscape:window-y="0"
+      inkscape:window-height="510"
+      inkscape:pageopacity="0.0"
+  /&gt;
+  &lt;g
+      id="layer1"
+    &gt;
+    &lt;g
+        id="g2298"
+        transform="matrix(.78306 0 0 .78306 -447.41 -120.69)"
+      &gt;
+      &lt;rect
+          id="rect2296"
+          style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-width:3.75;fill:#ffffff"
+          height="146"
+          width="110"
+          y="180.36"
+          x="648"
+      /&gt;
+      &lt;rect
+          id="rect2294"
+          style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-width:3.75;fill:#ffffff"
+          height="146"
+          width="110"
+          y="198.36"
+          x="634"
+      /&gt;
+      &lt;rect
+          id="rect2280"
+          style="stroke-linejoin:round;stroke:#000000;stroke-linecap:round;stroke-width:3.75;fill:#ffffff"
+          height="146"
+          width="110"
+          y="214.36"
+          x="620"
+      /&gt;
+      &lt;path
+          id="path2282"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m636.25 258.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2284"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m636.25 278.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2286"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m636.25 298.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2288"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m636.25 318.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2290"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m636.25 338.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2292"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m636.25 238.36h77.5"
+      /&gt;
+    &lt;/g
+    &gt;
+  &lt;/g
+  &gt;
+  &lt;metadata
+    &gt;
+    &lt;rdf:RDF
+      &gt;
+      &lt;cc:Work
+        &gt;
+        &lt;dc:format
+          &gt;image/svg+xml&lt;/dc:format
+        &gt;
+        &lt;dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        /&gt;
+        &lt;cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        /&gt;
+        &lt;dc:publisher
+          &gt;
+          &lt;cc:Agent
+              rdf:about="http://openclipart.org/"
+            &gt;
+            &lt;dc:title
+              &gt;Openclipart&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:publisher
+        &gt;
+        &lt;dc:title
+          &gt;Paper 4 icon&lt;/dc:title
+        &gt;
+        &lt;dc:date
+          &gt;2006-12-26T00:00:00&lt;/dc:date
+        &gt;
+        &lt;dc:description
+        /&gt;
+        &lt;dc:source
+          &gt;https://openclipart.org/detail/24793/-by--24793&lt;/dc:source
+        &gt;
+        &lt;dc:creator
+          &gt;
+          &lt;cc:Agent
+            &gt;
+            &lt;dc:title
+              &gt;Anonymous&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:creator
+        &gt;
+      &lt;/cc:Work
+      &gt;
+      &lt;cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        &gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        /&gt;
+      &lt;/cc:License
+      &gt;
+    &lt;/rdf:RDF
+    &gt;
+  &lt;/metadata
+  &gt;
+&lt;/svg
+&gt;
+</y:Resource>
+      <y:Resource id="4">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+&lt;svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:osb="http://www.openswatchbook.org/uri/2009/osb"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    id="svg2"
+    sodipodi:docname="arrow.svg"
+    viewBox="0 0 118.97 23.969"
+    version="1.1"
+    inkscape:version="0.48.4 r9939"
+  &gt;
+  &lt;defs
+      id="defs4"
+    &gt;
+    &lt;linearGradient
+        id="linearGradient5395"
+        y2="613.86"
+        gradientUnits="userSpaceOnUse"
+        x2="650.5"
+        gradientTransform="matrix(.19027 0 0 .19027 22.882 447.06)"
+        y1="613.86"
+        x1="25.764"
+        inkscape:collect="always"
+      &gt;
+      &lt;stop
+          id="stop5391"
+          style="stop-color:#ffff33;stop-opacity:.60870"
+          offset="0"
+      /&gt;
+      &lt;stop
+          id="stop5393"
+          style="stop-color:#fffeaa;stop-opacity:.38261"
+          offset="1"
+      /&gt;
+    &lt;/linearGradient
+    &gt;
+  &lt;/defs
+  &gt;
+  &lt;sodipodi:namedview
+      id="base"
+      fit-margin-left="0"
+      inkscape:zoom="5.6"
+      borderopacity="1.0"
+      inkscape:current-layer="layer1"
+      inkscape:cx="56.857721"
+      inkscape:cy="31.566965"
+      inkscape:window-maximized="0"
+      showgrid="true"
+      fit-margin-right="0"
+      units="in"
+      inkscape:document-units="px"
+      bordercolor="#666666"
+      inkscape:window-x="358"
+      inkscape:window-y="0"
+      objecttolerance="40"
+      fit-margin-bottom="0"
+      inkscape:window-width="1355"
+      inkscape:pageopacity="0.0"
+      inkscape:pageshadow="2"
+      pagecolor="#ffffff"
+      inkscape:window-height="945"
+      fit-margin-top="0"
+    &gt;
+    &lt;inkscape:grid
+        id="grid3004"
+        spacingx="2px"
+        originy="-476.52093px"
+        enabled="true"
+        originx="-27.78125px"
+        spacingy="2px"
+        visible="true"
+        snapvisiblegridlinesonly="true"
+        type="xygrid"
+        empspacing="25"
+    /&gt;
+  &lt;/sodipodi:namedview
+  &gt;
+  &lt;g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(-27.781 -551.88)"
+    &gt;
+    &lt;path
+        id="Arrow"
+        style="stroke-opacity:.81778;stroke:#333333;stroke-width:.19;fill:url(#linearGradient5395)"
+        d="m32.636 551.97c-2.6353 0-4.7569 5.3985-4.7569 11.987 0 6.5882 2.1216 11.798 4.7569 11.798h94.418l19.506-11.798-19.506-11.987z"
+        sodipodi:nodetypes="ssscccs"
+        inkscape:connector-curvature="0"
+        inkscape:label="#arrow01"
+      &gt;
+      &lt;title
+          id="title3077"
+          style="fill:url(#linearGradient5395)"
+        &gt;Arrow&lt;/title
+      &gt;
+    &lt;/path
+    &gt;
+  &lt;/g
+  &gt;
+  &lt;metadata
+    &gt;
+    &lt;rdf:RDF
+      &gt;
+      &lt;cc:Work
+        &gt;
+        &lt;dc:format
+          &gt;image/svg+xml&lt;/dc:format
+        &gt;
+        &lt;dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        /&gt;
+        &lt;cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        /&gt;
+        &lt;dc:publisher
+          &gt;
+          &lt;cc:Agent
+              rdf:about="http://openclipart.org/"
+            &gt;
+            &lt;dc:title
+              &gt;Openclipart&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:publisher
+        &gt;
+        &lt;dc:title
+          &gt;Arrow Right Yellow&lt;/dc:title
+        &gt;
+        &lt;dc:date
+          &gt;2013-03-21T02:06:32&lt;/dc:date
+        &gt;
+        &lt;dc:description
+          &gt;Yellow arrow pointing right suitable for sign-here type flags.&lt;/dc:description
+        &gt;
+        &lt;dc:source
+          &gt;https://openclipart.org/detail/176415/arrow-right-yellow-by-dougransom-176415&lt;/dc:source
+        &gt;
+        &lt;dc:creator
+          &gt;
+          &lt;cc:Agent
+            &gt;
+            &lt;dc:title
+              &gt;dougransom&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:creator
+        &gt;
+        &lt;dc:subject
+          &gt;
+          &lt;rdf:Bag
+            &gt;
+            &lt;rdf:li
+              &gt;Arrow&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;Flag&lt;/rdf:li
+            &gt;
+          &lt;/rdf:Bag
+          &gt;
+        &lt;/dc:subject
+        &gt;
+      &lt;/cc:Work
+      &gt;
+      &lt;cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        &gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        /&gt;
+      &lt;/cc:License
+      &gt;
+    &lt;/rdf:RDF
+    &gt;
+  &lt;/metadata
+  &gt;
+&lt;/svg
+&gt;
+</y:Resource>
+      <y:Resource id="5">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+&lt;svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:cc="http://creativecommons.org/ns#"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    id="svg11300"
+    inkscape:export-ydpi="90.000000"
+    inkscape:export-filename="/home/jimmac/Desktop/wi-fi.png"
+    viewBox="0 0 38 38.001"
+    sodipodi:version="0.32"
+    inkscape:export-xdpi="90.000000"
+    version="1.0"
+    inkscape:output_extension="org.inkscape.output.svg.inkscape"
+    inkscape:version="0.46"
+    sodipodi:docname="tango_down_arrow_blue.svg"
+    sodipodi:docbase="/home/tigert/cvs/freedesktop.org/tango-icon-theme/scalable/actions"
+  &gt;
+  &lt;defs
+      id="defs3"
+    &gt;
+    &lt;radialGradient
+        id="radialGradient3208"
+        gradientUnits="userSpaceOnUse"
+        cy="36.421"
+        cx="24.837"
+        gradientTransform="matrix(1 0 0 .53672 0 16.873)"
+        r="15.645"
+        inkscape:collect="always"
+      &gt;
+      &lt;stop
+          id="stop8664"
+          style="stop-color:#000000"
+          offset="0"
+      /&gt;
+      &lt;stop
+          id="stop8666"
+          style="stop-color:#000000;stop-opacity:0"
+          offset="1"
+      /&gt;
+    &lt;/radialGradient
+    &gt;
+    &lt;radialGradient
+        id="radialGradient4559"
+        gradientUnits="userSpaceOnUse"
+        cy="1.535"
+        cx="15.987"
+        gradientTransform="matrix(0 2.0467 1.5576 0 2.3811 -22.965)"
+        r="17.171"
+        inkscape:collect="always"
+      &gt;
+      &lt;stop
+          id="stop8652"
+          style="stop-color:#ffffff"
+          offset="0"
+      /&gt;
+      &lt;stop
+          id="stop8654"
+          style="stop-color:#ffffff;stop-opacity:0"
+          offset="1"
+      /&gt;
+    &lt;/radialGradient
+    &gt;
+    &lt;radialGradient
+        id="radialGradient4562"
+        gradientUnits="userSpaceOnUse"
+        cy="20.494"
+        cx="35.293"
+        gradientTransform="matrix(0 .84302 -1.0202 0 45.89 1.3815)"
+        r="16.956"
+        inkscape:collect="always"
+      &gt;
+      &lt;stop
+          id="stop1444"
+          style="stop-color:#729fcf"
+          offset="0"
+      /&gt;
+      &lt;stop
+          id="stop1446"
+          style="stop-color:#3465a4"
+          offset="1"
+      /&gt;
+    &lt;/radialGradient
+    &gt;
+  &lt;/defs
+  &gt;
+  &lt;sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:window-x="0"
+      inkscape:window-y="0"
+      pagecolor="#ffffff"
+      inkscape:showpageshadow="false"
+      inkscape:grid-bbox="true"
+      inkscape:zoom="2.536359"
+      inkscape:pageshadow="2"
+      stroke="#4e9a06"
+      showgrid="false"
+      borderopacity="0.25490196"
+      inkscape:current-layer="layer1"
+      inkscape:cx="16.553294"
+      inkscape:cy="56.234298"
+      inkscape:window-width="1280"
+      inkscape:pageopacity="0.0"
+      inkscape:window-height="778"
+      inkscape:document-units="px"
+      fill="#4e9a06"
+  /&gt;
+  &lt;g
+      id="layer1"
+      inkscape:label="Layer 1"
+      inkscape:groupmode="layer"
+      transform="translate(-4.4681 -4.9677)"
+    &gt;
+    &lt;g
+        id="g4599"
+      &gt;
+      &lt;path
+          id="path8660"
+          sodipodi:rx="15.644737"
+          sodipodi:ry="8.3968935"
+          style="opacity:.20455;fill-rule:evenodd;fill:url(#radialGradient3208)"
+          sodipodi:type="arc"
+          d="m40.482 36.421a15.645 8.3969 0 1 1 -31.29 0 15.645 8.3969 0 1 1 31.29 0z"
+          transform="matrix(1.2145 0 0 .59546 -6.6957 16.281)"
+          sodipodi:cy="36.421127"
+          sodipodi:cx="24.837126"
+      /&gt;
+      &lt;path
+          id="path8643"
+          sodipodi:nodetypes="cccccccc"
+          style="stroke-linejoin:round;fill-rule:evenodd;stroke:#183868;stroke-linecap:round;stroke-miterlimit:10;fill:url(#radialGradient4562)"
+          d="m31.978 5.4677l-18.005 0.0039v12.991l-7.9959 0.008 17.145 19.997 16.846-19.998-7.996-0.003 0.006-12.999z"
+      /&gt;
+      &lt;path
+          id="path8645"
+          sodipodi:nodetypes="cccccc"
+          style="opacity:.50802;fill-rule:evenodd;fill:url(#radialGradient4559)"
+          d="m7.0668 18.974l7.4062-0.012-0.003-12.992 15.379 0.0088c-0.77 18.341-10.723 10.993-15.382 21.647l-7.4002-8.652z"
+      /&gt;
+      &lt;path
+          id="path8658"
+          sodipodi:nodetypes="cccccccc"
+          style="opacity:.48128;stroke:#ffffff;stroke-miterlimit:10;fill:none"
+          d="m30.976 6.4716l-16.001-0.0039v12.993l-6.8172 0.015 14.954 17.453 14.707-17.457-6.84-0.005-0.003-12.995z"
+      /&gt;
+    &lt;/g
+    &gt;
+  &lt;/g
+  &gt;
+  &lt;metadata
+    &gt;
+    &lt;rdf:RDF
+      &gt;
+      &lt;cc:Work
+        &gt;
+        &lt;dc:format
+          &gt;image/svg+xml&lt;/dc:format
+        &gt;
+        &lt;dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        /&gt;
+        &lt;cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        /&gt;
+        &lt;dc:publisher
+          &gt;
+          &lt;cc:Agent
+              rdf:about="http://openclipart.org/"
+            &gt;
+            &lt;dc:title
+              &gt;Openclipart&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:publisher
+        &gt;
+        &lt;dc:title
+          &gt;tango blue go down&lt;/dc:title
+        &gt;
+        &lt;dc:date
+          &gt;2010-03-09T18:40:19&lt;/dc:date
+        &gt;
+        &lt;dc:description
+          &gt;This is modified Tango icon go-down (colors changed to blue).&lt;/dc:description
+        &gt;
+        &lt;dc:source
+          &gt;https://openclipart.org/detail/30673/tango-blue-go-down-by-warszawianka&lt;/dc:source
+        &gt;
+        &lt;dc:creator
+          &gt;
+          &lt;cc:Agent
+            &gt;
+            &lt;dc:title
+              &gt;warszawianka&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:creator
+        &gt;
+        &lt;dc:subject
+          &gt;
+          &lt;rdf:Bag
+            &gt;
+            &lt;rdf:li
+              &gt;arrow&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;blue&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;down&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;icon&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;sign&lt;/rdf:li
+            &gt;
+            &lt;rdf:li
+              &gt;symbol&lt;/rdf:li
+            &gt;
+          &lt;/rdf:Bag
+          &gt;
+        &lt;/dc:subject
+        &gt;
+      &lt;/cc:Work
+      &gt;
+      &lt;cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        &gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        /&gt;
+      &lt;/cc:License
+      &gt;
+    &lt;/rdf:RDF
+    &gt;
+  &lt;/metadata
+  &gt;
+&lt;/svg
+&gt;
+</y:Resource>
+      <y:Resource id="6">&lt;?xml version="1.0" encoding="UTF-8" standalone="no"?&gt;
+&lt;!-- Created with Inkscape (http://www.inkscape.org/) --&gt;
+&lt;svg
+    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:cc="http://web.resource.org/cc/"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+    xmlns:svg="http://www.w3.org/2000/svg"
+    xmlns:ns1="http://sozi.baierouge.fr"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    id="svg1468"
+    sodipodi:docname="paper2.svg"
+    viewBox="0 0 187.5 187.5"
+    sodipodi:version="0.32"
+    version="1.0"
+    y="0"
+    x="0"
+    inkscape:version="0.42"
+    sodipodi:docbase="C:\Documents and Settings\Jarno\Omat tiedostot\vanhasta\opencliparts\omat\symbols"
+  &gt;
+  &lt;sodipodi:namedview
+      id="base"
+      bordercolor="#666666"
+      inkscape:pageshadow="2"
+      inkscape:window-width="704"
+      pagecolor="#ffffff"
+      inkscape:zoom="1.8346667"
+      inkscape:window-x="66"
+      borderopacity="1.0"
+      inkscape:current-layer="svg1468"
+      inkscape:cx="93.750002"
+      inkscape:cy="93.750002"
+      inkscape:window-y="66"
+      inkscape:window-height="510"
+      inkscape:pageopacity="0.0"
+  /&gt;
+  &lt;g
+      id="layer1"
+    &gt;
+    &lt;g
+        id="g2269"
+        transform="matrix(.78306 0 0 .78306 -90.507 -132.91)"
+      &gt;
+      &lt;g
+          id="g2217"
+          transform="translate(152 18)"
+        &gt;
+        &lt;path
+            id="path2219"
+            style="stroke-linejoin:round;stroke:#000000;stroke-width:3.8589;fill:#ffffff"
+            d="m29.742 196.36h81.388l-1.89 30.57 29.02-0.07v115.5h-108.52l0.002-146z"
+        /&gt;
+        &lt;path
+            id="path2221"
+            style="stroke:#000000;stroke-linecap:round;stroke-width:4.25;fill:none"
+            d="m110.81 197.01l26.91 28.67"
+        /&gt;
+      &lt;/g
+      &gt;
+      &lt;path
+          id="path2223"
+          style="stroke:#000000;stroke-width:2.375;fill:none"
+          d="m196 234.36h64"
+      /&gt;
+      &lt;path
+          id="path2225"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m196.25 254.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2227"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m196.25 274.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2229"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m196.25 294.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2231"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m196.25 314.36h77.5"
+      /&gt;
+      &lt;path
+          id="path2233"
+          style="stroke:#000000;stroke-width:2.6135;fill:none"
+          d="m196.25 334.36h77.5"
+      /&gt;
+    &lt;/g
+    &gt;
+  &lt;/g
+  &gt;
+  &lt;metadata
+    &gt;
+    &lt;rdf:RDF
+      &gt;
+      &lt;cc:Work
+        &gt;
+        &lt;dc:format
+          &gt;image/svg+xml&lt;/dc:format
+        &gt;
+        &lt;dc:type
+            rdf:resource="http://purl.org/dc/dcmitype/StillImage"
+        /&gt;
+        &lt;cc:license
+            rdf:resource="http://creativecommons.org/licenses/publicdomain/"
+        /&gt;
+        &lt;dc:publisher
+          &gt;
+          &lt;cc:Agent
+              rdf:about="http://openclipart.org/"
+            &gt;
+            &lt;dc:title
+              &gt;Openclipart&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:publisher
+        &gt;
+        &lt;dc:title
+          &gt;Paper 2 icon&lt;/dc:title
+        &gt;
+        &lt;dc:date
+          &gt;2006-12-26T00:00:00&lt;/dc:date
+        &gt;
+        &lt;dc:description
+        /&gt;
+        &lt;dc:source
+          &gt;https://openclipart.org/detail/24789/-by--24789&lt;/dc:source
+        &gt;
+        &lt;dc:creator
+          &gt;
+          &lt;cc:Agent
+            &gt;
+            &lt;dc:title
+              &gt;Anonymous&lt;/dc:title
+            &gt;
+          &lt;/cc:Agent
+          &gt;
+        &lt;/dc:creator
+        &gt;
+      &lt;/cc:Work
+      &gt;
+      &lt;cc:License
+          rdf:about="http://creativecommons.org/licenses/publicdomain/"
+        &gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Reproduction"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#Distribution"
+        /&gt;
+        &lt;cc:permits
+            rdf:resource="http://creativecommons.org/ns#DerivativeWorks"
+        /&gt;
+      &lt;/cc:License
+      &gt;
+    &lt;/rdf:RDF
+    &gt;
+  &lt;/metadata
+  &gt;
+&lt;/svg
+&gt;
+</y:Resource>
+    </y:Resources>
+  </data>
+</graphml>
