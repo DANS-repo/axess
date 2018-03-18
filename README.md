@@ -1,15 +1,15 @@
-# axxess
+# Axxess
 
-Java library to convert ms access databases to csv (and back to ms access again, if needed)
+Java library to convert MS Access databases to csv (and back to MS Access again, if needed)
 
 ![Axxess](img/axxess.png)
 
 _On top of [Jackcess](http://jackcess.sourceforge.net/) Axxess extracts data and metadata from
-MS Access databases and writes these out as comma separated files (.csv)_
+MS Access databases and writes these out as comma separated values (.csv)_
 
 With the aid of the excellent java library [Jackcess](http://jackcess.sourceforge.net/),
 Axxess extracts data and metadata from binary representations (\*.mdb, \*.accdb files)
-of Access and writes these out as comma separated versions (\*.csv files). There is no need to have 
+of Access and writes these out as comma separated values (\*.csv files). There is no need to have 
 a jet-engine running; you do not need to be on Windows. Axxess was built as part of an
 effort to procure data stored in MS Access databases for long-term preservation and access.
 Oh, and by the way, Axxess (and Jackcess) can also rebuild MS Access databases from the data and
