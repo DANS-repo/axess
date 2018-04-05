@@ -48,7 +48,7 @@ class IntegrationTest {
       // File format: V2000 [VERSION_4]  AccessVersion: 08.50
       {"types", "all_datatypes.mdb"},
 
-      // {"types2", "decimal_types.accdb"},
+      {"types2", "decimal_types.accdb"},
       //
       // {"cliwoc", "CLIWOC21_97.mdb",
       //   "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},

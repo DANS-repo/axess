@@ -34,6 +34,7 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
 
     private EncodingDetector encodingDetector;
     private boolean extractMetadata = true;
+    private boolean extractTableData = true;
     private Archiver archiver;
     private boolean archiveResults;
     private boolean compressArchive;
@@ -89,6 +90,18 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
      */
     public Axxess2CsvConverter setExtractMetadata(boolean extractMetadata) {
         this.extractMetadata = extractMetadata;
+        return this;
+    }
+
+    /**
+     * Extract data from tables in the database. Default is <code>true</code>. This option set to <code>false</code>
+     * enables quick scanning of databases.
+     *
+     * @param extractTableData <code>true</code> for extracting table data, <code>false</code> to skip this step
+     * @return this for chaining method calls
+     */
+    public Axxess2CsvConverter setExtractTableData(boolean extractTableData) {
+        this.extractTableData = extractTableData;
         return this;
     }
 
@@ -202,10 +215,12 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
                 File mdFile = metadataWriter.writeDatabaseMetadata(db);
                 csvFiles.add(mdFile);
             }
-            tableDataWriter.setExtractorDef(getExtractorDef().copy());
-            tableDataWriter.withTargetDirectory(targetDirectory);
-            List<File> tableFiles = tableDataWriter.writeDatabaseData(db);
-            csvFiles.addAll(tableFiles);
+            if (extractTableData) {
+                tableDataWriter.setExtractorDef(getExtractorDef().copy());
+                tableDataWriter.withTargetDirectory(targetDirectory);
+                List<File> tableFiles = tableDataWriter.writeDatabaseData(db);
+                csvFiles.addAll(tableFiles);
+            }
             LOG.info("Converted {} to {}", file.getName(), targetDirectory.getAbsolutePath());
 
             if (isIncludingManifest()) {
@@ -222,6 +237,7 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
                 resultFiles = csvFiles;
             }
             increaseDbCount();
+            System.out.print("\r" + getDatabaseCount() + " " + file.getName());
             return resultFiles;
         } finally {
             if (db != null) {

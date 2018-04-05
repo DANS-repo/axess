@@ -149,6 +149,7 @@ public class AxxessMain {
               .withTargetEncoding(csvTargetEncoding)
               .withCSVFormat(csvTargetFormat)
               .setExtractMetadata("true".equalsIgnoreCase(getProp("csv.target.include.metadata", "true")))
+              .setExtractTableData("true".equalsIgnoreCase(getProp("csv.target.include.table.data", "true")))
               .setIncludeManifest("true".equalsIgnoreCase(getProp("csv.target.include.manifest", "true")))
               .setArchiveResults("true".equalsIgnoreCase(getProp("create.zip", "false")))
               .setCompressArchive("true".equalsIgnoreCase(getProp("compress.zip", "false")));
