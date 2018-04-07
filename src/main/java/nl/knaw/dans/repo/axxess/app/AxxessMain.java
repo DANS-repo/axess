@@ -5,6 +5,7 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.util.StatusPrinter;
 import nl.knaw.dans.repo.axxess.acc2csv.Axxess2CsvConverter;
+import nl.knaw.dans.repo.axxess.core.Axxess;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.csv2acc.Csv2AxxessConverter;
 import org.slf4j.Logger;
@@ -186,8 +187,9 @@ public class AxxessMain {
         }
 
         if (a2c != null) {
-            String msg = String.format("Converted %d database(s) to %d result files, with %d error(s) and %d warnings(s).",
-              a2c.getDatabaseCount(), csvResultFiles.size(), a2c.getErrorCount(), a2c.getWarningCount());
+            String msg =
+              String.format("Converted %d database(s) to %d result files, with %d error(s) and %d warnings(s).",
+                a2c.getDatabaseCount(), csvResultFiles.size(), a2c.getErrorCount(), a2c.getWarningCount());
             System.out.println(msg);
             LOG.info(msg);
             if (a2c.getErrorCount() > 0) {
@@ -196,6 +198,8 @@ public class AxxessMain {
                             .stream()
                             .map(Throwable::getMessage)
                             .collect(Collectors.joining("\n\t")));
+                String csvErrorListFile = getProp("csv.error.list.file", "logs/csv_error_list.csv");
+                writeErrorFile(a2c.getErrorList(), csvErrorListFile, baseDir);
             }
             if (a2c.getWarningCount() > 0) {
                 LOG.info("Warnings during conversion from Access to csv:");
@@ -203,16 +207,20 @@ public class AxxessMain {
                             .stream()
                             .map(Throwable::getMessage)
                             .collect(Collectors.joining("\n\t")));
+                String csvWarningListFile = getProp("csv.warning.list.file", "logs/csv_warning_list.csv");
+                writeErrorFile(a2c.getWarningList(), csvWarningListFile, baseDir);
             }
             String csvResultListFile = getProp("csv.result.list.file", null);
             if (csvResultListFile != null) {
                 boolean absoluteNames = "true".equalsIgnoreCase(getProp("csv.result.list.absolute.filenames", "false"));
                 writeResultFiles(csvResultFiles, csvResultListFile, baseDir, absoluteNames);
             }
+
         }
         if (c2a != null) {
-            String msg = String.format("Converted %d metadata file(s) to %d database(s), with %d error(s) and %d warning(s)",
-              c2a.getMetadataFilenameCount(), c2a.getDatabaseCount(), c2a.getErrorCount(), c2a.getWarningCount());
+            String msg =
+              String.format("Converted %d metadata file(s) to %d database(s), with %d error(s) and %d warning(s)",
+                c2a.getDatabaseCount(), c2a.getDatabaseCount(), c2a.getErrorCount(), c2a.getWarningCount());
             System.out.println(msg);
             LOG.info(msg);
             if (c2a.getErrorCount() > 0) {
@@ -221,6 +229,8 @@ public class AxxessMain {
                             .stream()
                             .map(Throwable::getMessage)
                             .collect(Collectors.joining("\n\t")));
+                String dbErrorListFile = getProp("db.error.list.file", "logs/db_error_list.csv");
+                writeErrorFile(c2a.getErrorList(), dbErrorListFile, baseDir);
             }
             if (c2a.getWarningCount() > 0) {
                 LOG.info("Warnings during conversion from csv to Access:");
@@ -228,6 +238,8 @@ public class AxxessMain {
                             .stream()
                             .map(Throwable::getMessage)
                             .collect(Collectors.joining("\n\t")));
+                String dbWarningListFile = getProp("db.warning.list.file", "logs/db_warning_list.csv");
+                writeErrorFile(c2a.getWarningList(), dbWarningListFile, baseDir);
             }
             String dbResultListFile = getProp("db.result.list.file", null);
             if (dbResultListFile != null) {
@@ -280,8 +292,31 @@ public class AxxessMain {
         LOG.info("Wrote result file list to {}", file.getAbsolutePath());
     }
 
+    private static void writeErrorFile(List<Throwable> errors, String filename, File baseDir) throws IOException {
+        File file = new File(filename);
+        if (!file.isAbsolute()) {
+            file = new File(baseDir, filename);
+        }
+        File dir = file.getParentFile();
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        List<String> records = errors
+          .stream()
+          .map(Throwable::getMessage)
+          .collect(Collectors.toList());
+        try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(file), Charset.forName("UTF-8"))) {
+            for (String record : records) {
+                osw.write(record + "\n");
+            }
+            osw.close();
+        }
+    }
+
     private static void help() {
         System.out.println("Axxess is a tool for converting MS Access databases to and from csv files.");
+        System.out.println("Axxess version: " + Axxess.getProperty("axxess.version") + "  |  build: " +
+          Axxess.getProperty("axxess.build"));
         System.out.println("See also: https://github.com/DANS-repo/axxess\n");
         String jarFile = new java.io.File(AxxessMain.class.getProtectionDomain()
                                                           .getCodeSource()

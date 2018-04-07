@@ -5,15 +5,17 @@ import com.healthmarketscience.jackcess.Column;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.Row;
 import com.healthmarketscience.jackcess.Table;
+import nl.knaw.dans.repo.axxess.core.AxxessCheckedException;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.core.Codex;
+import nl.knaw.dans.repo.axxess.core.ErrorListener;
 import nl.knaw.dans.repo.axxess.core.Extractor;
-import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -25,12 +27,27 @@ public class TableDataExtractor extends Extractor<TableDataExtractor> {
 
     private static Logger LOG = LoggerFactory.getLogger(TableDataExtractor.class);
 
+    public TableDataExtractor() {
+    }
+
+    public TableDataExtractor(ErrorListener externalListener) {
+        setExternalListener(externalListener);
+    }
+
     public List<File> writeDatabaseData(Database db)
       throws IOException, AxxessException {
         List<File> convertedFiles = new ArrayList<>();
         for (String tableName : db.getTableNames()) {
-            Table table = db.getTable(tableName);
-            convertedFiles.add(writeTableData(table));
+            try {
+                Table table = db.getTable(tableName);
+                if (table == null) {
+                    throw new AxxessCheckedException("For tableName " + tableName);
+                }
+                convertedFiles.add(writeTableData(table));
+            } catch (FileNotFoundException | AxxessCheckedException e) {
+                LOG.warn("Table ", e);
+                reportWarning(db.getFile(), "Table: " + tableName, e);
+            }
         }
         return convertedFiles;
     }

@@ -2,6 +2,7 @@ package nl.knaw.dans.repo.axxess.core;
 
 import com.healthmarketscience.jackcess.DataType;
 
+import java.io.File;
 import java.util.Collection;
 
 /**
@@ -36,7 +37,7 @@ public interface Codex {
      */
     Object decode(DataType type, String value);
 
-    void setListener(Listener listener);
+    void setListener(ErrorListener listener);
 
     /**
      * Convenience method to encode a collection of strings. Same as
@@ -47,14 +48,7 @@ public interface Codex {
      */
     String encodeCollection(Collection<String> value);
 
-    /**
-     * Listener for errors and warnings dispatched by a {@link Codex} during encoding and decoding.
-     */
-    public interface Listener {
+    void setCurrentFile(File file);
 
-        abstract void reportWarning(String message, Throwable cause);
-
-        abstract void reportError(String message, Throwable cause);
-
-    }
+    void setErrorListener(ErrorListener listener);
 }

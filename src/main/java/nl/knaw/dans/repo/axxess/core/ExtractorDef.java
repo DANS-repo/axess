@@ -64,7 +64,7 @@ public class ExtractorDef {
         this.filenameComposer = filenameComposer;
     }
 
-    public Codex getCodex(Codex.Listener listener) {
+    public Codex getCodex(ErrorListener listener) {
         if (codex == null) {
             codex = new DefaultCodex(listener);
         }

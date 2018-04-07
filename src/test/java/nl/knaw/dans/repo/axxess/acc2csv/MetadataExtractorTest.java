@@ -9,6 +9,7 @@ import nl.knaw.dans.repo.axxess.core.ObjectType;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -50,5 +51,16 @@ class MetadataExtractorTest {
         assertTrue(matrix.getValues().contains(DefaultCodex.class.getName()));
 
         //assertEquals("[DB],Filename,TEXT,example.mdb", matrix.getLines().get(8).toString());
+    }
+
+    @Test
+    void testErrorMessage() throws Exception {
+        MetadataExtractor metadataExtractor = new MetadataExtractor();
+        metadataExtractor.reportError(new File("foo/bar"), "message, another message", new RuntimeException("bla,foo"));
+        List<Throwable> errorList = metadataExtractor.getErrorList();
+        for (Throwable t : errorList) {
+            //System.out.println(t.getMessage());
+            assertTrue(t.getMessage().contains("java.lang.RuntimeException"));
+        }
     }
 }

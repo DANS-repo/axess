@@ -23,6 +23,7 @@ public interface Axxess {
     String EM_AXXESS_BUILD = "Axxess build";
     String EM_AXXESS_URL = "Axxess URL";
     String EM_CODEX = "Codex";
+    String EM_WARNINGS = "Warnings";
 
     String DB_FILENAME = "Filename";
     String DB_PASSWORD = "Password";

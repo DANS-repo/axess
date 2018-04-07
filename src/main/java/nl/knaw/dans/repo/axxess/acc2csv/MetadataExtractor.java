@@ -10,18 +10,22 @@ import com.healthmarketscience.jackcess.Relationship;
 import com.healthmarketscience.jackcess.Table;
 import com.healthmarketscience.jackcess.query.Query;
 import nl.knaw.dans.repo.axxess.core.Axxess;
+import nl.knaw.dans.repo.axxess.core.AxxessCheckedException;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
 import nl.knaw.dans.repo.axxess.core.Codex;
+import nl.knaw.dans.repo.axxess.core.ErrorListener;
 import nl.knaw.dans.repo.axxess.core.Extractor;
 import nl.knaw.dans.repo.axxess.core.KeyTypeValueMatrix;
 import nl.knaw.dans.repo.axxess.core.ObjectType;
 import org.apache.commons.csv.CSVFormat;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,6 +34,15 @@ import java.util.stream.Collectors;
  * objects.
  */
 public class MetadataExtractor extends Extractor<MetadataExtractor> implements Axxess {
+
+    private List<String> extractionWarnings = new ArrayList<>();
+
+    public MetadataExtractor() {
+    }
+
+    public MetadataExtractor(ErrorListener externalListener) {
+        setExternalListener(externalListener);
+    }
 
     private static void appendProperties(KeyTypeValueMatrix matrix, PropertyMap propMap, String keyPrefix,
                                          Codex codex) {
@@ -80,11 +93,21 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
      * @throws IOException for read errors
      */
     public KeyTypeValueMatrix getMetadata(Database db) throws IOException {
-        return getExtractionMetadata()
-          .append(getDatabaseMetadata(db))
-          .append(getRelationshipMetadata(db))
-          .append(getQueryMetadata(db))
-          .append(getExtendedTableMetadata(db));
+        extractionWarnings.clear();
+        KeyTypeValueMatrix currentExtractionMetadata = getExtractionMetadata();
+        KeyTypeValueMatrix databaseMetadata = getDatabaseMetadata(db);
+        KeyTypeValueMatrix relationMetadata = getRelationshipMetadata(db);
+        KeyTypeValueMatrix queryMetadata = getQueryMetadata(db);
+        KeyTypeValueMatrix extendedTableMetadata = getExtendedTableMetadata(db);
+        currentExtractionMetadata
+          .add(EM_WARNINGS, DataType.COMPLEX_TYPE, getCodex().encodeCollection(extractionWarnings))
+          .prefixKeys(ObjectType.EXTRACTION_METADATA);
+
+        return currentExtractionMetadata
+          .append(databaseMetadata)
+          .append(relationMetadata)
+          .append(queryMetadata)
+          .append(extendedTableMetadata);
     }
 
     public KeyTypeValueMatrix getExtractionMetadata() {
@@ -101,8 +124,14 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
     }
 
     public KeyTypeValueMatrix getDatabaseMetadata(Database db) throws IOException {
-        List<String> relationshipNames =
-          db.getRelationships().stream().map(Relationship::getName).collect(Collectors.toList());
+        List<String> relationshipNames = new ArrayList<>();
+        try {
+            relationshipNames = db.getRelationships().stream().map(Relationship::getName).collect(Collectors.toList());
+        } catch (FileNotFoundException e) {
+            LOG.warn("RelationshipNames", e);
+            extractionWarnings.add("RelationshipNames: " + " msg:" + e.getMessage());
+            reportWarning(db.getFile(), "Error while reading relationships names", e);
+        }
         List<String> queryNames = db.getQueries().stream().map(Query::getName).collect(Collectors.toList());
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
           .add(DB_FILENAME, DataType.TEXT, db.getFile().getName())
@@ -145,8 +174,9 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
                                           .map(Index::getName)
                                           .findFirst()
                                           .orElse(null);
+        String tableName = table.getName();
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
-          .add(TABLE_NAME, DataType.TEXT, table.getName());
+          .add(TABLE_NAME, DataType.TEXT, tableName);
         if (includeDbName) {
             matrix.add(TABLE_DATABASE_NAME, DataType.TEXT, table.getDatabase().getFile().getName());
         }
@@ -158,18 +188,30 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
               .add(TABLE_INDEX_NAMES, DataType.COMPLEX_TYPE, getCodex().encodeCollection(indexNames))
               .add(TABLE_PRIMARY_KEY_INDEX, DataType.TEXT, primaryKeyIndexName);
 
-        appendProperties(matrix, table.getProperties(), TABLE_PROP, getCodex());
+        try {
+            appendProperties(matrix, table.getProperties(), TABLE_PROP, getCodex());
+        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+            LOG.warn("Table: " + tableName, e);
+            extractionWarnings.add("Table: " + tableName + " msg:" + e.getMessage());
+            reportWarning(table.getDatabase().getFile(), "Table: " + tableName, e);
+        }
         return matrix;
     }
 
     public KeyTypeValueMatrix getRelationshipMetadata(Database db) throws IOException {
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
         int relationshipCount = 0;
-        for (Relationship relationship : db.getRelationships()) {
-            KeyTypeValueMatrix relationshipMatrix = getRelationshipMetadata(relationship);
-            relationshipMatrix.prefixKeys(ObjectType.RELATIONSHIP, relationshipCount);
-            matrix.append(relationshipMatrix);
-            ++relationshipCount;
+        try {
+            for (Relationship relationship : db.getRelationships()) {
+                KeyTypeValueMatrix relationshipMatrix = getRelationshipMetadata(relationship);
+                relationshipMatrix.prefixKeys(ObjectType.RELATIONSHIP, relationshipCount);
+                matrix.append(relationshipMatrix);
+                ++relationshipCount;
+            }
+        } catch (FileNotFoundException e) {
+            LOG.warn("RelationshipNames", e);
+            extractionWarnings.add("RelationshipNames" + " msg:" + e.getMessage());
+            reportWarning(db.getFile(), "RelationshipNames", e);
         }
         return matrix;
     }
@@ -199,7 +241,7 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix();
         int queryCount = 0;
         for (Query query : db.getQueries()) {
-            KeyTypeValueMatrix queryMatrix = getQueryMetadata(query);
+            KeyTypeValueMatrix queryMatrix = getQueryMetadata(query, db);
             queryMatrix.prefixKeys(ObjectType.QUERY, queryCount);
             matrix.append(queryMatrix);
             ++queryCount;
@@ -207,13 +249,23 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
         return matrix;
     }
 
-    public KeyTypeValueMatrix getQueryMetadata(Query query) {
-        return new KeyTypeValueMatrix()
-          .add(Q_NAME, DataType.TEXT, query.getName())
+    public KeyTypeValueMatrix getQueryMetadata(Query query, Database db) {
+        String queryName = query.getName();
+        KeyTypeValueMatrix queryMetadata = new KeyTypeValueMatrix()
+          .add(Q_NAME, DataType.TEXT, queryName)
           .add(Q_TYPE, DataType.TEXT, query.getType())
           .add(Q_IS_HIDDEN, DataType.BOOLEAN, query.isHidden())
-          .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, getCodex().encodeCollection(query.getParameters()))
-          .add(Q_SQL, DataType.TEXT, query.toSQLString().replaceAll("[\r\n]", " "));
+          .add(Q_PARAMETERS, DataType.COMPLEX_TYPE, getCodex().encodeCollection(query.getParameters()));
+
+        try {
+            queryMetadata.add(Q_SQL, DataType.TEXT, query.toSQLString().replaceAll("[\r\n]", " "));
+        } catch (IllegalStateException e) {
+            LOG.warn("Error in query: " + queryName, e);
+            extractionWarnings.add("Query: " + queryName + " msg:" + e.getMessage());
+            reportWarning(db.getFile(), "Query: " + queryName, e);
+        }
+
+        return queryMetadata;
     }
 
     public KeyTypeValueMatrix getExtendedTableMetadata(Database db) throws IOException {
@@ -221,27 +273,36 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
         int tableCount = 0;
 
         for (String tableName : db.getTableNames()) {
-            Table table = db.getTable(tableName);
-            KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
-            tableMatrix.prefixKeys(ObjectType.TABLE, tableCount);
-            matrix.append(tableMatrix);
+            try {
+                Table table = db.getTable(tableName);
+                if (table == null) {
+                    throw new AxxessCheckedException("For tableName " + tableName);
+                }
+                KeyTypeValueMatrix tableMatrix = getTableMetadata(table, false);
+                tableMatrix.prefixKeys(ObjectType.TABLE, tableCount);
+                matrix.append(tableMatrix);
 
-            int indexCount = 0;
-            for (Index index : table.getIndexes()) {
-                KeyTypeValueMatrix indexMatrix = getIndexMetadata(index);
-                indexMatrix.prefixKeys(ObjectType.TABLE_INDEX, tableCount, indexCount);
-                matrix.append(indexMatrix);
-                indexCount++;
-            }
+                int indexCount = 0;
+                for (Index index : table.getIndexes()) {
+                    KeyTypeValueMatrix indexMatrix = getIndexMetadata(index);
+                    indexMatrix.prefixKeys(ObjectType.TABLE_INDEX, tableCount, indexCount);
+                    matrix.append(indexMatrix);
+                    indexCount++;
+                }
 
-            int columnCount = 0;
-            for (Column column : table.getColumns()) {
-                KeyTypeValueMatrix columnMatrix = getColumnMetadata(column);
-                columnMatrix.prefixKeys(ObjectType.TABLE_COLUMN, tableCount, columnCount);
-                matrix.append(columnMatrix);
-                ++columnCount;
+                int columnCount = 0;
+                for (Column column : table.getColumns()) {
+                    KeyTypeValueMatrix columnMatrix = getColumnMetadata(column);
+                    columnMatrix.prefixKeys(ObjectType.TABLE_COLUMN, tableCount, columnCount);
+                    matrix.append(columnMatrix);
+                    ++columnCount;
+                }
+                ++tableCount;
+            } catch (FileNotFoundException | AxxessCheckedException e) {
+                LOG.warn("Table: " + tableName, e);
+                extractionWarnings.add("Table: " + tableName + " msg:" + e.getMessage());
+                reportWarning(db.getFile(), "Table: " + tableName, e);
             }
-            ++tableCount;
         }
         return matrix;
     }
@@ -266,8 +327,9 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
     }
 
     public KeyTypeValueMatrix getColumnMetadata(Column column) throws IOException {
+        String columnName = column.getName();
         KeyTypeValueMatrix matrix = new KeyTypeValueMatrix()
-          .add(C_NAME, DataType.TEXT, column.getName())
+          .add(C_NAME, DataType.TEXT, columnName)
           .add(C_INDEX, DataType.INT, column.getColumnIndex())
           .add(C_DATA_TYPE, DataType.TEXT, column.getType())
           .add(C_LENGTH, DataType.INT, column.getLength())
@@ -282,8 +344,14 @@ public class MetadataExtractor extends Extractor<MetadataExtractor> implements A
           .add(C_IS_HYPERLINK, DataType.BOOLEAN, column.isHyperlink())
           .add(C_IS_VARIABLE_LENGTH, DataType.BOOLEAN, column.isVariableLength());
 
-        appendProperties(matrix, column.getProperties(), C_PROP, getCodex());
-
+        try {
+            appendProperties(matrix, column.getProperties(), C_PROP, getCodex());
+        } catch (IllegalArgumentException | IndexOutOfBoundsException | ClassCastException e) {
+            LOG.warn("Column: " + columnName, e);
+            extractionWarnings.add("Column: " + columnName + " msg:" + e.getMessage());
+            File file = column.getTable().getDatabase().getFile();
+            reportWarning(file, "Column: " + columnName, e);
+        }
         Column vhColumn = column.getVersionHistoryColumn();
         if (vhColumn != null) {
             matrix.add(C_VERSION_HISTORY_COLUMN, DataType.INT, vhColumn.getColumnIndex());

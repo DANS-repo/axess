@@ -4,6 +4,7 @@ import com.healthmarketscience.jackcess.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -50,7 +51,7 @@ import java.util.regex.Pattern;
  * </p>
  * <p>
  * Any warnings or errors that take place during encoding or decoding of values will be reported
- * to the given {@link Codex.Listener}.
+ * to the given {@link ErrorListener}.
  * </p>
  */
 public class DefaultCodex implements Codex {
@@ -58,17 +59,28 @@ public class DefaultCodex implements Codex {
     private static final String CSV_DELIMITER = ",";
     private static final Pattern digitPattern = Pattern.compile("d?\\d+");
     private static Logger LOG = LoggerFactory.getLogger(DefaultCodex.class);
-    private Listener listener;
+    private ErrorListener listener;
     private String booleanTrue = "true";
     private String booleanFalse = "false";
+    private File currentFile;
 
     /**
      * Construct a new {@link DefaultCodex} with the given <code>listener</code>.
      *
      * @param listener listens for errors and warnings, may be <code>null</code>
      */
-    public DefaultCodex(Listener listener) {
+    public DefaultCodex(ErrorListener listener) {
         this.listener = listener;
+    }
+
+    @Override
+    public void setErrorListener(ErrorListener listener) {
+        this.listener = listener;
+    }
+
+    @Override
+    public void setCurrentFile(File currentFile) {
+        this.currentFile = currentFile;
     }
 
     /**
@@ -163,7 +175,7 @@ public class DefaultCodex implements Codex {
         } else if (DataType.UNSUPPORTED_VARLEN == type) {
             return value;
         } else {
-            getListener().reportWarning(">> Unknown DataType: " + type, null);
+            getListener().reportWarning(currentFile, "codex", new AxxessCheckedException("Unknown DataType: " + type));
             return value;
         }
     }
@@ -172,7 +184,8 @@ public class DefaultCodex implements Codex {
         if (value instanceof byte[]) {
             return Base64.getEncoder().encodeToString(((byte[]) value));
         } else {
-            getListener().reportWarning(">> Unexpected OLE field type: " + value.getClass(), null);
+            getListener().reportWarning(currentFile, "codex",
+              new AxxessCheckedException("Unexpected OLE field type: " + value.getClass()));
             return null;
         }
     }
@@ -185,7 +198,8 @@ public class DefaultCodex implements Codex {
         if (value instanceof String) {
             return ((String) value).replaceAll("\r", "\u0002").replaceAll("\n", "\u0001");
         } else {
-            getListener().reportWarning(">> Unexpected String field type: " + value.getClass(), null);
+            getListener().reportWarning(currentFile, "codex",
+              new AxxessCheckedException("Unexpected String field type: " + value.getClass()));
             return null;
         }
     }
@@ -223,7 +237,8 @@ public class DefaultCodex implements Codex {
                 return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(((LocalDateTime) dt));
             }
         } else {
-            getListener().reportWarning(">> Unexpected Date field type: " + value.getClass(), null);
+            getListener().reportWarning(currentFile, "codex",
+              new AxxessCheckedException("Unexpected Date field type: " + value.getClass()));
             return null;
         }
     }
@@ -285,7 +300,8 @@ public class DefaultCodex implements Codex {
         if (value instanceof Collection) {
             return encodeCollection(((Collection) value));
         } else {
-            getListener().reportWarning(">> Unexpected Complex Type field type: " + value.getClass(), null);
+            getListener().reportWarning(currentFile, "codex",
+              new AxxessCheckedException("Unexpected Complex Type: " + value.getClass()));
             return null;
         }
     }
@@ -298,17 +314,17 @@ public class DefaultCodex implements Codex {
         return Arrays.asList(value.split(CSV_DELIMITER));
     }
 
-    private Listener getListener() {
+    private ErrorListener getListener() {
         if (listener == null) {
-            listener = new Listener() {
+            listener = new ErrorListener() {
 
                 @Override
-                public void reportWarning(String message, Throwable cause) {
+                public void reportWarning(File file, String message, Throwable cause) {
                     LOG.warn(message, cause);
                 }
 
                 @Override
-                public void reportError(String message, Throwable cause) {
+                public void reportError(File file, String message, Throwable cause) {
                     LOG.error(message, cause);
                 }
             };
@@ -317,7 +333,7 @@ public class DefaultCodex implements Codex {
     }
 
     @Override
-    public void setListener(Listener listener) {
+    public void setListener(ErrorListener listener) {
         this.listener = listener;
     }
 

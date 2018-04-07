@@ -17,7 +17,7 @@ import java.util.List;
  *
  * @param <T> the implementing class
  */
-public abstract class Extractor<T extends Extractor> implements Codex.Listener {
+public abstract class Extractor<T extends Extractor> implements ErrorListener {
 
     private static Logger LOG = LoggerFactory.getLogger(Extractor.class);
 
@@ -25,6 +25,8 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
 
     private List<Throwable> errorList = new ArrayList<>();
     private List<Throwable> warningList = new ArrayList<>();
+
+    private ErrorListener externalListener;
 
     /**
      * Convenience call for getting all settings.
@@ -246,28 +248,69 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
         return warningList;
     }
 
-    /**
-     * Not for public use.
-     *
-     * @param message warning message
-     * @param cause   warning cause. may be <code>null</code>
-     */
-    @Override
-    public void reportWarning(String message, Throwable cause) {
-        message = message + ", @" + Thread.currentThread().getStackTrace()[2];
-        warningList.add(new Throwable(message, cause));
+    public void setExternalListener(ErrorListener listener) {
+        this.externalListener = listener;
     }
 
     /**
      * Not for public use.
      *
+     * @param file    current db file
+     * @param message warning message
+     * @param cause   warning cause. may be <code>null</code>
+     */
+    @Override
+    public void reportWarning(File file, String message, Throwable cause) {
+        if (externalListener != null) {
+            externalListener.reportWarning(file, message, cause);
+        } else {
+            warningList.add(new Throwable(createMessage(file, message, cause), cause));
+        }
+    }
+
+    /**
+     * Not for public use.
+     *
+     * @param file    current db file
      * @param message error message
      * @param cause   error cause. may be <code>null</code>
      */
     @Override
-    public void reportError(String message, Throwable cause) {
-        message = message + ", @" + Thread.currentThread().getStackTrace()[2];
-        errorList.add(new Throwable(message, cause));
+    public void reportError(File file, String message, Throwable cause) {
+        if (externalListener != null) {
+            externalListener.reportError(file, message, cause);
+        } else {
+            errorList.add(new Throwable(createMessage(file, message, cause), cause));
+        }
+    }
+
+    private String createMessage(File file, String message, Throwable cause) {
+        StringBuilder sb = new StringBuilder()
+          .append(file.getAbsolutePath()).append(",")
+          .append(escape(message)).append(",")
+          .append(escape(cause.getMessage())).append(",")
+          .append(cause.getClass().getName()).append(",");
+        int size = 0;
+        for (StackTraceElement ste : cause.getStackTrace()) {
+            size += 1;
+            sb.append("|")
+              .append(ste.getMethodName())
+              .append("@")
+              .append(ste.getFileName())
+              .append(":")
+              .append(ste.getLineNumber());
+            if (size >= 10) {
+                break;
+            }
+        }
+        return sb.toString();
+    }
+
+    private String escape(String msg) {
+        if (msg == null) {
+            return "";
+        }
+        return msg.replaceAll(",", ";");
     }
 
     protected void reset() {
@@ -283,5 +326,6 @@ public abstract class Extractor<T extends Extractor> implements Codex.Listener {
         }
         return file;
     }
+
 
 }

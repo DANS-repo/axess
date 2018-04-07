@@ -1,5 +1,6 @@
 package nl.knaw.dans.repo.axxess.acc2csv;
 
+import com.healthmarketscience.jackcess.CryptCodecProvider;
 import com.healthmarketscience.jackcess.Database;
 import com.healthmarketscience.jackcess.DatabaseBuilder;
 import nl.knaw.dans.repo.axxess.core.AxxessException;
@@ -43,8 +44,9 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
      * Constructs a new {@link Axxess2CsvConverter}.
      */
     public Axxess2CsvConverter() {
-        metadataWriter = new MetadataExtractor();
-        tableDataWriter = new TableDataExtractor();
+        metadataWriter = new MetadataExtractor(this);
+        tableDataWriter = new TableDataExtractor(this);
+        getCodex().setErrorListener(this);
     }
 
     /**
@@ -159,6 +161,7 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
         List<File> resultFiles = new ArrayList<>();
         try {
             convert(file.getAbsoluteFile(), getTargetDirectory(), resultFiles, false);
+            System.out.println();
         } catch (IOException e) {
             throw new AxxessException("Exception during conversion of " + file.getAbsolutePath(), e);
         }
@@ -187,7 +190,7 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
                 resultFiles.addAll(doConvert(file, targetDirectory));
             } catch (Exception e) {
                 LOG.error("While converting: " + file.getAbsolutePath(), e);
-                reportError("File: " + file.getAbsolutePath(), e);
+                reportError(file, "Fatal error", e);
                 if (e instanceof AxxessException) {
                     throw e;
                 }
@@ -198,12 +201,15 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
     }
 
     private List<File> doConvert(File file, File targetDirectory) throws IOException, AxxessException {
+        getCodex().setCurrentFile(file);
         List<File> resultFiles = new ArrayList<>();
         List<File> csvFiles = new ArrayList<>();
         LOG.info("Trying to convert {}", file.getAbsolutePath());
         Database db = null;
         try {
-            db = DatabaseBuilder.open(file);
+            db = new DatabaseBuilder(file)
+              .setCodecProvider(new CryptCodecProvider())
+              .open();
             Optional<Charset> maybeCharset = getEncoding(db);
             if (maybeCharset.isPresent()) {
                 LOG.info("Setting encoding to '{}' for '{}'", maybeCharset.get(), db.getFile());
@@ -237,7 +243,7 @@ public class Axxess2CsvConverter extends Converter<Axxess2CsvConverter> {
                 resultFiles = csvFiles;
             }
             increaseDbCount();
-            System.out.print("\r" + getDatabaseCount() + " " + file.getName());
+            System.out.print("\r" + getDatabaseCount() + " " + file.getName() + "                                    ");
             return resultFiles;
         } finally {
             if (db != null) {

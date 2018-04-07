@@ -6,7 +6,7 @@
 
   <groupId>nl.knaw.dans.repo</groupId>
   <artifactId>axxess</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <description>Library for converting MS Access databases to and from csv.</description>
   <url>https://github.com/DANS-repo/axxess</url>
 
@@ -68,6 +68,13 @@
       <artifactId>jackcess</artifactId>
       <version>2.1.10</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/com.healthmarketscience.jackcess/jackcess-encrypt -->
+    <dependency>
+      <groupId>com.healthmarketscience.jackcess</groupId>
+      <artifactId>jackcess-encrypt</artifactId>
+      <version>2.1.4</version>
+    </dependency>
+
 
     <dependency>
       <groupId>org.apache.commons</groupId>

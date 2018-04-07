@@ -46,9 +46,9 @@ class IntegrationTest {
       //   "https://easy.dans.knaw.nl/ui/rest/datasets/48078/files/2804052/content", "download"},
 
       // File format: V2000 [VERSION_4]  AccessVersion: 08.50
-      {"types", "all_datatypes.mdb"},
-
-      {"types2", "decimal_types.accdb"},
+      // {"types", "all_datatypes.mdb"},
+      //
+      // {"types2", "decimal_types.accdb"},
       //
       // {"cliwoc", "CLIWOC21_97.mdb",
       //   "https://easy.dans.knaw.nl/ui/rest/datasets/40826/files/2462445/content"},
@@ -68,7 +68,17 @@ class IntegrationTest {
       //
       // {"red_list", "European_Red_List_November2017.mdb",
       //   "https://www.eea.europa.eu/data-and-maps/data/european-red-lists-6/"}
-
+      // {"codec", "ADC DB 2.8b Access 2002-2003.mdb"}
+      // {"annelies", "BronnenBasisbestand(Annelies).mdb"}
+      // {"assembly", "Assembly-CSharp.dll.mdb"} // not a database
+      // {"adc", "ADC DB 2.8b Access 2002-2003.mdb"}
+      {"rhijn2", "Rhijn_1848.mdb"}
+      // {"bijlage", "bijlage 7 vondstdeterminatie aw me nt.mdb"} // corrupt?
+      // {"adc2", "ADC DB 2.8b Access 2002-2003.mdb"}
+      // {"roer", "DB AB Roerkade.mdb"}
+      // {"reep", "DB De Reep - Oirschot.mdb"}
+      // {"decreet", "Decreet.mdb"}
+      // {"skelet", "Hoofd Skelettenformulier.mdb"}
     };
 
     @BeforeAll

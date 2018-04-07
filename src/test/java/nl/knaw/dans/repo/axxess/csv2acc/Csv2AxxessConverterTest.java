@@ -2,8 +2,6 @@ package nl.knaw.dans.repo.axxess.csv2acc;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class Csv2AxxessConverterTest {
 
     @Test
